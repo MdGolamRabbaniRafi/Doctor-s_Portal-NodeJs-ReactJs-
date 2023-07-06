@@ -1,6 +1,7 @@
 import { IsString, Matches, IsEmail, IsEmpty } from 'class-validator';
-import { Column, PrimaryGeneratedColumn, OneToMany, Entity } from 'typeorm';
+import { Column, PrimaryGeneratedColumn, OneToMany, Entity, ManyToOne } from 'typeorm';
 import { AppointmentEntity } from './appointment.entitiy';
+import { AdminEntity } from 'src/Admin/admin.entity';
 
 export class AddDocotorDTO {
   @IsString({ message: "invalid name" })
@@ -57,4 +58,6 @@ export class DoctorEntity {
 
   @OneToMany(() => AppointmentEntity, appointment => appointment.doctor)
   appointment: AppointmentEntity[];
+  @ManyToOne(() => AdminEntity, admin => admin.doctor)
+  admin: AdminEntity;
 }
