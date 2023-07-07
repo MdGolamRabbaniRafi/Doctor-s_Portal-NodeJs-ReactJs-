@@ -2,8 +2,7 @@ import { Controller, Post, Get, Put, Delete, Body, Param, UsePipes, ValidationPi
 import { PatientService } from './Patient.service';
 import { SignupPatientDTO,  PatientEntity,  } from './Patient.dto';
 
- // var patients = [];
-// var articles = [];
+ 
 
 @Controller('Patient')
 export class PatientController {
@@ -19,61 +18,35 @@ export class PatientController {
   SeeProfile(@Param('id') id: number): Object {
     return this.patientService.SeeProfile(id);
   }
+  @Put('/submitFeedback/:id')
+  @UsePipes(new ValidationPipe())
+  submitFeedback(
+    @Param('id', ParseIntPipe) id: number,
+    @Body('feedback') feedback: string,
+  ): Promise<PatientEntity> {
+    return this.patientService.submitFeedback(id, feedback);
+  }
 
-  // @Get('/SeeProfile/:id')
-  // SeeProfile(@Param('id') id: number): Object {
-  //   return this.patientService.SeeProfile(id);
-  // }
-
-  // @Put('/Edit/:id')
-  // Edit(@Param('id') id: number, @Body() updatePatient: AddPatientDTO): Object {
-  //   return this.patientService.Edit(id, patients, updatePatient);
-  // }
-
-  // @Get('/Searching/:id')
-  // Searching(@Param('id') id: number): Object {
-  //   return this.patientService.Searching(id, patients);
-  // }
-
-  // @Put('/ChangePassword/:id')
-  // ChangePassword(@Param('id') id: number, @Body() pass: AddPatientDTO): Object {
-  //   return this.patientService.ChangePassword(id, patients, pass);
-  // }
-
-
- 
-
-  // @Post('/addappointment')
-  // addAppointment(@Body() appointment: any): Promise<AppointmentEntity> {
-  //   console.log(appointment);
-  //   return this.patientService.addAppointment(appointment);
-  // }
-
-  // @Get('/viewAppointment/:patientid')
-  // viewAppointment(@Param('patientid', ParseIntPipe) patientid: number): Promise<PatientEntity[]> {
-  //   return this.patientService.viewAppointment(patientid);
-  // }
-
-//   @Delete('/deleteAllAppointments/:doctorid')
-//   deleteAllAppointments(@Param('doctorid', ParseIntPipe) doctorId: number): Promise<void> {
-//     return this.doctorService.deleteAllAppointments(doctorId);
-//   }
-
-//   @Delete('/deleteOneAppointment/:doctorid/:serial')
-//   deleteOneAppointment(
-//     @Param('doctorid', ParseIntPipe) doctorId: number,
-//     @Param('serial', ParseIntPipe) serial: number,
-//   ): Promise<void> {
-//     return this.doctorService.deleteOneAppointment(doctorId, serial);
-//   }
-
-//   @Put('/appointments/:doctorId/:appointmentId')
-//   updateAppointment(
-//     @Param('doctorId', ParseIntPipe) doctorId: number,
-//     @Param('appointmentId', ParseIntPipe) appointmentId: number,
-//     @Body() Data: AppointmentEntity,
-//   ): Promise<AppointmentEntity> {
-//     return this.doctorService.updateAppointment(doctorId, appointmentId, Data);
-//   }
-// }
+  @Put('/orderMedicine/:id')
+@UsePipes(new ValidationPipe())
+orderMedicine(
+  @Param('id', ParseIntPipe) id: number,
+  @Body('medicineOrder') medicineOrder: string,
+): Promise<PatientEntity> {
+  return this.patientService.orderMedicine(id, medicineOrder);
 }
+@Put('/editProfile/:id')
+@UsePipes(new ValidationPipe())
+editProfile(
+  @Param('id', ParseIntPipe) id: number,
+  @Body() updatedPatientData: Partial<PatientEntity>,
+): Promise<PatientEntity> {
+  return this.patientService.editProfile(id, updatedPatientData);
+}
+}
+
+
+
+  
+  
+

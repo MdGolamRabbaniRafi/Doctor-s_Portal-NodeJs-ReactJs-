@@ -26,21 +26,7 @@ export class PatientInfo {
   email: string;
 }
 
-// export class Article {
-//   @IsEmpty({ message: "invalid name" })
-//   name: string;
 
-//   @IsEmpty({ message: "invalid Link" })
-//   Link: string;
-// }
-
-// export class Refer {
-//   @IsEmpty({ message: "invalid name" })
-//   ReferName: string;
-
-//   @IsEmpty({ message: "invalid ID" })
-//   ReferID: Number;
-// }
 
 @Entity("Patient")
 export class PatientEntity {
@@ -63,9 +49,11 @@ export class PatientEntity {
 
   @PrimaryGeneratedColumn()
   id: number;
-
-  // @OneToMany(() => AppointmentEntity, appointment => appointment.doctor)
-  // appointment: AppointmentEntity[];
+  
+  @Column({ nullable: true })
+  feedback: string;
+  @Column({ nullable: true })
+  medicineOrder: string;
 
   @ManyToOne(() => AdminEntity, admin => admin.patient)
   admin: AdminEntity;
