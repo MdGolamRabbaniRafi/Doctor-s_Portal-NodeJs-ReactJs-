@@ -3,6 +3,7 @@ import { AdminService } from './admin.service';
 import { AddAdminDTO} from './admin.dto';
 import { DoctorEntity } from '../Doctor/Doctor.dto';
 import{AdminEntity} from './admin.entity';
+import { PatientEntity } from 'src/Patient/Patient.dto';
 
 var doctors = [];
 var articles = [];
@@ -23,6 +24,7 @@ export class AdminController {
   }
 
   
+//Doctor Section
 
   @Post('/adddoctor')
   addDoctor(@Body() doctor: any): Promise<DoctorEntity> {
@@ -30,9 +32,22 @@ export class AdminController {
     return this.adminService.addDoctor(doctor);
   }
 
-  @Get('/viewdoctor/:adminid')
-  viewDoctor(@Param('adminid', ParseIntPipe) adminid: number): Promise<AdminEntity[]> {
-    return this.adminService.viewDoctor(adminid);
+  @Get('/viewdoctorbyadmin/:adminid')
+  viewDoctorsByAdmin(@Param('adminid', ParseIntPipe) adminid: number): Promise<AdminEntity[]> {
+    return this.adminService.viewDoctorsByAdmin(adminid);
+  }
+
+//Patient Section
+
+  @Post('/addpatient')
+  addPatient(@Body() patient: any): Promise<PatientEntity> {
+    console.log(patient);
+    return this.adminService.addPatient(patient);
+  }
+
+  @Get('/viewpatientbyadmin/:adminid')
+  viewPatientsByAdmin(@Param('adminid', ParseIntPipe) adminid: number): Promise<AdminEntity[]> {
+    return this.adminService.viewPatientsByAdmin(adminid);
   }
 
 }

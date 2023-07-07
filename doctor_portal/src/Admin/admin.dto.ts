@@ -11,6 +11,7 @@ export class AddAdminDTO {
 
   @Matches(/^\d{8}$/, { message: 'Password must be 8 digits long.' })
   password: string;
+  
 
   id: number;
 }

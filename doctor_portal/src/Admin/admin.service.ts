@@ -4,6 +4,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from 'typeorm';
 import { AdminEntity } from './admin.entity';
 import { DoctorEntity } from '../Doctor/doctor.dto';
+import { PatientEntity } from 'src/Patient/Patient.dto';
 
 @Injectable()
 export class AdminService {
@@ -11,7 +12,9 @@ export class AdminService {
     @InjectRepository(AdminEntity)
     private AdminRepo: Repository<AdminEntity>,
     @InjectRepository(DoctorEntity)
-    private doctorRepo: Repository<DoctorEntity>
+    private doctorRepo: Repository<DoctorEntity>,
+    @InjectRepository(PatientEntity)
+    private patientRepo: Repository<PatientEntity>
   ) {}
 
   async addAdmin(data: AddAdminDTO): Promise<AdminEntity> {
@@ -32,7 +35,7 @@ export class AdminService {
       }
     });
   }
-
+//Doctor section
   async addDoctor(doctor: any): Promise<DoctorEntity> {
     return this.doctorRepo.save(doctor);
   }
@@ -40,11 +43,28 @@ export class AdminService {
   
   
 
-  viewDoctor(id: any): Promise<AdminEntity[]> {
+  viewDoctorsByAdmin(id: any): Promise<AdminEntity[]> {
     return this.AdminRepo.find({
       where: { id: id },
       relations: {
         doctor: true,
+      },
+    });
+  }
+
+  //Patient Section
+  async addPatient(patient: any): Promise<PatientEntity> {
+    return this.patientRepo.save(patient);
+  }
+
+  
+  
+
+  viewPatientsByAdmin(id: any): Promise<AdminEntity[]> {
+    return this.AdminRepo.find({
+      where: { id: id },
+      relations: {
+        patient: true,
       },
     });
   }

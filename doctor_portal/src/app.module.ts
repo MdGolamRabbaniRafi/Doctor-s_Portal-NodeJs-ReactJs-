@@ -2,10 +2,11 @@ import { Module } from '@nestjs/common';
 import { DoctorModule } from './Doctor/doctor.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AdminModule } from './Admin/admin.module';
+import { PatientModule } from './Patient/patient.module';
 
 @Module({
   imports: [
-    DoctorModule, AdminModule,
+    DoctorModule, AdminModule, PatientModule,
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: 'localhost',
