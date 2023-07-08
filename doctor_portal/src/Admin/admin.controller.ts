@@ -32,9 +32,29 @@ export class AdminController {
     return this.adminService.addDoctor(doctor);
   }
 
+  @Get('/viewalldoctor')
+  getAllDoctor(): Promise<DoctorEntity[]> {
+  return this.adminService.getAllDoctor();
+}
+
+@Get('/doctor/:id')
+getDoctorById(@Param('id', ParseIntPipe) id: number): object {
+  return this.adminService.getDoctorById(id);
+}
+
   @Get('/viewdoctorbyadmin/:adminid')
   viewDoctorsByAdmin(@Param('adminid', ParseIntPipe) adminid: number): Promise<AdminEntity[]> {
     return this.adminService.viewDoctorsByAdmin(adminid);
+  }
+
+  @Delete('/deletedoctorss')
+  deleteAllDoctors(): object {
+    return this.adminService.deleteAllDoctors();
+  }
+
+  @Delete('/deleteOneDoctor/:id')
+  deleteOneDoctor(@Param('id', ParseIntPipe) Id: number): Promise<{ message: string }> {
+    return this.adminService.deleteOneDoctor(Id);
   }
 
 //Patient Section
@@ -45,9 +65,30 @@ export class AdminController {
     return this.adminService.addPatient(patient);
   }
 
+  @Get('/viewallpatient')
+  getAllPatient(): Promise<PatientEntity[]> {
+  return this.adminService.getAllPatient();
+}
+
+@Get('/patient/:id')
+getPatientById(@Param('id', ParseIntPipe) id: number): object {
+  return this.adminService.getPatientById(id);
+}
+
   @Get('/viewpatientbyadmin/:adminid')
   viewPatientsByAdmin(@Param('adminid', ParseIntPipe) adminid: number): Promise<AdminEntity[]> {
     return this.adminService.viewPatientsByAdmin(adminid);
   }
+
+  @Delete('/deletepatients')
+  deleteAllPatients(): object {
+    return this.adminService.deleteAllPatients();
+  }
+
+  @Delete('/deleteOnePatient/:id')
+  deleteOnePatient(@Param('id', ParseIntPipe) Id: number): Promise<{ message: string }> {
+    return this.adminService.deleteOnePatient(Id);
+  }
+  
 
 }
