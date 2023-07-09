@@ -5,8 +5,7 @@ import { DoctorEntity } from '../Doctor/Doctor.dto';
 import{AdminEntity} from './admin.entity';
 import { PatientEntity } from 'src/Patient/Patient.dto';
 
-var doctors = [];
-var articles = [];
+
 
 @Controller('admin')
 export class AdminController {
@@ -42,12 +41,12 @@ getDoctorById(@Param('id', ParseIntPipe) id: number): object {
   return this.adminService.getDoctorById(id);
 }
 
-  @Get('/viewdoctorbyadmin/:adminid')
+  @Get('/adminaddeddoctors/:adminid')
   viewDoctorsByAdmin(@Param('adminid', ParseIntPipe) adminid: number): Promise<AdminEntity[]> {
     return this.adminService.viewDoctorsByAdmin(adminid);
   }
 
-  @Delete('/deletedoctorss')
+  @Delete('/deletedoctors')
   deleteAllDoctors(): object {
     return this.adminService.deleteAllDoctors();
   }
@@ -56,6 +55,16 @@ getDoctorById(@Param('id', ParseIntPipe) id: number): object {
   deleteOneDoctor(@Param('id', ParseIntPipe) Id: number): Promise<{ message: string }> {
     return this.adminService.deleteOneDoctor(Id);
   }
+
+  @Put('/doctor/:id')
+  updateDoctorById(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() data: Partial<DoctorEntity>,
+    @Body('name') name: string,
+  ): Promise<{ message: string; updatedDoctor: DoctorEntity }> {
+    return this.adminService.updateDoctorById(id, data, name);
+  }
+  
 
 //Patient Section
 
@@ -75,7 +84,7 @@ getPatientById(@Param('id', ParseIntPipe) id: number): object {
   return this.adminService.getPatientById(id);
 }
 
-  @Get('/viewpatientbyadmin/:adminid')
+  @Get('/adminaddedpatitents/:adminid')
   viewPatientsByAdmin(@Param('adminid', ParseIntPipe) adminid: number): Promise<AdminEntity[]> {
     return this.adminService.viewPatientsByAdmin(adminid);
   }
@@ -89,6 +98,16 @@ getPatientById(@Param('id', ParseIntPipe) id: number): object {
   deleteOnePatient(@Param('id', ParseIntPipe) Id: number): Promise<{ message: string }> {
     return this.adminService.deleteOnePatient(Id);
   }
+
+  @Put('/patient/:id')
+  updatePatientById(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() data: Partial<PatientEntity>,
+    @Body('name') name: string,
+  ): Promise<{ message: string; updatedPatient: PatientEntity }> {
+    return this.adminService.updatePatientById(id, data, name);
+  }
+  
   
 
 }

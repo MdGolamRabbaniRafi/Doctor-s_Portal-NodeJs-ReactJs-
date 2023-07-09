@@ -66,8 +66,3 @@ async editProfile(id: number, updatedPatientData: Partial<PatientEntity>): Promi
 
  
 
-
-<<<<<<< HEAD
-=======
-
->>>>>>> 07dfa9ccd7062b7689c3d9b38b42cb848f57c158

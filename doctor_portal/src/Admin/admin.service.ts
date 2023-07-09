@@ -41,21 +41,22 @@ export class AdminService {
   }
 
   async getAllDoctor(): Promise<DoctorEntity[]> {
-    return this.doctorRepo.find();
+    return this.doctorRepo.find({ select: ['id', 'name', 'email'] });
 }
 
 async getDoctorById(id: number): Promise<DoctorEntity> {
-  return this.doctorRepo.findOne({ where: { id } });
+  return this.doctorRepo.findOne({ where: { id },
+    select: ['id', 'name', 'email'], });
 }
 
-  viewDoctorsByAdmin(id: any): Promise<AdminEntity[]> {
-    return this.AdminRepo.find({
-      where: { id: id },
-      relations: {
-        doctor: true,
-      },
-    });
-  }
+async viewDoctorsByAdmin(id: any): Promise<AdminEntity[]> {
+  return this.AdminRepo.createQueryBuilder('admin')
+    .leftJoinAndSelect('admin.doctor', 'doctor')
+    .select(['admin.id', 'admin.name', 'admin.email'])
+    .addSelect(['doctor.id', 'doctor.name', 'doctor.email'])
+    .where('admin.id = :id', { id })
+    .getMany();
+}
 
   async deleteAllDoctors(): Promise<{ message: string }> {
     const deleteResult = await this.doctorRepo.delete({});
@@ -81,31 +82,50 @@ async getDoctorById(id: number): Promise<DoctorEntity> {
     return { message: 'Doctor removed successfully' };
   }
 
+  async updateDoctorById(id: number, data: Partial<DoctorEntity>, name: string): Promise<{ message: string; updatedDoctor: DoctorEntity }> {
+    const doctor = await this.doctorRepo.findOne({ where: { id } });
+    
+    if (!doctor) {
+      throw new NotFoundException('Doctor not found');
+    }
+  
+    const updatedDoctor = Object.assign(doctor, data);
+    const savedDoctor = await this.patientRepo.save(updatedDoctor);
+    
+    return { message: `Doctor named ${name} of ID number ${id} updated successfully`, updatedDoctor: savedDoctor };
+  }
+
+
+
   //Patient Section
   async addPatient(patient: any): Promise<PatientEntity> {
     return this.patientRepo.save(patient);
   }
 
   async getAllPatient(): Promise<PatientEntity[]> {
-    return this.patientRepo.find();
+    return this.patientRepo.find({ select: ['id', 'name', 'email', 'diagonized'] });
 }
 
 async getPatientById(id: number): Promise<PatientEntity> {
-  return this.patientRepo.findOne({ where: { id } });
+  return this.patientRepo.findOne({ 
+    where: { id },
+    select: ['id', 'name', 'email', 'diagonized'],
+  });
 }
 
 
 
 
   
-  viewPatientsByAdmin(id: any): Promise<AdminEntity[]> {
-    return this.AdminRepo.find({
-      where: { id: id },
-      relations: {
-        patient: true,
-      },
-    });
-  }
+async viewPatientsByAdmin(id: any): Promise<AdminEntity[]> {
+  return this.AdminRepo.createQueryBuilder('admin')
+    .leftJoinAndSelect('admin.patient', 'patient')
+    .select(['admin.id', 'admin.name', 'admin.email'])
+    .addSelect(['patient.id', 'patient.name', 'patient.email', 'patient.diagonized'])
+    .where('admin.id = :id', { id })
+    .getMany();
+}
+
 
   async deleteAllPatients(): Promise<{ message: string }> {
     const deleteResult = await this.patientRepo.delete({});
@@ -130,6 +150,21 @@ async getPatientById(id: number): Promise<PatientEntity> {
     await this.patientRepo.remove(patient);
     return { message: 'Patient deleted successfully' };
   }
+
+  async updatePatientById(id: number, data: Partial<PatientEntity>, name: string): Promise<{ message: string; updatedPatient: PatientEntity }> {
+    const patient = await this.patientRepo.findOne({ where: { id } });
+    
+    if (!patient) {
+      throw new NotFoundException('Patient not found');
+    }
+  
+    const updatedPatient = Object.assign(patient, data);
+    const savedPatient = await this.patientRepo.save(updatedPatient);
+    
+    return { message: `Patient named ${name} of ID number ${id} updated successfully`, updatedPatient: savedPatient };
+  }
+  
+  
 
   
 }
