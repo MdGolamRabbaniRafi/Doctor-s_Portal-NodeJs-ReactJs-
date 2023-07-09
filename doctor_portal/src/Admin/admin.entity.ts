@@ -2,6 +2,7 @@ import { IsString, Matches, IsEmail, IsEmpty } from 'class-validator';
 import { Column, PrimaryGeneratedColumn, OneToMany, Entity } from 'typeorm';
 import { DoctorEntity } from '../Doctor/Doctor.dto';
 import { PatientEntity } from 'src/Patient/Patient.dto';
+import { PmailEntity } from 'src/Patient/PatientMail.entity';
 
 @Entity("Admin")
 export class AdminEntity {
@@ -18,7 +19,8 @@ export class AdminEntity {
   @Matches(/^\d{8}$/, { message: 'Password must be 8 digits long.' })
   password: string;
 
-  
+  // @Column()
+  // filenames:string;
 
   @PrimaryGeneratedColumn()
   id: number;
@@ -28,5 +30,8 @@ export class AdminEntity {
 
   @OneToMany(() => PatientEntity, patient => patient.admin)
   patient: PatientEntity[];
+
+  @OneToMany(() => PmailEntity, pmail => pmail.admin)
+  pmail: PmailEntity[];
 }
 

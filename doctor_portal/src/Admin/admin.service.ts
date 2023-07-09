@@ -1,20 +1,31 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { AddAdminDTO } from './admin.dto';
+import { AddAdminDTO, AdminLoginDTO } from './admin.dto';
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from 'typeorm';
 import { AdminEntity } from './admin.entity';
 import { DoctorEntity } from '../Doctor/doctor.dto';
 import { PatientEntity } from 'src/Patient/Patient.dto';
+import { PmailEntity } from 'src/Patient/PatientMail.entity';
+import { MailerService } from '@nestjs-modules/mailer/dist';
+import * as bcrypt from 'bcrypt';
+import { EmailDTO } from './email.dto';
 
 @Injectable()
 export class AdminService {
+  signupp(mydata: AddAdminDTO) {
+    throw new Error('Method not implemented.');
+  }
   constructor(
     @InjectRepository(AdminEntity)
     private AdminRepo: Repository<AdminEntity>,
     @InjectRepository(DoctorEntity)
     private doctorRepo: Repository<DoctorEntity>,
     @InjectRepository(PatientEntity)
-    private patientRepo: Repository<PatientEntity>
+    private patientRepo: Repository<PatientEntity>,
+    @InjectRepository(PmailEntity)
+    private pmailRepo: Repository<PmailEntity>,
+
+    private mailerService: MailerService
   ) {}
 
   async addAdmin(data: AddAdminDTO): Promise<AdminEntity> {
@@ -35,6 +46,44 @@ export class AdminService {
       }
     });
   }
+
+  async signup(data: AddAdminDTO): Promise<AdminEntity> {
+    const salt = await bcrypt.genSalt();
+    data.password = await bcrypt.hash(data.password,salt);
+   return this.AdminRepo.save(data);
+}
+
+async signIn(data: AdminLoginDTO) {
+  const userdata= await this.AdminRepo.findOneBy({email:data.email});
+const match:boolean = await bcrypt.compare(data.password, userdata.password);
+return match;
+
+}
+
+//Email 
+// async mailPatient(mail: PmailEntity, subject: string, text: string): Promise<PmailEntity> {
+//   return this.pmailRepo.save({
+//     email: mail.email,
+//     subject,
+//     message: mail.message,
+//   });
+// }
+
+async mailPatient(pmail: any): Promise<PmailEntity> {
+  return this.pmailRepo.save(pmail);
+}
+
+async emailSending(clientdata: { email: any; subject: any; text: any; }) {
+  return await this.mailerService.sendMail({
+    to: clientdata.email,
+    subject: clientdata.subject,
+    text: clientdata.text,
+  });
+}
+
+
+
+
 //Doctor section
   async addDoctor(doctor: any): Promise<DoctorEntity> {
     return this.doctorRepo.save(doctor);

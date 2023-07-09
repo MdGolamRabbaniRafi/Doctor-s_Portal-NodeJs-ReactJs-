@@ -1,6 +1,7 @@
 import { IsString, Matches, IsEmail, IsEmpty } from 'class-validator';
 import { AdminEntity } from 'src/Admin/admin.entity';
 import { Column, PrimaryGeneratedColumn, OneToMany, Entity, ManyToOne } from 'typeorm';
+import { PmailEntity } from './PatientMail.entity';
 
 
 export class SignupPatientDTO {
@@ -58,5 +59,6 @@ export class PatientEntity {
   @ManyToOne(() => AdminEntity, admin => admin.patient)
   admin: AdminEntity;
 
+  
 
 }

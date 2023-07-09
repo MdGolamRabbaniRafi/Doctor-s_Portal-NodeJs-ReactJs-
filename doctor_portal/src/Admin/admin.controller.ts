@@ -1,9 +1,13 @@
-import { Controller, Post, Get, Put, Delete, Body, Param, UsePipes, ValidationPipe, ParseIntPipe } from '@nestjs/common';
+import { Controller, Post, Get, Put, Delete, Body, Param, UsePipes, ValidationPipe, ParseIntPipe, UseInterceptors, UploadedFile, Session } from '@nestjs/common';
 import { AdminService } from './admin.service';
 import { AddAdminDTO} from './admin.dto';
 import { DoctorEntity } from '../Doctor/Doctor.dto';
 import{AdminEntity} from './admin.entity';
 import { PatientEntity } from 'src/Patient/Patient.dto';
+import { PmailEntity } from 'src/Patient/PatientMail.entity';
+import { MulterError, diskStorage } from 'multer';
+import { FileInterceptor } from '@nestjs/platform-express';
+
 
 
 
@@ -21,6 +25,67 @@ export class AdminController {
   ViewProfile(@Param('id') id: number): Object {
     return this.adminService.ViewProfile(id);
   }
+
+  @Post('/signup')
+  // @UseInterceptors(FileInterceptor('image',
+  //     {
+  //         fileFilter: (req, file, cb) => {
+  //             if (file.originalname.match(/^.*\.(jpg|webp|png|jpeg)$/))
+  //                 cb(null, true);
+  //             else {
+  //                 cb(new MulterError('LIMIT_UNEXPECTED_FILE', 'image'), false);
+  //             }
+  //         },
+  //         limits: { fileSize: 30000 },
+  //         storage: diskStorage({
+  //             destination: './uploads',
+  //             filename: function (req, file, cb) {
+  //                 cb(null, Date.now() + file.originalname)
+  //             },
+  //         })
+  //     }
+  // ))
+  @UsePipes(new ValidationPipe)
+  signup(@Body() mydata: AddAdminDTO, @UploadedFile() imageobj: Express.Multer.File) {
+      console.log(mydata);
+      // console.log(imageobj.filename);
+      // mydata.filenames = imageobj.filename;
+      return this.adminService.signup(mydata);
+
+  }
+
+  @Post('/signin')
+  signIn(@Body() data: AddAdminDTO, @Session() session) {
+
+      if (this.adminService.signIn(data)) {
+          session.email = data.email;
+          return true;
+      }
+      else {
+
+          return false;
+      }
+      // return this.adminService.signIn(data);
+  }
+
+ //Email
+//  @Post('/mailPatient')
+//  mailPatient(@Body() mail: PmailEntity): Promise<PmailEntity> {
+//    const { subject, message } = mail;
+//    return this.adminService.mailPatient(mail, subject, message);
+//  }
+@Post('/mailPatient')
+mailPatient(@Body() pmail: any): Promise<PmailEntity> {
+    console.log(pmail);
+    return this.adminService.mailPatient(pmail);
+  }
+
+  @Post('/emailSending')
+  emailSending(@Body() clientdata) {
+      return this.adminService.emailSending(clientdata);
+  }
+
+ 
 
   
 //Doctor Section
@@ -111,3 +176,5 @@ getPatientById(@Param('id', ParseIntPipe) id: number): object {
   
 
 }
+
+
