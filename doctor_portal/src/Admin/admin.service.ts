@@ -9,6 +9,7 @@ import { PmailEntity } from 'src/Patient/PatientMail.entity';
 import { MailerService } from '@nestjs-modules/mailer/dist';
 import * as bcrypt from 'bcrypt';
 import { EmailDTO } from './email.dto';
+import { NoticeEntity } from './noticeBoard.entity';
 
 @Injectable()
 export class AdminService {
@@ -24,6 +25,8 @@ export class AdminService {
     private patientRepo: Repository<PatientEntity>,
     @InjectRepository(PmailEntity)
     private pmailRepo: Repository<PmailEntity>,
+    @InjectRepository(NoticeEntity)
+    private noticeRepo: Repository<NoticeEntity>,
 
     private mailerService: MailerService
   ) {}
@@ -80,7 +83,11 @@ async emailSending(clientdata: { email: any; subject: any; text: any; }) {
     text: clientdata.text,
   });
 }
+//Notice Board
 
+async addNotice(notice: any): Promise<NoticeEntity> {
+  return this.noticeRepo.save(notice);
+}
 
 
 

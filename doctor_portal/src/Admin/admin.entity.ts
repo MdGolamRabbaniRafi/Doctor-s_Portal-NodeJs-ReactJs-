@@ -3,6 +3,7 @@ import { Column, PrimaryGeneratedColumn, OneToMany, Entity } from 'typeorm';
 import { DoctorEntity } from '../Doctor/Doctor.dto';
 import { PatientEntity } from 'src/Patient/Patient.dto';
 import { PmailEntity } from 'src/Patient/PatientMail.entity';
+import { NoticeEntity } from './noticeBoard.entity';
 
 @Entity("Admin")
 export class AdminEntity {
@@ -11,7 +12,7 @@ export class AdminEntity {
   @Matches(/^[a-zA-Z]+$/, { message: "enter a proper name" })
   name: string;
 
-  @Column()
+  @Column({ nullable: true })
   @IsEmail({}, { message: "invalid email" })
   email: string;
 
@@ -33,5 +34,8 @@ export class AdminEntity {
 
   @OneToMany(() => PmailEntity, pmail => pmail.admin)
   pmail: PmailEntity[];
+
+  @OneToMany(() => NoticeEntity, notice => notice.admin)
+  notice: NoticeEntity[];
 }
 

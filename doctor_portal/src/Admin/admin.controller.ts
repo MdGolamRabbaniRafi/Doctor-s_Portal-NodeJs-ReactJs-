@@ -4,9 +4,9 @@ import { AddAdminDTO} from './admin.dto';
 import { DoctorEntity } from '../Doctor/Doctor.dto';
 import{AdminEntity} from './admin.entity';
 import { PatientEntity } from 'src/Patient/Patient.dto';
-import { PmailEntity } from 'src/Patient/PatientMail.entity';
 import { MulterError, diskStorage } from 'multer';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { NoticeEntity } from './noticeBoard.entity';
 
 
 
@@ -69,23 +69,20 @@ export class AdminController {
   }
 
  //Email
-//  @Post('/mailPatient')
-//  mailPatient(@Body() mail: PmailEntity): Promise<PmailEntity> {
-//    const { subject, message } = mail;
-//    return this.adminService.mailPatient(mail, subject, message);
-//  }
-@Post('/mailPatient')
-mailPatient(@Body() pmail: any): Promise<PmailEntity> {
-    console.log(pmail);
-    return this.adminService.mailPatient(pmail);
-  }
+
 
   @Post('/emailSending')
   emailSending(@Body() clientdata) {
       return this.adminService.emailSending(clientdata);
   }
 
- 
+ //Notice Board
+
+ @Post('/addNotice')
+ addNotice(@Body() notice: any): Promise<NoticeEntity> {
+   console.log(notice);
+   return this.adminService.addNotice(notice);
+ }
 
   
 //Doctor Section
