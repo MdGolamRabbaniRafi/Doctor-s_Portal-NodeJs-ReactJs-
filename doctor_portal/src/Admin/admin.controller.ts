@@ -1,7 +1,7 @@
 import { Controller, Post, Get, Put, Delete, Body, Param, UsePipes, ValidationPipe, ParseIntPipe, UseInterceptors, UploadedFile, Session } from '@nestjs/common';
 import { AdminService } from './admin.service';
 import { AddAdminDTO} from './admin.dto';
-import { DoctorEntity } from '../Doctor/Doctor.dto';
+import { AddDocotorDTO, DoctorEntity } from '../Doctor/Doctor.dto';
 import{AdminEntity} from './admin.entity';
 import { PatientEntity } from 'src/Patient/Patient.dto';
 import { MulterError, diskStorage } from 'multer';
@@ -84,6 +84,24 @@ export class AdminController {
    return this.adminService.addNotice(notice);
  }
 
+ @Get('/viewallnotice')
+  getAllNotice(): Promise<NoticeEntity[]> {
+  return this.adminService.getAllNotice();
+}
+
+@Delete('/deleteallnotice')
+deleteAllNotice(): object {
+  return this.adminService.deleteAllNotice();
+}
+
+@Delete('/deleteOneNotice/:sl')
+  deleteOneNotice(@Param('sl', ParseIntPipe) SL: number): Promise<{ message: string }> {
+    return this.adminService.deleteOneNotice(SL);
+  }
+
+
+
+
   
 //Doctor Section
 
@@ -127,6 +145,12 @@ getDoctorById(@Param('id', ParseIntPipe) id: number): object {
     return this.adminService.updateDoctorById(id, data, name);
   }
   
+  // @Put('/updatesalary')
+  //   @UsePipes(new ValidationPipe())
+  //   updateSalary(@Body() data: AddDocotorDTO): object {
+  //     return this.adminService.updateAdmin(data);
+  //   }
+    
 
 //Patient Section
 
@@ -169,6 +193,22 @@ getPatientById(@Param('id', ParseIntPipe) id: number): object {
   ): Promise<{ message: string; updatedPatient: PatientEntity }> {
     return this.adminService.updatePatientById(id, data, name);
   }
+
+  //Salary
+
+  @Put('/adminaddedpatients/:doctorid')
+  updateSalaryByDoctorId(
+    @Param('doctorid', ParseIntPipe) doctorId: number,
+    @Body('salary', ParseIntPipe) salary: number,
+  ): Promise<DoctorEntity> {
+    return this.adminService.updateSalaryByDoctorId(doctorId, salary);
+  }
+  
+
+  
+
+
+
   
   
 

@@ -5,7 +5,6 @@ import { Repository } from 'typeorm';
 import { AdminEntity } from './admin.entity';
 import { DoctorEntity } from '../Doctor/doctor.dto';
 import { PatientEntity } from 'src/Patient/Patient.dto';
-import { PmailEntity } from 'src/Patient/PatientMail.entity';
 import { MailerService } from '@nestjs-modules/mailer/dist';
 import * as bcrypt from 'bcrypt';
 import { EmailDTO } from './email.dto';
@@ -23,8 +22,8 @@ export class AdminService {
     private doctorRepo: Repository<DoctorEntity>,
     @InjectRepository(PatientEntity)
     private patientRepo: Repository<PatientEntity>,
-    @InjectRepository(PmailEntity)
-    private pmailRepo: Repository<PmailEntity>,
+    // @InjectRepository(PmailEntity)
+    // private pmailRepo: Repository<PmailEntity>,
     @InjectRepository(NoticeEntity)
     private noticeRepo: Repository<NoticeEntity>,
 
@@ -72,9 +71,9 @@ return match;
 //   });
 // }
 
-async mailPatient(pmail: any): Promise<PmailEntity> {
-  return this.pmailRepo.save(pmail);
-}
+// async mailPatient(pmail: any): Promise<PmailEntity> {
+//   return this.pmailRepo.save(pmail);
+// }
 
 async emailSending(clientdata: { email: any; subject: any; text: any; }) {
   return await this.mailerService.sendMail({
@@ -88,6 +87,56 @@ async emailSending(clientdata: { email: any; subject: any; text: any; }) {
 async addNotice(notice: any): Promise<NoticeEntity> {
   return this.noticeRepo.save(notice);
 }
+
+// async getAllNotice(): Promise<NoticeEntity[]> {
+//   return this.noticeRepo.find({ select: ['subject', 'message', 'postedTime', 'sl', 'admin'] });
+// }
+
+async getAllNotice(): Promise<NoticeEntity[]> {
+  const notices = await this.noticeRepo.find({
+    select: ['sl', 'subject', 'message', 'postedTime'],
+    relations: ['admin'],
+  });
+  const modifiedNotices: NoticeEntity[] = notices.map(notice => {
+    const modifiedNotice = { ...notice };
+    if (modifiedNotice.admin) {
+      modifiedNotice.message = `Posted by ${modifiedNotice.admin.name}: ${modifiedNotice.message}`;
+      delete modifiedNotice.admin.password;
+      delete modifiedNotice.admin.email;
+    }
+    return modifiedNotice;
+  });
+
+  return modifiedNotices;
+}
+
+async deleteAllNotice(): Promise<{ message: string }> {
+  const deleteResult = await this.noticeRepo.delete({});
+  
+  if (deleteResult.affected > 0) {
+    return { message: 'All notices removed successfully' };
+  } else {
+    return { message: 'No notice to remove' };
+  }
+}
+
+async deleteOneNotice(SL: number): Promise<{ message: string }> {
+  const notice = await this.noticeRepo.findOne({
+    where: { sl: SL },
+  });
+  
+  if (!notice) {
+    throw new NotFoundException('Notice not found');
+  }
+
+  await this.noticeRepo.remove(notice);
+  return { message: 'Notice removed successfully' };
+}
+
+
+
+
+
 
 
 
@@ -219,8 +268,18 @@ async viewPatientsByAdmin(id: any): Promise<AdminEntity[]> {
     
     return { message: `Patient named ${name} of ID number ${id} updated successfully`, updatedPatient: savedPatient };
   }
-  
-  
 
+  //Salary
+
+  async updateSalaryByDoctorId(doctorId: number, salary: number): Promise<DoctorEntity> {
+    const doctor = await this.doctorRepo.findOne(doctorId);
+    if (!doctor) {
+      throw new NotFoundException('Doctor not found');
+    }
+  
+    doctor.salary = salary;
+    return this.doctorRepo.save(doctor);
+  }
+  
   
 }
