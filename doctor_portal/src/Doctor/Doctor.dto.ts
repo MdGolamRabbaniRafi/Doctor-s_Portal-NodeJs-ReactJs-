@@ -3,6 +3,8 @@ import { Column, PrimaryGeneratedColumn, OneToMany, Entity, ManyToOne } from 'ty
 import { AppointmentEntity } from './appointment.entitiy';
 import { AdminEntity } from 'src/Admin/admin.entity';
 import { SalaryEntity } from 'src/Admin/salary.entity';
+import { DoctorModule } from './doctor.module';
+
 
 export class AddDocotorDTO {
   @IsString({ message: "invalid name" })

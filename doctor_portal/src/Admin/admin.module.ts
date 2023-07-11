@@ -8,6 +8,7 @@ import { PatientEntity } from 'src/Patient/Patient.dto';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { NoticeEntity } from './noticeBoard.entity';
 import { SalaryEntity } from './salary.entity';
+import { AppointmentEntity } from 'src/Doctor/appointment.entitiy';
 
 @Module({
   imports: [ MailerModule.forRoot({
@@ -21,7 +22,7 @@ import { SalaryEntity } from './salary.entity';
         pass: 'pjwvkevgjvozlose',
       },
     },
-  }),TypeOrmModule.forFeature([AdminEntity, DoctorEntity, PatientEntity,  NoticeEntity, SalaryEntity])],
+  }),TypeOrmModule.forFeature([AdminEntity, DoctorEntity, PatientEntity,  NoticeEntity, SalaryEntity, AppointmentEntity])],
   controllers: [AdminController],
   providers: [AdminService],
 })

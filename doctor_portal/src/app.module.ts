@@ -3,6 +3,8 @@ import { DoctorModule } from './Doctor/doctor.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AdminModule } from './Admin/admin.module';
 import { PatientModule } from './Patient/patient.module';
+import * as bcrypt from 'bcrypt';
+
 
 @Module({
   imports: [

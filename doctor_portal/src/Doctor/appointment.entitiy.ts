@@ -1,6 +1,8 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm";
 import { DoctorEntity } from "./Doctor.dto";
 import { IsInt } from "class-validator";
+import { DoctorModule } from './doctor.module';
+
 
 @Entity("appointment")
 export class AppointmentEntity {

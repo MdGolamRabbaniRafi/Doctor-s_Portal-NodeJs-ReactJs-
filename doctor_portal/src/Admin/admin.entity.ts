@@ -6,24 +6,19 @@ import { NoticeEntity } from './noticeBoard.entity';
 
 @Entity("Admin")
 export class AdminEntity {
-  @Column()
-  @IsString({ message: "invalid name" })
-  @Matches(/^[a-zA-Z]+$/, { message: "enter a proper name" })
-  name: string;
-
-  @Column({ nullable: true })
-  @IsEmail({}, { message: "invalid email" })
-  email: string;
-
-  @Column()
-  @Matches(/^\d{8}$/, { message: 'Password must be 8 digits long.' })
-  password: string;
-
-  // @Column()
-  // filenames:string;
-
   @PrimaryGeneratedColumn()
-  id: number;
+id:number;
+@Column({ name: 'fullname', type: 'varchar', length: 150, nullable: true })
+name: string;
+
+@Column({type: "varchar",length: 150, nullable: true})
+email:string;
+@Column({nullable: true})
+phone:number;
+@Column({nullable: true})
+password:string;
+@Column({nullable: true})
+filenames:string;
 
   @OneToMany(() => DoctorEntity, doctor => doctor.admin)
   doctor: DoctorEntity[];

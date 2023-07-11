@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Put, Delete, Body, Param, UsePipes, ValidationPipe, ParseIntPipe, UseInterceptors, UploadedFile, Session } from '@nestjs/common';
+import { Controller, Post, Get, Put, Delete, Body, Param, UsePipes, ValidationPipe, ParseIntPipe, UseInterceptors, UploadedFile, Session, ParseFilePipe, MaxFileSizeValidator, FileTypeValidator, Res } from '@nestjs/common';
 import { AdminService } from './admin.service';
 import { AddAdminDTO} from './admin.dto';
 import { AddDocotorDTO, DoctorEntity } from '../Doctor/Doctor.dto';
@@ -7,6 +7,8 @@ import { PatientEntity } from 'src/Patient/Patient.dto';
 import { MulterError, diskStorage } from 'multer';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { NoticeEntity } from './noticeBoard.entity';
+import * as bcrypt from 'bcrypt';
+
 
 
 
@@ -17,8 +19,8 @@ export class AdminController {
 
   @Post('/addadmin')
   @UsePipes(new ValidationPipe())
-  addAdmin(@Body() doctor: AddAdminDTO): object {
-    return this.adminService.addAdmin(doctor);
+  addAdmin(@Body() admin: AddAdminDTO): object {
+    return this.adminService.addAdmin(admin);
   }
 
   @Get('/ViewAdminProfile/:id')
@@ -27,32 +29,34 @@ export class AdminController {
   }
 
   @Post('/signup')
-  // @UseInterceptors(FileInterceptor('image',
-  //     {
-  //         fileFilter: (req, file, cb) => {
-  //             if (file.originalname.match(/^.*\.(jpg|webp|png|jpeg)$/))
-  //                 cb(null, true);
-  //             else {
-  //                 cb(new MulterError('LIMIT_UNEXPECTED_FILE', 'image'), false);
-  //             }
-  //         },
-  //         limits: { fileSize: 30000 },
-  //         storage: diskStorage({
-  //             destination: './uploads',
-  //             filename: function (req, file, cb) {
-  //                 cb(null, Date.now() + file.originalname)
-  //             },
-  //         })
-  //     }
-  // ))
-  @UsePipes(new ValidationPipe)
-  signup(@Body() mydata: AddAdminDTO, @UploadedFile() imageobj: Express.Multer.File) {
-      console.log(mydata);
-      // console.log(imageobj.filename);
-      // mydata.filenames = imageobj.filename;
-      return this.adminService.signup(mydata);
+    @UseInterceptors(FileInterceptor('image',
+        {
+            fileFilter: (req, file, cb) => {
+                if (file.originalname.match(/^.*\.(jpg|webp|png|jpeg)$/))
+                    cb(null, true);
+                else {
+                    cb(new MulterError('LIMIT_UNEXPECTED_FILE', 'image'), false);
+                }
+            },
+            limits: { fileSize: 30000 },
+            storage: diskStorage({
+                destination: './uploads',
+                filename: function (req, file, cb) {
+                    cb(null, Date.now() + file.originalname)
+                },
+            })
+        }
+    ))
+    @UsePipes(new ValidationPipe)
+    signup(@Body() mydata: AddAdminDTO, @UploadedFile() imageobj: Express.Multer.File) {
+        console.log(mydata);
+        console.log(imageobj.filename);
+        mydata.filenames = imageobj.filename;
+        return this.adminService.signup(mydata);
 
-  }
+    }
+  
+
 
   @Post('/signin')
   signIn(@Body() data: AddAdminDTO, @Session() session) {
@@ -66,6 +70,20 @@ export class AdminController {
           return false;
       }
       // return this.adminService.signIn(data);
+  }
+
+  @Get('showadminphotobyid/:adminId')
+    async getimagebyadminid(@Param('adminId', ParseIntPipe) adminId: number, @Res() res) {
+        const filename = await this.adminService.getimagebyadminid(adminId);
+        res.sendFile(filename, { root: './uploads' })
+
+    }
+
+  //DashBoard
+
+  @Get("/dashboard")
+  getDashboard():any {
+      return this.adminService.getDashboard();
   }
 
  //Email
@@ -194,17 +212,21 @@ getPatientById(@Param('id', ParseIntPipe) id: number): object {
     return this.adminService.updatePatientById(id, data, name);
   }
 
-  //Salary
+  //Delete Appointment
 
-  @Put('/adminaddedpatients/:doctorid')
-  updateSalaryByDoctorId(
-    @Param('doctorid', ParseIntPipe) doctorId: number,
-    @Body('salary', ParseIntPipe) salary: number,
-  ): Promise<DoctorEntity> {
-    return this.adminService.updateSalaryByDoctorId(doctorId, salary);
+  @Delete('/deleteappointment')
+  deleteAllAppointment(): object {
+    return this.adminService.deleteAllAppointment();
   }
-  
 
+  @Delete('/deleteOneAppointment/:Serial')
+  deleteAppointment(@Param('Serial', ParseIntPipe) Serial: number): Promise<{ message: string }> {
+    return this.adminService.deleteAppointment(Serial);
+  }
+
+
+
+ 
   
 
 

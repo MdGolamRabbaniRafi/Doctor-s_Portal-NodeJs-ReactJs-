@@ -2,6 +2,7 @@ import { Controller, Post, Get, Put, Delete, Body, Param, UsePipes, ValidationPi
 import { DoctorService } from './Doctor.service';
 import { AddDocotorDTO, Article, DoctorEntity, Refer } from './Doctor.dto';
 import { AppointmentEntity } from './appointment.entitiy';
+import { DoctorModule } from './doctor.module';
 
 var doctors = [];
 var articles = [];

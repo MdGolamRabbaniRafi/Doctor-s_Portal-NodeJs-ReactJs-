@@ -5,6 +5,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { DoctorEntity } from './Doctor.dto';
 import { AppointmentEntity } from './appointment.entitiy';
 import { SalaryEntity } from 'src/Admin/salary.entity';
+import * as bcrypt from 'bcrypt';
+
 
 @Module({
   imports: [TypeOrmModule.forFeature([DoctorEntity, AppointmentEntity, SalaryEntity])],

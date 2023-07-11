@@ -9,6 +9,7 @@ import { MailerService } from '@nestjs-modules/mailer/dist';
 import * as bcrypt from 'bcrypt';
 import { EmailDTO } from './email.dto';
 import { NoticeEntity } from './noticeBoard.entity';
+import { AppointmentEntity } from 'src/Doctor/appointment.entitiy';
 
 @Injectable()
 export class AdminService {
@@ -22,8 +23,8 @@ export class AdminService {
     private doctorRepo: Repository<DoctorEntity>,
     @InjectRepository(PatientEntity)
     private patientRepo: Repository<PatientEntity>,
-    // @InjectRepository(PmailEntity)
-    // private pmailRepo: Repository<PmailEntity>,
+    @InjectRepository(AppointmentEntity)
+     private appointmentRepo: Repository<AppointmentEntity>,
     @InjectRepository(NoticeEntity)
     private noticeRepo: Repository<NoticeEntity>,
 
@@ -41,7 +42,8 @@ export class AdminService {
         name: true,
         email: true,
         id: true,
-        password: true
+        password: true,
+        filenames: true
       },
       where: {
         id: id,
@@ -54,12 +56,23 @@ export class AdminService {
     data.password = await bcrypt.hash(data.password,salt);
    return this.AdminRepo.save(data);
 }
+  
 
 async signIn(data: AdminLoginDTO) {
   const userdata= await this.AdminRepo.findOneBy({email:data.email});
 const match:boolean = await bcrypt.compare(data.password, userdata.password);
 return match;
+}
 
+async getimagebyadminid(adminid:number) {
+  const mydata:AddAdminDTO =await this.AdminRepo.findOneBy({ id:adminid});
+  console.log(mydata);
+  return  mydata.filenames;
+      }
+
+//Dashboard
+getDashboard():any {
+  return "Admin Dashboard";
 }
 
 //Email 
@@ -269,17 +282,34 @@ async viewPatientsByAdmin(id: any): Promise<AdminEntity[]> {
     return { message: `Patient named ${name} of ID number ${id} updated successfully`, updatedPatient: savedPatient };
   }
 
-  //Salary
+  //Delete Appointment
 
-  async updateSalaryByDoctorId(doctorId: number, salary: number): Promise<DoctorEntity> {
-    const doctor = await this.doctorRepo.findOne(doctorId);
-    if (!doctor) {
-      throw new NotFoundException('Doctor not found');
+
+  async deleteAllAppointment(): Promise<{ message: string }> {
+    const deleteResult = await this.doctorRepo.delete({});
+    
+    if (deleteResult.affected > 0) {
+      return { message: 'All appointment removed successfully' };
+    } else {
+      return { message: 'No appointment to remove' };
+    }
+  }
+  
+  
+  async deleteAppointment(Serial: number): Promise<{ message: string }> {
+    const app = await this.appointmentRepo.findOne({
+      where: { Serial: Serial },
+    });
+    
+    if (!app) {
+      throw new NotFoundException('Appointment not found');
     }
   
-    doctor.salary = salary;
-    return this.doctorRepo.save(doctor);
+    await this.appointmentRepo.remove(app);
+    return { message: `Appointment Serial ${Serial} removed successfully`};
   }
+
+ 
   
   
 }
