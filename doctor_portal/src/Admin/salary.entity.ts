@@ -7,19 +7,15 @@ import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, Pri
 
 
 
-
 @Entity("Salary")
 export class SalaryEntity {
- 
-
-  @Column()
-  salary: number;
+  @Column({ nullable: true })
+  salary: string;
 
   @ManyToOne(() => DoctorEntity, doctor => doctor.salary)
   @JoinColumn({ name: "doctorId" })
-  @PrimaryGeneratedColumn()
   doctor: DoctorEntity;
 
-  @Column()
-  doctorId: number;
+  @PrimaryGeneratedColumn()
+  code: number;
 }

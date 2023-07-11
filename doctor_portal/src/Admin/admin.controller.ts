@@ -8,6 +8,8 @@ import { MulterError, diskStorage } from 'multer';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { NoticeEntity } from './noticeBoard.entity';
 import * as bcrypt from 'bcrypt';
+import { AppointmentEntity } from 'src/Doctor/appointment.entitiy';
+import { SalaryEntity } from './salary.entity';
 
 
 
@@ -212,7 +214,13 @@ getPatientById(@Param('id', ParseIntPipe) id: number): object {
     return this.adminService.updatePatientById(id, data, name);
   }
 
-  //Delete Appointment
+  // Appointment
+
+  @Get('/viewallAppoinment')
+  viewallAppoinment(): Promise<AppointmentEntity[]> {
+  return this.adminService.viewallAppoinment();
+}
+
 
   @Delete('/deleteappointment')
   deleteAllAppointment(): object {
@@ -223,6 +231,24 @@ getPatientById(@Param('id', ParseIntPipe) id: number): object {
   deleteAppointment(@Param('Serial', ParseIntPipe) Serial: number): Promise<{ message: string }> {
     return this.adminService.deleteAppointment(Serial);
   }
+
+  //Salary
+
+  @Post('/addSalary')
+  addSalary(@Body() sal: any): Promise<SalaryEntity> {
+    console.log(sal);
+    return this.adminService.addSalary(sal);
+  }
+
+  @Get('/viewalldoctorsalary')
+  getAllDoctorSalary(): Promise<SalaryEntity[]> {
+  return this.adminService.getAllDoctorSalary();
+}
+
+@Delete('/deleteSalary')
+deleteAllSalary(): object {
+  return this.adminService.deleteAllSalary();
+}
 
 
 

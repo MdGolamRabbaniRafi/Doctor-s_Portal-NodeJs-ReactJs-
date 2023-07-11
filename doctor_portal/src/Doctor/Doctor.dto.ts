@@ -64,6 +64,6 @@ export class DoctorEntity {
   @ManyToOne(() => AdminEntity, admin => admin.doctor)
   admin: AdminEntity;
   @OneToMany(() => SalaryEntity, salary => salary.doctor)
-  salary: number;
+  salary: SalaryEntity;
 
 }

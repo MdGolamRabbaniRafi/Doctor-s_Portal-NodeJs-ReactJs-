@@ -10,6 +10,7 @@ import * as bcrypt from 'bcrypt';
 import { EmailDTO } from './email.dto';
 import { NoticeEntity } from './noticeBoard.entity';
 import { AppointmentEntity } from 'src/Doctor/appointment.entitiy';
+import { SalaryEntity } from './salary.entity';
 
 @Injectable()
 export class AdminService {
@@ -27,6 +28,8 @@ export class AdminService {
      private appointmentRepo: Repository<AppointmentEntity>,
     @InjectRepository(NoticeEntity)
     private noticeRepo: Repository<NoticeEntity>,
+    @InjectRepository(SalaryEntity)
+    private salaryRepo: Repository<SalaryEntity>,
 
     private mailerService: MailerService
   ) {}
@@ -110,17 +113,17 @@ async getAllNotice(): Promise<NoticeEntity[]> {
     select: ['sl', 'subject', 'message', 'postedTime'],
     relations: ['admin'],
   });
-  const modifiedNotices: NoticeEntity[] = notices.map(notice => {
-    const modifiedNotice = { ...notice };
-    if (modifiedNotice.admin) {
-      modifiedNotice.message = `Posted by ${modifiedNotice.admin.name}: ${modifiedNotice.message}`;
-      delete modifiedNotice.admin.password;
-      delete modifiedNotice.admin.email;
+  const mm: NoticeEntity[] = notices.map(notice => {
+    const mm = { ...notice };
+    if (mm.admin) {
+      mm.message = `Posted by ${mm.admin.name}: ${mm.message}`;
+      delete mm.admin.password;
+      delete mm.admin.email;
     }
-    return modifiedNotice;
+    return mm;
   });
 
-  return modifiedNotices;
+  return mm;
 }
 
 async deleteAllNotice(): Promise<{ message: string }> {
@@ -282,7 +285,25 @@ async viewPatientsByAdmin(id: any): Promise<AdminEntity[]> {
     return { message: `Patient named ${name} of ID number ${id} updated successfully`, updatedPatient: savedPatient };
   }
 
-  //Delete Appointment
+  // Appointment
+
+  async viewallAppoinment(): Promise<AppointmentEntity[]> {
+    const app = await this.appointmentRepo.find({
+      select: ['Serial', 'name', 'age', 'date', 'time'],
+      relations: ['doctor'],
+    });
+    const rel: AppointmentEntity[] = app.map(appo => {
+      const rel = { ...appo };
+      if (rel.doctor) {
+        rel.name = `Added by doctor ${rel.doctor.name}: ${rel.name}`;
+        delete rel.doctor.password;
+        delete rel.doctor.email;
+      }
+      return rel;
+    });
+  
+    return rel;
+  }
 
 
   async deleteAllAppointment(): Promise<{ message: string }> {
@@ -309,6 +330,38 @@ async viewPatientsByAdmin(id: any): Promise<AdminEntity[]> {
     return { message: `Appointment Serial ${Serial} removed successfully`};
   }
 
+
+  //Salary
+  async addSalary(sal: any): Promise<SalaryEntity> {
+    return this.salaryRepo.save(sal);
+  }
+
+  async getAllDoctorSalary(): Promise<SalaryEntity[]> {
+    const salaries = await this.salaryRepo.find({
+      relations: ['doctor'],
+    });
+  
+    const modifiedSalaries: SalaryEntity[] = salaries.map(salary => {
+      if (salary.doctor) {
+        salary.salary = ` Doctor ${salary.doctor.name} gets: ${salary.salary} Taka per Month`;
+        delete salary.doctor.password;
+        delete salary.doctor.email;
+      }
+      return salary;
+    });
+  
+    return modifiedSalaries;
+  }
+
+  async deleteAllSalary(): Promise<{ message: string }> {
+    const deleteSal = await this.salaryRepo.delete({});
+    
+    if (deleteSal.affected > 0) {
+      return { message: 'All salaries cutted successfully' };
+    } else {
+      return { message: 'No Salaries to remove' };
+    }
+  }
  
   
   

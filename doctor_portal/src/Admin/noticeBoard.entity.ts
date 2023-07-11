@@ -12,8 +12,8 @@ export class NoticeEntity {
   @PrimaryGeneratedColumn()
   sl: number;
 
-  @Column()
-  @IsString({ message: "invalid Subject" })
+  @Column({nullable: true})
+  @IsString({ message: "invalid Subject", })
   subject: string;
 
   @Column()
