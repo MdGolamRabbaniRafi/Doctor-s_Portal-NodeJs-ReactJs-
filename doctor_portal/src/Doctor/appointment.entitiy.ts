@@ -29,4 +29,8 @@ export class AppointmentEntity {
   @ManyToOne(() => PatientEntity, patient => patient.appointment)
   patient: PatientEntity;
 
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 7bc485af2ca3fa2133f45dfa506cc5324ba67569
