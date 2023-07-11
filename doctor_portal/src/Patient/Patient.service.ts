@@ -2,9 +2,13 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { SignupPatientDTO, PatientEntity,  } from './Patient.dto';
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from 'typeorm';
+import { DoctorEntity } from 'src/Doctor/Doctor.dto';
+import { AppointmentEntity } from 'src/Doctor/appointment.entitiy';
 
 @Injectable()
 export class PatientService {
+  doctorRepo: any;
+  appointmentRepo: any;
   constructor(
     @InjectRepository(PatientEntity)
     private PatientRepo: Repository<PatientEntity>,
@@ -60,6 +64,28 @@ async editProfile(id: number, updatedPatientData: Partial<PatientEntity>): Promi
 
   return this.PatientRepo.save(patient);
 }
+async getDoctorById(id: number): Promise<DoctorEntity> {
+  return this.doctorRepo.findOne({ 
+    where: { id },
+    select: ['id', 'name', 'email', ],
+  });
+}
+async addAppointment(appointment: any): Promise<AppointmentEntity> {
+  return this.appointmentRepo.save(appointment);
+}
+async deleteAppointment(Serial: number): Promise<{ message: string }> {
+  const app = await this.appointmentRepo.findOne({
+    where: { Serial: Serial },
+  });
+  
+  if (!app) {
+    throw new NotFoundException('Appointment not found');
+  }
+
+  await this.appointmentRepo.remove(app);
+  return { message: `Appointment Serial ${Serial} removed successfully`};
+}
+
 
 }
 

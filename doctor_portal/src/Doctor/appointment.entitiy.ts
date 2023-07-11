@@ -2,6 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm";
 import { DoctorEntity } from "./Doctor.dto";
 import { IsInt } from "class-validator";
 import { DoctorModule } from './doctor.module';
+import { PatientEntity } from "src/Patient/Patient.dto";
 
 
 @Entity("appointment")
@@ -24,4 +25,8 @@ export class AppointmentEntity {
 
   @ManyToOne(() => DoctorEntity, doctor => doctor.appointment)
   doctor: DoctorEntity;
+
+  @ManyToOne(() => PatientEntity, patient => patient.appointment)
+  patient: PatientEntity;
+
 }

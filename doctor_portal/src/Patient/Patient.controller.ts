@@ -1,6 +1,7 @@
 import { Controller, Post, Get, Put, Delete, Body, Param, UsePipes, ValidationPipe, ParseIntPipe } from '@nestjs/common';
 import { PatientService } from './Patient.service';
 import { SignupPatientDTO,  PatientEntity,  } from './Patient.dto';
+import { AppointmentEntity } from 'src/Doctor/appointment.entitiy';
 
  
 
@@ -43,6 +44,20 @@ editProfile(
 ): Promise<PatientEntity> {
   return this.patientService.editProfile(id, updatedPatientData);
 }
+@Get('/searchdoctor/:id')
+getDoctorById(@Param('id', ParseIntPipe) id: number): object {
+  return this.patientService.getDoctorById(id);
+}
+@Post('/addAppointment')
+  addAppointment(@Body() appointment: any): Promise<AppointmentEntity> {
+    console.log(appointment);
+    return this.patientService.addAppointment(appointment);
+  }
+  @Delete('/deleteOneAppointment/:Serial')
+  deleteAppointment(@Param('Serial', ParseIntPipe) Serial: number): Promise<{ message: string }> {
+    return this.patientService.deleteAppointment(Serial);
+  }
+
 }
 
 
