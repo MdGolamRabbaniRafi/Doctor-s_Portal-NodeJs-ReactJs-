@@ -34,6 +34,6 @@ import { AppointmentEntity } from 'src/Doctor/appointment.entitiy';
     ]),
   ],
   controllers: [AdminController],
-  providers: [AdminService, MailerService], // Include MailerService as a provider
+  providers: [AdminService, MailerService], 
 })
 export class AdminModule {}

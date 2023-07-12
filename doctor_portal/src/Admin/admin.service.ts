@@ -6,7 +6,6 @@ import { AdminEntity } from './admin.entity';
 import { DoctorEntity } from '../Doctor/doctor.dto';
 import { PatientEntity } from 'src/Patient/Patient.dto';
 import * as bcrypt from 'bcrypt';
-import { EmailDTO } from './email.dto';
 import { NoticeEntity } from './noticeBoard.entity';
 import { AppointmentEntity } from 'src/Doctor/appointment.entitiy';
 import { SalaryEntity } from './salary.entity';
