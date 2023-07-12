@@ -367,13 +367,42 @@ async viewPatientsByAdmin(id: any): Promise<AdminEntity[]> {
       return { message: 'No Salaries to remove' };
     }
   }
+//Eid Bonus
+
+  async updateEidSalary(): Promise<SalaryEntity[]> {
+  const salaries = await this.salaryRepo.find();
+
+  const updatedSalaries: SalaryEntity[] = [];
+  for (const salary of salaries) {
+    const currentSalary = Number(salary.salary);
+    const updatedSalaryValue = (currentSalary + 120).toString();
+    salary.salary = updatedSalaryValue;
+
+    const updatedSalary = await this.salaryRepo.save(salary);
+    updatedSalaries.push(updatedSalary);
+  }
+
+  return updatedSalaries;
+}
+
+async updateSalarybycode(code: number, data: Partial<SalaryEntity>, name: string): Promise<{ message: string; updatedSalary: SalaryEntity }> {
+  const salary = await this.salaryRepo.findOne({ where: { code } });
+  
+  if (!salary) {
+    throw new NotFoundException('Patient not found');
+  }
+
+  const updatedSalary = Object.assign(salary, data);
+  const savedSalary = await this.salaryRepo.save(updatedSalary);
+  
+  return { message: `Doctor salary of code ${code} updated successfully`, updatedSalary: savedSalary };
+}
+
+
+
+
 
   
-  async updateSalary(data: SalaryDTO): Promise<SalaryEntity[]> {
-    await this.salaryRepo.update({}, data);
-    return this.salaryRepo.find();
-  }
- 
   
   
 }

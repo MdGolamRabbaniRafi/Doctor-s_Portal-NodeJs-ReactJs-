@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Put, Delete, Body, Param, UsePipes, ValidationPipe, ParseIntPipe, UseInterceptors, UploadedFile, Session, ParseFilePipe, MaxFileSizeValidator, FileTypeValidator, Res, BadRequestException } from '@nestjs/common';
+import { Controller, Post, Get, Put, Delete, Body, Param, UsePipes, ValidationPipe, ParseIntPipe, UseInterceptors, UploadedFile, Session, ParseFilePipe, MaxFileSizeValidator, FileTypeValidator, Res, BadRequestException, ParseFloatPipe } from '@nestjs/common';
 import { AdminService } from './admin.service';
 import { AddAdminDTO, SalaryDTO} from './admin.dto';
 import { AddDocotorDTO, DoctorEntity } from '../Doctor/Doctor.dto';
@@ -241,7 +241,8 @@ getPatientById(@Param('id', ParseIntPipe) id: number): object {
   }
   const salaryEntity = new SalaryEntity();
   salaryEntity.salary = salary;
-  salaryEntity.doctor = { id: doctorId } as DoctorEntity;
+  salaryEntity.doctor = { id: doctorId } as DoctorEntity; 
+
   return this.adminService.addSalary(salaryEntity);
 }
 
@@ -255,12 +256,23 @@ deleteAllSalary(): object {
   return this.adminService.deleteAllSalary();
 }
 
-@Put('/updatesalary')
-    @UsePipes(new ValidationPipe())
-    updateSalary(@Body() sal: SalaryDTO): object {
-      return this.adminService.updateSalary(sal);
-    }
-    
+
+@Put('/salary/:code')
+updateSalarybycode(
+  @Param('code', ParseIntPipe) code: number,
+  @Body() data: Partial<SalaryEntity>,
+  @Body('name') name: string,
+): Promise<{ message: string; updatedSalary: SalaryEntity }> {
+  return this.adminService.updateSalarybycode(code, data, name);
+}
+
+
+//Eid Bonus
+@Put('/EidBonus')
+updateEidSalary(): Promise<SalaryEntity[]> {
+  return this.adminService.updateEidSalary();
+}
+
 
 
 
