@@ -1,4 +1,4 @@
-import { IsEmail, IsString, Matches } from "class-validator";
+import { IsDefined, IsEmail, IsString, Matches } from "class-validator";
 import { AdminEntity } from "src/Admin/admin.entity";
 import { DoctorEntity } from "src/Doctor/Doctor.dto";
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
@@ -7,9 +7,10 @@ import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, Pri
 
 
 
+
 @Entity("Salary")
 export class SalaryEntity {
-  @Column({ nullable: true })
+  @Column()
   salary: string;
 
   @ManyToOne(() => DoctorEntity, doctor => doctor.salary)

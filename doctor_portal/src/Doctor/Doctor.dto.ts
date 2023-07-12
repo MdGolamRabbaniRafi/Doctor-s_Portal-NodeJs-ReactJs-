@@ -61,9 +61,12 @@ export class DoctorEntity {
 
   @OneToMany(() => AppointmentEntity, appointment => appointment.doctor)
   appointment: AppointmentEntity[];
+
   @ManyToOne(() => AdminEntity, admin => admin.doctor)
   admin: AdminEntity;
+
   @OneToMany(() => SalaryEntity, salary => salary.doctor)
-  salary: SalaryEntity;
+salary: SalaryEntity[];
 
 }
+

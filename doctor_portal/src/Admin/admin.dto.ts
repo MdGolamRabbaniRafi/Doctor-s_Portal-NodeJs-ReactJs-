@@ -19,3 +19,10 @@ export class AdminLoginDTO {
  email: string;
  password: string;
 }
+
+export class SalaryDTO {
+  @IsString()
+  salary: string;
+
+  code: number;
+}

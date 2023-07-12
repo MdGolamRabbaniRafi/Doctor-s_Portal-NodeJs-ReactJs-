@@ -61,10 +61,6 @@ export class PatientEntity {
 
   @OneToMany(() => AppointmentEntity, appointment => appointment.patient)
   appointment: AppointmentEntity[];
-<<<<<<< HEAD
-=======
-
->>>>>>> 7bc485af2ca3fa2133f45dfa506cc5324ba67569
 
 
 }

@@ -1,6 +1,6 @@
-import { Controller, Post, Get, Put, Delete, Body, Param, UsePipes, ValidationPipe, ParseIntPipe, UseInterceptors, UploadedFile, Session, ParseFilePipe, MaxFileSizeValidator, FileTypeValidator, Res } from '@nestjs/common';
+import { Controller, Post, Get, Put, Delete, Body, Param, UsePipes, ValidationPipe, ParseIntPipe, UseInterceptors, UploadedFile, Session, ParseFilePipe, MaxFileSizeValidator, FileTypeValidator, Res, BadRequestException } from '@nestjs/common';
 import { AdminService } from './admin.service';
-import { AddAdminDTO} from './admin.dto';
+import { AddAdminDTO, SalaryDTO} from './admin.dto';
 import { AddDocotorDTO, DoctorEntity } from '../Doctor/Doctor.dto';
 import{AdminEntity} from './admin.entity';
 import { PatientEntity } from 'src/Patient/Patient.dto';
@@ -235,10 +235,15 @@ getPatientById(@Param('id', ParseIntPipe) id: number): object {
   //Salary
 
   @Post('/addSalary')
-  addSalary(@Body() sal: any): Promise<SalaryEntity> {
-    console.log(sal);
-    return this.adminService.addSalary(sal);
+   addSalary(@Body('doctorId') doctorId: number, @Body('salary') salary: string): Promise<SalaryEntity> {
+  if (!doctorId) {
+    throw new BadRequestException('Doctor ID is required');
   }
+  const salaryEntity = new SalaryEntity();
+  salaryEntity.salary = salary;
+  salaryEntity.doctor = { id: doctorId } as DoctorEntity;
+  return this.adminService.addSalary(salaryEntity);
+}
 
   @Get('/viewalldoctorsalary')
   getAllDoctorSalary(): Promise<SalaryEntity[]> {
@@ -249,6 +254,13 @@ getPatientById(@Param('id', ParseIntPipe) id: number): object {
 deleteAllSalary(): object {
   return this.adminService.deleteAllSalary();
 }
+
+@Put('/updatesalary')
+    @UsePipes(new ValidationPipe())
+    updateSalary(@Body() sal: SalaryDTO): object {
+      return this.adminService.updateSalary(sal);
+    }
+    
 
 
 

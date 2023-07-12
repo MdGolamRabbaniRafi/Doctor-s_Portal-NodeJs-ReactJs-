@@ -1,5 +1,5 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { AddAdminDTO, AdminLoginDTO } from './admin.dto';
+import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import { AddAdminDTO, AdminLoginDTO, SalaryDTO } from './admin.dto';
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from 'typeorm';
 import { AdminEntity } from './admin.entity';
@@ -332,9 +332,14 @@ async viewPatientsByAdmin(id: any): Promise<AdminEntity[]> {
 
 
   //Salary
-  async addSalary(sal: any): Promise<SalaryEntity> {
-    return this.salaryRepo.save(sal);
+  async addSalary(salary: SalaryEntity): Promise<SalaryEntity> {
+    try {
+      return this.salaryRepo.save(salary);
+    } catch (error) {
+      throw new InternalServerErrorException('Failed to add salary');
+    }
   }
+
 
   async getAllDoctorSalary(): Promise<SalaryEntity[]> {
     const salaries = await this.salaryRepo.find({
@@ -361,6 +366,12 @@ async viewPatientsByAdmin(id: any): Promise<AdminEntity[]> {
     } else {
       return { message: 'No Salaries to remove' };
     }
+  }
+
+  
+  async updateSalary(data: SalaryDTO): Promise<SalaryEntity[]> {
+    await this.salaryRepo.update({}, data);
+    return this.salaryRepo.find();
   }
  
   
