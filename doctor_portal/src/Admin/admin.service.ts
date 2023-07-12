@@ -5,12 +5,12 @@ import { Repository } from 'typeorm';
 import { AdminEntity } from './admin.entity';
 import { DoctorEntity } from '../Doctor/doctor.dto';
 import { PatientEntity } from 'src/Patient/Patient.dto';
-import { MailerService } from '@nestjs-modules/mailer/dist';
 import * as bcrypt from 'bcrypt';
 import { EmailDTO } from './email.dto';
 import { NoticeEntity } from './noticeBoard.entity';
 import { AppointmentEntity } from 'src/Doctor/appointment.entitiy';
 import { SalaryEntity } from './salary.entity';
+import { MailerService } from './mailer.service';
 
 @Injectable()
 export class AdminService {
@@ -30,6 +30,7 @@ export class AdminService {
     private noticeRepo: Repository<NoticeEntity>,
     @InjectRepository(SalaryEntity)
     private salaryRepo: Repository<SalaryEntity>,
+   
 
     private mailerService: MailerService
   ) {}
@@ -38,6 +39,7 @@ export class AdminService {
     console.log("Account Created Successfully");
     return this.AdminRepo.save(data);
   }
+
 
   async ViewProfile(id: number): Promise<AdminEntity[]> {
     return this.AdminRepo.find({
@@ -79,34 +81,18 @@ getDashboard():any {
 }
 
 //Email 
-// async mailPatient(mail: PmailEntity, subject: string, text: string): Promise<PmailEntity> {
-//   return this.pmailRepo.save({
-//     email: mail.email,
-//     subject,
-//     message: mail.message,
-//   });
-// }
 
-// async mailPatient(pmail: any): Promise<PmailEntity> {
-//   return this.pmailRepo.save(pmail);
-// }
-
-async emailSending(clientdata: { email: any; subject: any; text: any; }) {
-  return await this.mailerService.sendMail({
-    to: clientdata.email,
-    subject: clientdata.subject,
-    text: clientdata.text,
-  });
+async sendEmail(to: string, subject: string, text: string): Promise<void> {
+  await this.mailerService.sendMail(to, subject, text);
 }
+
+
 //Notice Board
 
 async addNotice(notice: any): Promise<NoticeEntity> {
   return this.noticeRepo.save(notice);
 }
 
-// async getAllNotice(): Promise<NoticeEntity[]> {
-//   return this.noticeRepo.find({ select: ['subject', 'message', 'postedTime', 'sl', 'admin'] });
-// }
 
 async getAllNotice(): Promise<NoticeEntity[]> {
   const notices = await this.noticeRepo.find({
@@ -367,6 +353,22 @@ async viewPatientsByAdmin(id: any): Promise<AdminEntity[]> {
       return { message: 'No Salaries to remove' };
     }
   }
+
+
+  async updateSalarybycode(code: number, data: Partial<SalaryEntity>, name: string): Promise<{ message: string; updatedSalary: SalaryEntity }> {
+    const salary = await this.salaryRepo.findOne({ where: { code } });
+    
+    if (!salary) {
+      throw new NotFoundException('Patient not found');
+    }
+  
+    const updatedSalary = Object.assign(salary, data);
+    const savedSalary = await this.salaryRepo.save(updatedSalary);
+    
+    return { message: `Doctor salary of code ${code} updated successfully`, updatedSalary: savedSalary };
+  }
+  
+  
 //Eid Bonus
 
   async updateEidSalary(): Promise<SalaryEntity[]> {
@@ -383,19 +385,6 @@ async viewPatientsByAdmin(id: any): Promise<AdminEntity[]> {
   }
 
   return updatedSalaries;
-}
-
-async updateSalarybycode(code: number, data: Partial<SalaryEntity>, name: string): Promise<{ message: string; updatedSalary: SalaryEntity }> {
-  const salary = await this.salaryRepo.findOne({ where: { code } });
-  
-  if (!salary) {
-    throw new NotFoundException('Patient not found');
-  }
-
-  const updatedSalary = Object.assign(salary, data);
-  const savedSalary = await this.salaryRepo.save(updatedSalary);
-  
-  return { message: `Doctor salary of code ${code} updated successfully`, updatedSalary: savedSalary };
 }
 
 

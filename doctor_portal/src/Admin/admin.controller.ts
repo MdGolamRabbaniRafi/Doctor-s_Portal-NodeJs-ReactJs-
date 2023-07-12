@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Put, Delete, Body, Param, UsePipes, ValidationPipe, ParseIntPipe, UseInterceptors, UploadedFile, Session, ParseFilePipe, MaxFileSizeValidator, FileTypeValidator, Res, BadRequestException, ParseFloatPipe } from '@nestjs/common';
+import { Controller, Post, Get, Put, Delete, Body, Param, UsePipes, ValidationPipe, ParseIntPipe, UseInterceptors, UploadedFile, Session, ParseFilePipe, MaxFileSizeValidator, FileTypeValidator, Res, BadRequestException, ParseFloatPipe, UnauthorizedException } from '@nestjs/common';
 import { AdminService } from './admin.service';
 import { AddAdminDTO, SalaryDTO} from './admin.dto';
 import { AddDocotorDTO, DoctorEntity } from '../Doctor/Doctor.dto';
@@ -24,6 +24,8 @@ export class AdminController {
   addAdmin(@Body() admin: AddAdminDTO): object {
     return this.adminService.addAdmin(admin);
   }
+
+  
 
   @Get('/ViewAdminProfile/:id')
   ViewProfile(@Param('id') id: number): Object {
@@ -74,6 +76,16 @@ export class AdminController {
       // return this.adminService.signIn(data);
   }
 
+   //Signout
+   @Get('/signout')
+   signout(@Session() session) {
+     if (session.destroy()) {
+       return { message: 'you are logged out' };
+     } else {
+       throw new UnauthorizedException('invalid actions');
+     }
+   }
+
   @Get('showadminphotobyid/:adminId')
     async getimagebyadminid(@Param('adminId', ParseIntPipe) adminId: number, @Res() res) {
         const filename = await this.adminService.getimagebyadminid(adminId);
@@ -90,11 +102,11 @@ export class AdminController {
 
  //Email
 
-
-  @Post('/emailSending')
-  emailSending(@Body() clientdata) {
-      return this.adminService.emailSending(clientdata);
-  }
+ @Post('/sendemail')
+ async sendEmail(@Body() emailData: { to: string; subject: string; text: string }): Promise<void> {
+   const { to, subject, text } = emailData;
+   await this.adminService.sendEmail(to, subject, text);
+ }
 
  //Notice Board
 
