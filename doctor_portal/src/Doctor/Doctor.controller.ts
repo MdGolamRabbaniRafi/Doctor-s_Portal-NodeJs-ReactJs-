@@ -3,11 +3,8 @@ import { DoctorService } from './Doctor.service';
 import { AddDocotorDTO, Article, DoctorEntity, LoginDTO, Refer } from './Doctor.dto';
 import { AppointmentEntity } from './appointment.entitiy';
 import { DoctorModule } from './doctor.module';
-<<<<<<< HEAD
 import { SessionGuard } from './Session.gaurd';
 import { NotificationEntity } from './Notification.entity';
-=======
->>>>>>> 3443213db0733a95a4242b6f05ffe0d552121317
 
 var doctors = [];
 var articles = [];

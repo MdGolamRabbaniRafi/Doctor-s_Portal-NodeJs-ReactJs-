@@ -4,11 +4,7 @@ import { AppointmentEntity } from './appointment.entitiy';
 import { AdminEntity } from 'src/Admin/admin.entity';
 import { SalaryEntity } from 'src/Admin/salary.entity';
 import { DoctorModule } from './doctor.module';
-<<<<<<< HEAD
 import { NotificationEntity } from './Notification.entity';
-=======
->>>>>>> 3443213db0733a95a4242b6f05ffe0d552121317
-
 
 export class AddDocotorDTO {
   @IsString({ message: "invalid name" })
@@ -67,7 +63,6 @@ export class DoctorEntity {
 
   @OneToMany(() => SalaryEntity, salary => salary.doctor)
 salary: SalaryEntity[];
-<<<<<<< HEAD
 @OneToMany(() => NotificationEntity, notification => notification.doctor)
 notification: DoctorEntity[];
 
@@ -76,8 +71,5 @@ export class LoginDTO {
   @IsEmail({}, { message: "invalid email" })
  email: string;
  password: string;
-=======
-
->>>>>>> 3443213db0733a95a4242b6f05ffe0d552121317
 }
 
