@@ -45,13 +45,13 @@ export class PatientEntity {
   password: string;
 
   @Column()
-  @IsString({ message: "invalid input " })
+  @IsString({ message: "invalid input " })//you have to make separate table for diagonised
   diagonized: string;
 
   @PrimaryGeneratedColumn()
   id: number;
   
-  @Column({ nullable: true })
+  @Column({ nullable: true }) //you have to make separate table for feedback and also for medicine
   feedback: string;
   @Column({ nullable: true })
   medicineOrder: string;

@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm";
 import { DoctorEntity } from "./Doctor.dto";
-import { IsInt } from "class-validator";
+import { IsEmail, IsInt } from "class-validator";
 import { DoctorModule } from './doctor.module';
 import { PatientEntity } from "src/Patient/Patient.dto";
 
@@ -16,6 +16,10 @@ export class AppointmentEntity {
   @IsInt({ message: "Age must be an integer" })
   @Column()
   age: number;
+
+  @Column({ type: "varchar", length: 150 })
+  @IsEmail({}, { message: "invalid email" })
+  email: string;
 
   @Column()
   date: string;

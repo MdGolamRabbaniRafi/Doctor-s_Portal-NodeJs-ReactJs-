@@ -53,22 +53,21 @@ export class DoctorController {
   }
 
   @Post('/refer')
-  @UseGuards(SessionGuard)
+  @UseGuards(SessionGuard)     
   Refer(@Body() reference: ReferEntity,@Session() session): object {
     return this.doctorService.Refer(reference,session.email);
   }
 
   @Post('/addappointment')
   @UseGuards(SessionGuard)
-  addAppointment(@Body() appointment: any,@Session() session): Promise<AppointmentEntity> {
-    console.log(appointment);
+  addAppointment(@Body() appointment: any,@Session() session): Promise<AppointmentEntity | String>{
     return this.doctorService.addAppointment(appointment,session.email);
   }
 
-  @Get('/viewAppointment/:doctorid')
+  @Get('/viewAppointment')
   @UseGuards(SessionGuard)
-  viewAppointment(@Param('doctorid', ParseIntPipe) doctorid: number): Promise<DoctorEntity[]> {
-    return this.doctorService.viewAppointment(doctorid);
+  viewAppointment(@Session() session): Promise<DoctorEntity[]> {
+    return this.doctorService.viewAppointment(session.email);
   }
   @Get('/notification')
   @UseGuards(SessionGuard)

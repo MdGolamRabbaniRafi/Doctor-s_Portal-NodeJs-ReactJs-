@@ -3,13 +3,12 @@ import { AddDocotorDTO, DoctorEntity, LoginDTO } from './Doctor.dto';
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from 'typeorm';
 import { AppointmentEntity } from './appointment.entitiy';
-import { DoctorModule } from './doctor.module';
 import * as bcrypt from 'bcrypt';
 import { NotificationEntity } from './Notification.entity';
 import { CurrentDate, CurrentTime } from './current.date';
-import { SessionGuard } from './Session.gaurd';
 import { Article, ArticleEntity } from './article.entity';
 import { ReferEntity } from './refer.entity';
+import { PatientEntity } from 'src/Patient/Patient.dto';
 
 @Injectable()
 export class DoctorService {
@@ -23,7 +22,9 @@ export class DoctorService {
     @InjectRepository(ArticleEntity)
     private articleRepo: Repository<ArticleEntity>,
     @InjectRepository(ReferEntity)
-    private referRepo: Repository<ReferEntity>
+    private referRepo: Repository<ReferEntity>,
+    @InjectRepository(PatientEntity)
+    private patientRepo: Repository<PatientEntity>
   ) {}
   async addDoctor(data: AddDocotorDTO): Promise<DoctorEntity> {
     const salt = await bcrypt.genSalt();
@@ -258,23 +259,73 @@ export class DoctorService {
     await this.notificationRepo.save(notiFication);
     return savedRefer;
   }
-  
-
-  async addAppointment(appointment: any, email: string): Promise<AppointmentEntity> {
+  async addAppointment(appointment: any, email: string): Promise<AppointmentEntity | string> {
+    const makeAppointment: AppointmentEntity = new AppointmentEntity();
     const doctor = await this.DoctorRepo.findOne({ where: { email } });
-      appointment.doctor = doctor.id;
-      return this.appointmentRepo.save(appointment);
-    
+    if (!doctor) {
+      return "Doctor not found";
+    }
+  
+    const PatientEmail = appointment.email;
+    let Patient: PatientEntity;
+    try {
+      Patient = await this.patientRepo.findOne({ where: { email: PatientEmail } });
+      if (!Patient) {
+        return "Invalid Email";
+      }
+    } catch (error) {
+      return "Error fetching patient";
+    }
+  
+    appointment.patient = Patient.id;
+    appointment.doctor = doctor.id;
+    makeAppointment.name = Patient.name; 
+    makeAppointment.age = appointment.age;
+    makeAppointment.email = Patient.email;
+
+    makeAppointment.date = appointment.date;
+    makeAppointment.time = appointment.time;
+    makeAppointment.doctor = appointment.doctor;
+    makeAppointment.patient = appointment.patient;
+    console.log("completeAppointment")
+
+    const completeAppointment=await this.appointmentRepo.save(makeAppointment);
+    console.log(completeAppointment)
+    const notiFication: NotificationEntity = new NotificationEntity();
+    const currentDate: CurrentDate = new CurrentDate();
+    const currentTime: CurrentTime = new CurrentTime();
+    notiFication.Message = "Make an Appointment";
+    notiFication.date = currentDate.getCurrentDate();
+    notiFication.time = currentTime.getCurrentTime();
+    notiFication.doctor = doctor;
+  
+    await this.notificationRepo.save(notiFication);
+    return completeAppointment;
   }
   
+  
+  
+  
 
-  viewAppointment(id: any): Promise<DoctorEntity[]> {
-    return this.DoctorRepo.find({
-      where: { id: id },
+  async viewAppointment(email: string): Promise<DoctorEntity[]> {
+    const AllAppointment = await this.DoctorRepo.find({
+      where: { email },
       relations: {
         appointment: true,
       },
     });
+    const doctor = await this.DoctorRepo.findOne({ where: { email } });
+
+    const notiFication: NotificationEntity = new NotificationEntity();
+    const currentDate: CurrentDate = new CurrentDate();
+    const currentTime: CurrentTime = new CurrentTime();
+    notiFication.Message = "Cheak all Appointment"; 
+    notiFication.date = currentDate.getCurrentDate();
+    notiFication.time = currentTime.getCurrentTime();
+    notiFication.doctor = doctor;
+  
+    await this.notificationRepo.save(notiFication);
+    return AllAppointment;
   }
 
   async deleteAllAppointments(doctorId: number): Promise<void> {
