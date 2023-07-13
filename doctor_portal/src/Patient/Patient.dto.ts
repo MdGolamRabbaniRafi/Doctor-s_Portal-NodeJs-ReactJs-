@@ -44,9 +44,15 @@ export class PatientEntity {
   @Matches(/^\d{8}$/, { message: 'Password must be 8 digits long.' })
   password: string;
 
+<<<<<<< HEAD
   // @Column()
   // @IsString({ message: "invalid input " })//you have to make separate table for diagonised
   // diagonized: string;
+=======
+  @Column()
+  @IsString({ message: "invalid input " })//you have to make separate table for diagonised
+  diagonized: string;
+>>>>>>> 79988d0ad4bd60844404af25f8e280cbcc3d69ef
 
   @PrimaryGeneratedColumn()
   id: number;
