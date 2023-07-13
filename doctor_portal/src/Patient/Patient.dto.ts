@@ -12,8 +12,8 @@ export class SignupPatientDTO {
   @IsEmail({}, { message: "invalid email" })
   email: string;
 
-  @IsString({ message: "invalid email" })
-  diagonized: string;
+  // @IsString({ message: "invalid email" })
+  // diagonized: string;
 
   @Matches(/^\d{8}$/, { message: 'Password must be 8 digits long.' })
   password: string;
@@ -44,14 +44,14 @@ export class PatientEntity {
   @Matches(/^\d{8}$/, { message: 'Password must be 8 digits long.' })
   password: string;
 
-  @Column()
-  @IsString({ message: "invalid input " })
-  diagonized: string;
+  // @Column()
+  // @IsString({ message: "invalid input " })//you have to make separate table for diagonised
+  // diagonized: string;
 
   @PrimaryGeneratedColumn()
   id: number;
   
-  @Column({ nullable: true })
+  @Column({ nullable: true }) //you have to make separate table for feedback and also for medicine
   feedback: string;
   @Column({ nullable: true })
   medicineOrder: string;

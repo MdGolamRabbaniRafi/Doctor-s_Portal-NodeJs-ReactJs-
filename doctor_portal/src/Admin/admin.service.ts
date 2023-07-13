@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException, Session } from '@nestjs/common';
 import { AddAdminDTO, AdminLoginDTO, SalaryDTO } from './admin.dto';
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from 'typeorm';
@@ -10,6 +10,8 @@ import { NoticeEntity } from './noticeBoard.entity';
 import { AppointmentEntity } from 'src/Doctor/appointment.entitiy';
 import { SalaryEntity } from './salary.entity';
 import { MailerService } from './mailer.service';
+import { NotificationEntity } from './notification.entity';
+import { CurrentDate, CurrentTime } from 'src/Doctor/current.date';
 
 @Injectable()
 export class AdminService {
@@ -29,6 +31,8 @@ export class AdminService {
     private noticeRepo: Repository<NoticeEntity>,
     @InjectRepository(SalaryEntity)
     private salaryRepo: Repository<SalaryEntity>,
+    @InjectRepository(NotificationEntity)
+    private notificationRepo: Repository<NotificationEntity>,
    
 
     private mailerService: MailerService
@@ -40,39 +44,116 @@ export class AdminService {
   }
 
 
-  async ViewProfile(id: number): Promise<AdminEntity[]> {
-    return this.AdminRepo.find({
+  async ViewProfile(email: string): Promise<AdminEntity[]> {
+    const visit = await this.AdminRepo.find({
       select: {
         name: true,
         email: true,
         id: true,
-        password: true,
-        filenames: true
+        password: false
       },
       where: {
-        id: id,
+        email: email,
       }
     });
+  
+    const admin = visit[0];
+    const notiFication: NotificationEntity = new NotificationEntity();
+    notiFication.admin = admin; 
+    notiFication.Message = "Profile Visited";
+    const currentDate: CurrentDate = new CurrentDate();
+    const currentTime: CurrentTime = new CurrentTime();
+  
+    notiFication.date = currentDate.getCurrentDate();
+    notiFication.time = currentTime.getCurrentTime();
+    await this.notificationRepo.save(notiFication);
+    return visit;
   }
 
   async signup(data: AddAdminDTO): Promise<AdminEntity> {
     const salt = await bcrypt.genSalt();
     data.password = await bcrypt.hash(data.password,salt);
-   return this.AdminRepo.save(data);
-}
+    try {
+      const savedAdmin = await this.AdminRepo.save(data);
+  
+      const notiFication: NotificationEntity = new NotificationEntity();
+      notiFication.admin = savedAdmin; 
+      notiFication.Message = "Account Created Successfully";
+      const currentDate: CurrentDate = new CurrentDate();
+      const currentTime: CurrentTime = new CurrentTime();
+  
+      notiFication.date = currentDate.getCurrentDate();
+      notiFication.time = currentTime.getCurrentTime();
+      await this.notificationRepo.save(notiFication);
+  
+      return savedAdmin;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }}
   
 
-async signIn(data: AdminLoginDTO) {
-  const userdata= await this.AdminRepo.findOneBy({email:data.email});
-const match:boolean = await bcrypt.compare(data.password, userdata.password);
-return match;
-}
+    async signIn(data: AdminLoginDTO) {
+      const userdata= await this.AdminRepo.findOneBy({email:data.email});
+  const match:boolean = await bcrypt.compare(data.password, userdata.password);
+  return match;
+  
+  }
+    
+    
+    
+  
+    async Logout(@Session() session, email: string) {
+      const Search = await this.AdminRepo.find({
+        select: {
+          name: true,
+          id: true,
+          password: false
+        },
+        where: {
+          email: email,
+        }
+      });
+    
+      const admin = Search[0];
+    
+      const notiFication: NotificationEntity = new NotificationEntity();
+      notiFication.admin = admin;
+      notiFication.Message = "Logged Out";
+    
+      const currentDate: CurrentDate = new CurrentDate();
+      const currentTime: CurrentTime = new CurrentTime();
+    
+      notiFication.date = currentDate.getCurrentDate();
+      notiFication.time = currentTime.getCurrentTime();
+    
+      await this.notificationRepo.save(notiFication);
+    
+      session.destroy();
+      return "Logout Successfully";
+    }
 
 async getimagebyadminid(adminid:number) {
   const mydata:AddAdminDTO =await this.AdminRepo.findOneBy({ id:adminid});
   console.log(mydata);
   return  mydata.filenames;
       }
+
+ async viewNotification(email: string): Promise<NotificationEntity[]> {
+        const doctor = await this.AdminRepo.findOne({
+          where: {
+            email: email,
+          },
+        });
+      
+        const notifications = await this.notificationRepo.find({
+          where: {
+            admin: doctor,
+          },
+        });
+      
+        return notifications;
+      }      
 
 //Dashboard
 getDashboard():any {
@@ -209,13 +290,13 @@ async viewDoctorsByAdmin(id: any): Promise<AdminEntity[]> {
   }
 
   async getAllPatient(): Promise<PatientEntity[]> {
-    return this.patientRepo.find({ select: ['id', 'name', 'email', 'diagonized'] });
+    return this.patientRepo.find({ select: ['id', 'name', 'email'] });
 }
 
 async getPatientById(id: number): Promise<PatientEntity> {
   return this.patientRepo.findOne({ 
     where: { id },
-    select: ['id', 'name', 'email', 'diagonized'],
+    select: ['id', 'name', 'email'],
   });
 }
 

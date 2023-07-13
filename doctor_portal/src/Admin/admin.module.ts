@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { AdminController } from './admin.controller';
 import { AdminService } from './admin.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AdminEntity } from './admin.entity';
+import { AdminEntity, AdminProfileEntity } from './admin.entity';
 import { DoctorEntity } from '../Doctor/doctor.dto';
 import { PatientEntity } from 'src/Patient/Patient.dto';
 import { MailerModule } from '@nestjs-modules/mailer';
@@ -10,6 +10,7 @@ import { NoticeEntity } from './noticeBoard.entity';
 import { SalaryEntity } from './salary.entity';
 import { MailerService } from './mailer.service';
 import { AppointmentEntity } from 'src/Doctor/appointment.entitiy';
+import { NotificationEntity } from './notification.entity';
 
 @Module({
   imports: [
@@ -31,6 +32,8 @@ import { AppointmentEntity } from 'src/Doctor/appointment.entitiy';
       NoticeEntity,
       SalaryEntity,
       AppointmentEntity,
+      NotificationEntity,
+      AdminProfileEntity
     ]),
   ],
   controllers: [AdminController],

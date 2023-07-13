@@ -1,6 +1,6 @@
-import { Controller, Post, Get, Put, Delete, Body, Param, UsePipes, ValidationPipe, ParseIntPipe, UseInterceptors, UploadedFile, Session, ParseFilePipe, MaxFileSizeValidator, FileTypeValidator, Res, BadRequestException, ParseFloatPipe, UnauthorizedException } from '@nestjs/common';
+import { Controller, Post, Get, Put, Delete, Body, Param, UsePipes, ValidationPipe, ParseIntPipe, UseInterceptors, UploadedFile, Session, ParseFilePipe, MaxFileSizeValidator, FileTypeValidator, Res, BadRequestException, ParseFloatPipe, UnauthorizedException, UseGuards } from '@nestjs/common';
 import { AdminService } from './admin.service';
-import { AddAdminDTO, SalaryDTO} from './admin.dto';
+import { AddAdminDTO, AdminLoginDTO, SalaryDTO} from './admin.dto';
 import { AddDocotorDTO, DoctorEntity } from '../Doctor/Doctor.dto';
 import{AdminEntity} from './admin.entity';
 import { PatientEntity } from 'src/Patient/Patient.dto';
@@ -10,6 +10,8 @@ import { NoticeEntity } from './noticeBoard.entity';
 import * as bcrypt from 'bcrypt';
 import { AppointmentEntity } from 'src/Doctor/appointment.entitiy';
 import { SalaryEntity } from './salary.entity';
+import { NotificationEntity } from './notification.entity';
+import { SessionGuard } from './session.guards';
 
 
 
@@ -27,9 +29,10 @@ export class AdminController {
 
   
 
-  @Get('/ViewAdminProfile/:id')
-  ViewProfile(@Param('id') id: number): Object {
-    return this.adminService.ViewProfile(id);
+  @Get('/ViewAdminProfile')
+  @UseGuards(SessionGuard)
+  ViewProfile(@Session() session): Object {
+    return this.adminService.ViewProfile(session.email);
   }
 
   @Post('/signup')
@@ -59,32 +62,41 @@ export class AdminController {
         return this.adminService.signup(mydata);
 
     }
+
+    //Notiication
+
+    @Get('/notification')
+    @UseGuards(SessionGuard)
+    viewNotification(@Session() session): Promise<NotificationEntity[]> {
+      return this.adminService.viewNotification(session.email);
+    }
   
 
 
-  @Post('/signin')
-  signIn(@Body() data: AddAdminDTO, @Session() session) {
+    @Post('/signin')
+    signIn(@Body() data: AddAdminDTO, @Session() session) {
 
-      if (this.adminService.signIn(data)) {
-          session.email = data.email;
-          return true;
-      }
-      else {
+        if (this.adminService.signIn(data)) {
+            session.email = data.email;
+            return  { message: "Login successful" };;
+        }
+        else {
 
-          return false;
-      }
-      // return this.adminService.signIn(data);
-  }
+            return  { message: "Login failed" };;
+        }
 
-   //Signout
-   @Get('/signout')
-   signout(@Session() session) {
-     if (session.destroy()) {
-       return { message: 'you are logged out' };
-     } else {
-       throw new UnauthorizedException('invalid actions');
-     }
-   }
+       
+        // return this.adminService.signIn(data);
+    }
+    
+    
+    @Post('/logout')
+    @UseGuards(SessionGuard)
+    async logout(@Session() session) {
+      return this.adminService.Logout(session,session.email);
+  
+    
+    }
 
   @Get('showadminphotobyid/:adminId')
     async getimagebyadminid(@Param('adminId', ParseIntPipe) adminId: number, @Res() res) {

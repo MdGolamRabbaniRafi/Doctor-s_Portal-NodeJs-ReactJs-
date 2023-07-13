@@ -1,10 +1,12 @@
 import { IsString, Matches, IsEmail, IsEmpty } from 'class-validator';
-import { Column, PrimaryGeneratedColumn, OneToMany, Entity, ManyToOne } from 'typeorm';
+import { Column, PrimaryGeneratedColumn, OneToMany, Entity, ManyToOne, OneToOne } from 'typeorm';
 import { AppointmentEntity } from './appointment.entitiy';
 import { AdminEntity } from 'src/Admin/admin.entity';
 import { SalaryEntity } from 'src/Admin/salary.entity';
 import { DoctorModule } from './doctor.module';
-
+import { NotificationEntity } from './Notification.entity';
+import { ArticleEntity } from './article.entity';
+import { ReferEntity } from './refer.entity';
 
 export class AddDocotorDTO {
   @IsString({ message: "invalid name" })
@@ -13,8 +15,7 @@ export class AddDocotorDTO {
 
   @IsEmail({}, { message: "invalid email" })
   email: string;
-
-  @Matches(/^\d{8}$/, { message: 'Password must be 8 digits long.' })
+  @Matches(/^\d{8,}$/, { message: 'Password must be at least 8 digits long.' })
   password: string;
 
   id: number;
@@ -25,35 +26,20 @@ export class DoctorInfo {
   email: string;
 }
 
-export class Article {
-  @IsEmpty({ message: "invalid name" })
-  name: string;
 
-  @IsEmpty({ message: "invalid Link" })
-  Link: string;
-}
 
-export class Refer {
-  @IsEmpty({ message: "invalid name" })
-  ReferName: string;
 
-  @IsEmpty({ message: "invalid ID" })
-  ReferID: Number;
-}
 
 @Entity("Doctor")
 export class DoctorEntity {
   @Column()
-  @IsString({ message: "invalid name" })
-  @Matches(/^[a-zA-Z]+$/, { message: "enter a proper name" })
+
   name: string;
 
   @Column()
-  @IsEmail({}, { message: "invalid email" })
   email: string;
 
   @Column()
-  @Matches(/^\d{8}$/, { message: 'Password must be 8 digits long.' })
   password: string;
 
   @PrimaryGeneratedColumn()
@@ -67,6 +53,16 @@ export class DoctorEntity {
 
   @OneToMany(() => SalaryEntity, salary => salary.doctor)
 salary: SalaryEntity[];
-
+@OneToMany(() => NotificationEntity, notification => notification.doctor)
+notification: DoctorEntity[];
+@OneToMany(() => ArticleEntity, article => article.doctor)
+article: DoctorEntity[];
+@OneToOne(() => ReferEntity, refer => refer.doctor)
+refer: DoctorEntity[];
+}
+export class LoginDTO {
+  @IsEmail({}, { message: "invalid email" })
+ email: string;
+ password: string;
 }
 
