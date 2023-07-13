@@ -1,10 +1,12 @@
 import { IsString, Matches, IsEmail, IsEmpty } from 'class-validator';
-import { Column, PrimaryGeneratedColumn, OneToMany, Entity, ManyToOne } from 'typeorm';
+import { Column, PrimaryGeneratedColumn, OneToMany, Entity, ManyToOne, OneToOne } from 'typeorm';
 import { AppointmentEntity } from './appointment.entitiy';
 import { AdminEntity } from 'src/Admin/admin.entity';
 import { SalaryEntity } from 'src/Admin/salary.entity';
 import { DoctorModule } from './doctor.module';
 import { NotificationEntity } from './Notification.entity';
+import { ArticleEntity } from './article.entity';
+import { ReferEntity } from './refer.entity';
 
 export class AddDocotorDTO {
   @IsString({ message: "invalid name" })
@@ -24,21 +26,9 @@ export class DoctorInfo {
   email: string;
 }
 
-export class Article {
-  @IsEmpty({ message: "invalid name" })
-  name: string;
 
-  @IsEmpty({ message: "invalid Link" })
-  Link: string;
-}
 
-export class Refer {
-  @IsEmpty({ message: "invalid name" })
-  ReferName: string;
 
-  @IsEmpty({ message: "invalid ID" })
-  ReferID: Number;
-}
 
 @Entity("Doctor")
 export class DoctorEntity {
@@ -65,7 +55,10 @@ export class DoctorEntity {
 salary: SalaryEntity[];
 @OneToMany(() => NotificationEntity, notification => notification.doctor)
 notification: DoctorEntity[];
-
+@OneToMany(() => ArticleEntity, article => article.doctor)
+article: DoctorEntity[];
+@OneToOne(() => ReferEntity, refer => refer.doctor)
+refer: DoctorEntity[];
 }
 export class LoginDTO {
   @IsEmail({}, { message: "invalid email" })

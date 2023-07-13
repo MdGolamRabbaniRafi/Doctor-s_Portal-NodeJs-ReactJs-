@@ -1,10 +1,11 @@
 import { Controller, Post, Get, Put, Delete, Body, Param, UsePipes, ValidationPipe, ParseIntPipe, Session, UseGuards } from '@nestjs/common';
 import { DoctorService } from './Doctor.service';
-import { AddDocotorDTO, Article, DoctorEntity, LoginDTO, Refer } from './Doctor.dto';
+import { AddDocotorDTO, DoctorEntity, LoginDTO } from './Doctor.dto';
 import { AppointmentEntity } from './appointment.entitiy';
-import { DoctorModule } from './doctor.module';
 import { SessionGuard } from './Session.gaurd';
 import { NotificationEntity } from './Notification.entity';
+import { Article } from './article.entity';
+import {  ReferEntity } from './refer.entity';
 
 var doctors = [];
 var articles = [];
@@ -38,21 +39,23 @@ export class DoctorController {
     return this.doctorService.Searching(id,session.email);
   }
 
-  @Put('/ChangePassword')
-  @UseGuards(SessionGuard)
-  ChangePassword(@Body()password,@Session() session): Object {
-    return this.doctorService.ChangePassword(session.email,password);
-  }
+  // @Put('/ChangePassword')
+  // @UseGuards(SessionGuard)
+  // ChangePassword(@Body()password,@Session() session): Object {
+  //   return this.doctorService.ChangePassword(session.email,password);
+  // }
+
 
   @Post('/addArticle')
-  addArticle(@Body() article: Article): object {
-    articles.push(article);
-    return this.doctorService.addArticle(article);
+  @UseGuards(SessionGuard)
+  addArticle(@Body() article: Article,@Session() session): object {
+    return this.doctorService.addArticle(article,session.email);
   }
 
-  @Post('/Refer')
-  Refer(@Body() reference: Refer): object {
-    return this.doctorService.Refer(reference);
+  @Post('/refer')
+  @UseGuards(SessionGuard)
+  Refer(@Body() reference: ReferEntity,@Session() session): object {
+    return this.doctorService.Refer(reference,session.email);
   }
 
   @Post('/addappointment')
@@ -63,6 +66,7 @@ export class DoctorController {
   }
 
   @Get('/viewAppointment/:doctorid')
+  @UseGuards(SessionGuard)
   viewAppointment(@Param('doctorid', ParseIntPipe) doctorid: number): Promise<DoctorEntity[]> {
     return this.doctorService.viewAppointment(doctorid);
   }

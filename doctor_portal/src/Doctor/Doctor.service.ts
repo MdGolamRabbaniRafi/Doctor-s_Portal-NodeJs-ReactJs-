@@ -1,5 +1,5 @@
 import { Injectable, Session } from '@nestjs/common';
-import { AddDocotorDTO, Article, DoctorEntity, LoginDTO, Refer } from './Doctor.dto';
+import { AddDocotorDTO, DoctorEntity, LoginDTO } from './Doctor.dto';
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from 'typeorm';
 import { AppointmentEntity } from './appointment.entitiy';
@@ -8,6 +8,8 @@ import * as bcrypt from 'bcrypt';
 import { NotificationEntity } from './Notification.entity';
 import { CurrentDate, CurrentTime } from './current.date';
 import { SessionGuard } from './Session.gaurd';
+import { Article, ArticleEntity } from './article.entity';
+import { ReferEntity } from './refer.entity';
 
 @Injectable()
 export class DoctorService {
@@ -17,30 +19,35 @@ export class DoctorService {
     @InjectRepository(AppointmentEntity)
     private appointmentRepo: Repository<AppointmentEntity>,
     @InjectRepository(NotificationEntity)
-    private notificationRepo: Repository<NotificationEntity>
+    private notificationRepo: Repository<NotificationEntity>,
+    @InjectRepository(ArticleEntity)
+    private articleRepo: Repository<ArticleEntity>,
+    @InjectRepository(ReferEntity)
+    private referRepo: Repository<ReferEntity>
   ) {}
-
   async addDoctor(data: AddDocotorDTO): Promise<DoctorEntity> {
     const salt = await bcrypt.genSalt();
     data.password = await bcrypt.hash(data.password, salt);
     console.log(data.password);
     console.log("Account Created Successfully");
+    try {
+      const savedDoctor = await this.DoctorRepo.save(data);
   
-    const savedDoctor = await this.DoctorRepo.save(data);
+      const notiFication: NotificationEntity = new NotificationEntity();
+      notiFication.doctor = savedDoctor; 
+      notiFication.Message = "Account Created Successfully";
+      const currentDate: CurrentDate = new CurrentDate();
+      const currentTime: CurrentTime = new CurrentTime();
   
-    const notiFication: NotificationEntity = new NotificationEntity();
-    notiFication.doctor = savedDoctor;
-    notiFication.Message = "Account Created Successfully";
-    const currentDate: CurrentDate = new CurrentDate();
-    const currentTime: CurrentTime = new CurrentTime();
-
-    notiFication.date=currentDate.getCurrentDate();
-    notiFication.time=currentTime.getCurrentTime();
-    await this.notificationRepo.save(notiFication)
-
-
-
-    return savedDoctor;
+      notiFication.date = currentDate.getCurrentDate();
+      notiFication.time = currentTime.getCurrentTime();
+      await this.notificationRepo.save(notiFication);
+  
+      return savedDoctor;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
   }
   
   
@@ -153,58 +160,105 @@ export class DoctorService {
     return search;
   }
   
-  async ChangePassword(email: string, password: string): Promise<DoctorEntity> {
+  // async ChangePassword(email: string, password: string): Promise<DoctorEntity> {
+  //   const doctor = await this.DoctorRepo.findOne({
+  //     select: {
+  //       password: true
+  //     },
+  //     where: {
+  //       email: email,
+  //     }
+  //   });
+  
+  //   const salt = await bcrypt.genSalt();
+  //   const hashedPassword = await bcrypt.hash(password.toString(), salt);
+  
+  //   await this.DoctorRepo.update({ email }, { password: hashedPassword });
+  
+  //   const updatedDoctor = await this.DoctorRepo.findOne({
+  //     where: {
+  //       email: email,
+  //     },
+  //   });
+
+  //   if (updatedDoctor) {
+  //     const notiFication: NotificationEntity = new NotificationEntity();
+  //     const currentDate: CurrentDate = new CurrentDate();
+  //     const currentTime: CurrentTime = new CurrentTime();
+  //     notiFication.Message = "Password Changed Successfully"; 
+  //     notiFication.date = currentDate.getCurrentDate();
+  //     notiFication.time = currentTime.getCurrentTime();
+  //     notiFication.doctor = updatedDoctor;
+  
+  //     await this.notificationRepo.save(notiFication);
+  //   } else {
+   
+  //     throw new Error("Doctor not found or invalid email");
+  //   }
+
+  
+  //   const notiFication: NotificationEntity = new NotificationEntity();
+  
+  
+  //   await this.notificationRepo.save(notiFication);
+  
+  //   return updatedDoctor;
+  // }
+  async addArticle(data: Article, email: string): Promise<ArticleEntity> {
     const doctor = await this.DoctorRepo.findOne({
-      select: {
-        password: true
-      },
-      where: {
-        email: email,
-      }
+      where: { email: email },
     });
-  
-    if (!doctor) {
-      throw new Error('Doctor not found');
-    }
-  
-    const salt = await bcrypt.genSalt();
-    const hashedPassword = await bcrypt.hash(password.toString(), salt);
-  
-    await this.DoctorRepo.update({ email }, { password: hashedPassword });
-  
-    const updatedDoctor = await this.DoctorRepo.findOne({
-      where: {
-        email: email,
-      },
-    });
-  
-    const notiFication: NotificationEntity = new NotificationEntity();
-    notiFication.doctor = updatedDoctor;
-    notiFication.Message = "Password Changed Successfully";
-  
     const currentDate: CurrentDate = new CurrentDate();
     const currentTime: CurrentTime = new CurrentTime();
+    const articlePost: ArticleEntity = new ArticleEntity();
+  
+ 
+  
+    articlePost.name = data.name;
+    articlePost.Link = data.Link;
+    articlePost.Publish_date = currentDate.getCurrentDate();
+    articlePost.Publish_time = currentTime.getCurrentTime();
+    articlePost.doctor=doctor;
+    const savedArticle = await this.articleRepo.save(articlePost);
+
+    console.log("Article Posted Successfully");
+   
+      const notiFication: NotificationEntity = new NotificationEntity();
+      notiFication.Message = "Post Article"; 
+      notiFication.date = currentDate.getCurrentDate();
+      notiFication.time = currentTime.getCurrentTime();
+      notiFication.doctor = doctor;
+  
+      await this.notificationRepo.save(notiFication);
+  
+    return savedArticle;
+  }
+  
+  
+ 
+  async Refer(data: ReferEntity, email: string): Promise<ReferEntity> {
+    const doctor = await this.DoctorRepo.findOne({
+      where: { email: email },
+    });
+    
+    const makeRefer: ReferEntity = new ReferEntity();
+    makeRefer.Refer = data.Refer;
+    makeRefer.ReferTo = data.ReferTo;
+    makeRefer.doctor = doctor; 
+    const savedRefer = await this.referRepo.save(makeRefer);
+  
+    const notiFication: NotificationEntity = new NotificationEntity();
+    const currentDate: CurrentDate = new CurrentDate();
+    const currentTime: CurrentTime = new CurrentTime();
+    notiFication.Message = "Refer a doctor"; 
     notiFication.date = currentDate.getCurrentDate();
     notiFication.time = currentTime.getCurrentTime();
+    notiFication.doctor = doctor;
   
     await this.notificationRepo.save(notiFication);
-  
-    return updatedDoctor;
+    return savedRefer;
   }
   
-  
-  
-
-
-  addArticle(data: Article): object {
-    console.log("Article Posted Successfully");
-    return data;
-  }
-
-  Refer(data: Refer): object {
-    console.log("Refered Successfully");
-    return data;
-  }
 
   async addAppointment(appointment: any, email: string): Promise<AppointmentEntity> {
     const doctor = await this.DoctorRepo.findOne({ where: { email } });
