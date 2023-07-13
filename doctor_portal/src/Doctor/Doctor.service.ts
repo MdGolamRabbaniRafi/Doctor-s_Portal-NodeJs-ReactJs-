@@ -4,10 +4,14 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from 'typeorm';
 import { AppointmentEntity } from './appointment.entitiy';
 import { DoctorModule } from './doctor.module';
+<<<<<<< HEAD
 import * as bcrypt from 'bcrypt';
 import { NotificationEntity } from './Notification.entity';
 import { CurrentDate, CurrentTime } from './current.date';
 import { SessionGuard } from './Session.gaurd';
+=======
+
+>>>>>>> 3443213db0733a95a4242b6f05ffe0d552121317
 
 @Injectable()
 export class DoctorService {
