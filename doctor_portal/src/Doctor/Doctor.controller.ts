@@ -1,7 +1,10 @@
-import { Controller, Post, Get, Put, Delete, Body, Param, UsePipes, ValidationPipe, ParseIntPipe } from '@nestjs/common';
+import { Controller, Post, Get, Put, Delete, Body, Param, UsePipes, ValidationPipe, ParseIntPipe, Session, UseGuards } from '@nestjs/common';
 import { DoctorService } from './Doctor.service';
-import { AddDocotorDTO, Article, DoctorEntity, Refer } from './Doctor.dto';
+import { AddDocotorDTO, Article, DoctorEntity, LoginDTO, Refer } from './Doctor.dto';
 import { AppointmentEntity } from './appointment.entitiy';
+import { DoctorModule } from './doctor.module';
+import { SessionGuard } from './Session.gaurd';
+import { NotificationEntity } from './Notification.entity';
 
 var doctors = [];
 var articles = [];
@@ -16,24 +19,29 @@ export class DoctorController {
     return this.doctorService.addDoctor(doctor);
   }
 
-  @Get('/ViewProfile/:id')
-  ViewProfile(@Param('id') id: number): Object {
-    return this.doctorService.ViewProfile(id);
+  @Get('/ViewProfile')
+  @UseGuards(SessionGuard)
+  ViewProfile(@Session() session): Object {
+    return this.doctorService.ViewProfile(session.email);
   }
 
-  @Put('/Edit/:id')
-  Edit(@Param('id') id: number, @Body() updateDoctor: AddDocotorDTO): Object {
-    return this.doctorService.Edit(id, doctors, updateDoctor);
+  @Put('/Edit')
+  @UseGuards(SessionGuard)
+  Edit(@Body() updateDoctor: AddDocotorDTO,@Session() session): Object {
+    return this.doctorService.Edit(session.email, updateDoctor);
+    
   }
 
   @Get('/Searching/:id')
-  Searching(@Param('id') id: number): Object {
-    return this.doctorService.Searching(id, doctors);
+  @UseGuards(SessionGuard)
+  Searching(@Param('id') id: number,@Session() session): Object {
+    return this.doctorService.Searching(id,session.email);
   }
 
-  @Put('/ChangePassword/:id')
-  ChangePassword(@Param('id') id: number, @Body() pass: AddDocotorDTO): Object {
-    return this.doctorService.ChangePassword(id, doctors, pass);
+  @Put('/ChangePassword')
+  @UseGuards(SessionGuard)
+  ChangePassword(@Body()password,@Session() session): Object {
+    return this.doctorService.ChangePassword(session.email,password);
   }
 
   @Post('/addArticle')
@@ -48,14 +56,20 @@ export class DoctorController {
   }
 
   @Post('/addappointment')
-  addAppointment(@Body() appointment: any): Promise<AppointmentEntity> {
+  @UseGuards(SessionGuard)
+  addAppointment(@Body() appointment: any,@Session() session): Promise<AppointmentEntity> {
     console.log(appointment);
-    return this.doctorService.addAppointment(appointment);
+    return this.doctorService.addAppointment(appointment,session.email);
   }
 
   @Get('/viewAppointment/:doctorid')
   viewAppointment(@Param('doctorid', ParseIntPipe) doctorid: number): Promise<DoctorEntity[]> {
     return this.doctorService.viewAppointment(doctorid);
+  }
+  @Get('/notification')
+  @UseGuards(SessionGuard)
+  viewNotification(@Session() session): Promise<NotificationEntity[]> {
+    return this.doctorService.viewNotification(session.email);
   }
 
   @Delete('/deleteAllAppointments/:doctorid')
@@ -79,4 +93,26 @@ export class DoctorController {
   ): Promise<AppointmentEntity> {
     return this.doctorService.updateAppointment(doctorId, appointmentId, Data);
   }
+  
+  @Post('/signin')
+  async signIn(@Body() data: LoginDTO, @Session() session) {
+
+      const loginSuccess = await this.doctorService.signIn(data);
+  
+      if (loginSuccess) {
+        session.email = data.email;
+        return "Login successful";
+      } else {
+        return "Login Failed";
+      }
+  }
+  
+  @Post('/logout')
+  @UseGuards(SessionGuard)
+  async logout(@Session() session) {
+    return this.doctorService.Logout(session,session.email);
+
+  
+  }
+
 }
