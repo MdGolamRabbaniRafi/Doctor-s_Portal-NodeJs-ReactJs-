@@ -11,7 +11,17 @@ import { ReferEntity } from './refer.entity';
 import { PatientEntity } from 'src/Patient/Patient.dto';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([DoctorEntity, AppointmentEntity, SalaryEntity,NotificationEntity,ArticleEntity,ReferEntity,PatientEntity])],
+  imports: [
+    TypeOrmModule.forFeature([
+      DoctorEntity,
+      AppointmentEntity,
+      SalaryEntity,
+      NotificationEntity,
+      ArticleEntity,
+      ReferEntity,
+      PatientEntity,
+    ]),
+  ],
   controllers: [DoctorController],
   providers: [DoctorService],
 })

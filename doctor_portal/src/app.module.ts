@@ -4,18 +4,21 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AdminModule } from './Admin/admin.module';
 import { PatientModule } from './Patient/patient.module';
 import * as bcrypt from 'bcrypt';
-
+import { EmployeeModule } from './Employee/employee.module';
 
 @Module({
   imports: [
-    DoctorModule, AdminModule, PatientModule,
+    DoctorModule,
+    AdminModule,
+    PatientModule,
+
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: 'localhost',
       port: 5432,
       username: 'postgres',
-      password: '1234',
-      database: 'Doctor_info',
+      password: 'root',
+      database: 'Doctors_Info',
       autoLoadEntities: true,
       synchronize: true,
     }),
