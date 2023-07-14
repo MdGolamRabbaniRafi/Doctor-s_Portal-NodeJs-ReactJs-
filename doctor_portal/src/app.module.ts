@@ -11,14 +11,14 @@ import { EmployeeModule } from './Employee/employee.module';
     DoctorModule,
     AdminModule,
     PatientModule,
-
+    EmployeeModule,
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: 'localhost',
       port: 5432,
       username: 'postgres',
       password: 'root',
-      database: 'Doctors_Info',
+      database: 'Doctor_info',
       autoLoadEntities: true,
       synchronize: true,
     }),

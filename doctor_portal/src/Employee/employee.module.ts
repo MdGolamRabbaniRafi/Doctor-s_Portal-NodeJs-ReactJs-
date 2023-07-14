@@ -13,26 +13,41 @@ import { EmailService } from './Services/email.service';
 import { DoctorService } from 'src/Doctor/Doctor.service';
 import { DoctorController } from 'src/Doctor/Doctor.controller';
 import { DoctorEntity } from 'src/Doctor/Doctor.dto';
-
+import { SalaryEntity } from 'src/Admin/salary.entity';
+import { NotificationEntity } from 'src/Admin/notification.entity';
+import { ArticleEntity } from 'src/Doctor/article.entity';
+import { ReferEntity } from 'src/Doctor/refer.entity';
+import { PatientEntity } from 'src/Patient/Patient.dto';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([EmployeesEntity, ReportsEintiy,AppointmentEntity,DoctorEntity]),
+  imports: [
+    TypeOrmModule.forFeature([
+      EmployeesEntity,
+      ReportsEintiy,
+      AppointmentEntity,
+      DoctorEntity,
 
-  MailerModule.forRoot({
-    transport: {
-      host: 'smtp.gmail.com',
-               port: 465,
-               ignoreTLS: true,
-               secure: true,
-               auth: {
-                   user: 'abcdhealthcare24@gmail.com',
-                   pass: 'edmhnqgrzwkdyfik'
-               },
-              }
-  }),
+      SalaryEntity,
+      NotificationEntity,
+      ArticleEntity,
+      ReferEntity,
+      PatientEntity,
+    ]),
 
-],
-  controllers: [EmployeeController,ReportController],
-  providers: [EmployeeService,ReportService,EmailService,DoctorService]
+    MailerModule.forRoot({
+      transport: {
+        host: 'smtp.gmail.com',
+        port: 465,
+        ignoreTLS: true,
+        secure: true,
+        auth: {
+          user: 'abcdhealthcare24@gmail.com',
+          pass: 'edmhnqgrzwkdyfik',
+        },
+      },
+    }),
+  ],
+  controllers: [EmployeeController, ReportController],
+  providers: [EmployeeService, EmailService, ReportService, DoctorService],
 })
 export class EmployeeModule {}
