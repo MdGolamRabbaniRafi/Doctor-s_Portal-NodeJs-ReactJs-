@@ -4,7 +4,7 @@ import { AddDocotorDTO, DoctorEntity, LoginDTO } from './Doctor.dto';
 import { AppointmentEntity } from './appointment.entitiy';
 import { SessionGuard } from './Session.gaurd';
 import { NotificationEntity } from './Notification.entity';
-import { Article } from './article.entity';
+import { Article, ArticleEntity } from './article.entity';
 import {  ReferEntity } from './refer.entity';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
@@ -15,16 +15,16 @@ export class DoctorController {
 
   @Post('/signup')
   @UsePipes(new ValidationPipe())
-  /////////////////////////////////////////////////////////////////////////////////
   addDoctor(@Body() doctor: AddDocotorDTO): Promise<string> {
     return this.doctorService.addDoctor(doctor);
   }
 
-  @Get('/ViewProfile/:id')
- /////////////////////////////////////////////////////////////////////////////////////// @UseGuards(SessionGuard)
-  ViewProfile(@Session() session,@Param('id') id: number): Object {
-    return this.doctorService.ViewProfile(id);
+  @Get('/ViewProfile/:email')
+  @UseGuards(SessionGuard)
+  ViewProfile(@Param('email') email: string): Object {
+    return this.doctorService.ViewProfile(email);
   }
+  
 
   @Put('/Edit')
   @UseGuards(SessionGuard)
@@ -35,7 +35,7 @@ export class DoctorController {
 
   @Get('/Searching/:id')
   @UseGuards(SessionGuard)
-  Searching(@Param('id') id: number,@Session() session): Object {
+  Searching(@Param('id') id: string,@Session() session): Object {
     return this.doctorService.Searching(id,session.email);
   }
 
@@ -58,48 +58,51 @@ export class DoctorController {
     return this.doctorService.Refer(reference,session.email);
   }
 
-  @Post('/addappointment/:id')
-  //@UseGuards(SessionGuard)////////////////////////////////////////////////////////////////////////////////////////////////////////
-  addAppointment(@Param('id') id: number,@Body() appointment: any,@Session() session): Promise<AppointmentEntity | String>{
-    console.log("Received doctorId:", id);
+  @Post('/addappointment')
+  @UseGuards(SessionGuard)
+  addAppointment(@Body() appointment: any,@Session() session): Promise<AppointmentEntity | String>{
     console.log("Received appointment data:", appointment);
-    return this.doctorService.addAppointment(appointment,id);
+    return this.doctorService.addAppointment(appointment,session.email);
   }
 
-  @Get('/viewAppointment/:id')
-  //@UseGuards(SessionGuard)//////////////////////////////////////////////////////////////////////////////////////////////////////////
-  viewAppointment(@Param('id',ParseIntPipe) id: number,@Session() session): Promise<DoctorEntity[]> {
-    return this.doctorService.viewAppointment(id);
+  @Get('/viewAppointment')
+  @UseGuards(SessionGuard)
+  viewAppointment(@Session() session): Promise<DoctorEntity[]> {
+    return this.doctorService.viewAppointment(session.email);
   }
-  @Get('/notification/:id')
-  /////////////////////////////////////////////////////////////////////////////////@UseGuards(SessionGuard)
-  viewNotification(@Session() session,@Param('id',ParseIntPipe) id: number): Promise<NotificationEntity[]> {
-    return this.doctorService.viewNotification(id);
+  
+  @Get('/viewArticle')
+  viewArticle(): Promise<ArticleEntity[]> {
+    return this.doctorService.viewArticle();
+  }
+  @Get('/notification')
+@UseGuards(SessionGuard)
+  viewNotification(@Session() session): Promise<NotificationEntity[]> {
+    return this.doctorService.viewNotification(session.email);
   }
 
-  @Delete('/deleteAllAppointments/:id')
-  ////////////////////////////////////////////////////////////////////////////////////@UseGuards(SessionGuard)
-  deleteAllAppointments(@Session() session,@Param('id',ParseIntPipe) id: number): Promise<String> {
-    return this.doctorService.deleteAllAppointments(id);
+  @Delete('/deleteAllAppointments')
+@UseGuards(SessionGuard)
+  deleteAllAppointments(@Session() session): Promise<String> {
+    return this.doctorService.deleteAllAppointments(session.email);
   }
 
-  @Delete('/deleteOneAppointment/:id/:serial')
-  //////////////////////////////////////////////////////////////////////////////////////////////@UseGuards(SessionGuard)
+  @Delete('/deleteOneAppointment/:serial')
+  @UseGuards(SessionGuard)
   deleteOneAppointment(
-    @Session() session,@Param('id',ParseIntPipe) id: number,
+    @Session() session,
     @Param('serial', ParseIntPipe) serial: number,
   ): Promise<String> {
-    return this.doctorService.deleteOneAppointment(id, serial);
+    return this.doctorService.deleteOneAppointment(session.email, serial);
   }
 
-  @Put('/updateAppointment/:id/:appointmentId')
-  //@UseGuards(SessionGuard)/////////////////////////////////////////////////////////////////////////////////////////////////////
+  @Put('/updateAppointment/:appointmentId')
+  @UseGuards(SessionGuard)
   updateAppointment(
     @Param('appointmentId', ParseIntPipe) appointmentId: number,@Session() session,
-    @Param('id', ParseIntPipe) id: number,
     @Body() Data: AppointmentEntity,
   ): Promise<AppointmentEntity|null|String> {
-    return this.doctorService.updateAppointment(id,appointmentId, Data);
+    return this.doctorService.updateAppointment(session.email,appointmentId, Data);
   }
   
   @Post('/signin')
@@ -158,7 +161,7 @@ async uploadFile(
   
   
 
-  @Get('/viewProfilePicture/:id')
+  @Get('/viewProfilePicture')
   @UseGuards(SessionGuard)
   getImages( @Session() session, @Res() res) {
     return this.doctorService.getImages(session.email, res);
@@ -174,5 +177,11 @@ async uploadFile(
   checkEmailHistory( @Session() session,) {
     return this.doctorService.checkEmailHistory(session.email);
   }
+  @Get('/searchUser/:email')
+  async searchUser(@Param('email') email: string): Promise<string> {
+    const userType = await this.doctorService.searchUser(email);
+    return userType;
+  }
+  
 
 }

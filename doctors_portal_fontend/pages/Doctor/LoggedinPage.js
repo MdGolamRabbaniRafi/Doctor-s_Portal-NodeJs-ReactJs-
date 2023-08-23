@@ -12,7 +12,10 @@ export default function LoggeginPage() {
 
         <HeaderForLoggedin></HeaderForLoggedin>
         
-          <NavigationBarLoggedin></NavigationBarLoggedin>
+          <NavigationBarLoggedin>
+
+            
+          </NavigationBarLoggedin>
 
 
       <FooterForLoggedin></FooterForLoggedin>

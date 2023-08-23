@@ -3,6 +3,7 @@ import axios from 'axios';
 import React, { useState } from 'react';
 import HeaderForLoggedin from '../Layout/LoggedinHeader';
 import FooterForLoggedin from '../Layout/LoggedinFooter';
+//import { useAuth } from '../utils/authentication';
 export default function AddAppointment() {
   const [email, setEmail] = useState('');
   const [age, setAge] = useState('');
@@ -10,6 +11,7 @@ export default function AddAppointment() {
   const [time, setTime] = useState('');
   const router = useRouter();
   const [error, setError] = useState('');
+ // const { user } = useAuth(); 
 
 
   const handleChangeEmail = (e) => {
@@ -24,7 +26,9 @@ export default function AddAppointment() {
   const handleChangeTime = (e) => {
     setTime(e.target.value);
   };
-
+  const handleBack = (e) => {
+    router.push('../Doctor/Appointment');
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("email:"+email)
@@ -38,12 +42,17 @@ export default function AddAppointment() {
       setError('');
 
       try {
-        const response = await axios.post('http://localhost:3000/Doctor/addappointment/1', {
+       // const userEmail = user.email;
+        const response = await axios.post(`http://localhost:3000/Doctor/addappointment`, {
           email: email,
           age: age,
           date: date,
-          time: time
-        });
+          time: time,
+        },
+        {
+          withCredentials: true,
+        }
+        );
 
         console.log("Backend Response:", response);
         console.log(5418525)
@@ -53,7 +62,7 @@ export default function AddAppointment() {
         } else if (response.data === "Error fetching patient") {
           setError('Error fetching patient');
         } else {
-          router.push('/Appointment');
+          router.push('../Doctor/Appointment');
         }
       } catch (error) {
         console.error('Failed:', error);
@@ -81,6 +90,7 @@ export default function AddAppointment() {
         <input type="time" id="time" name="time" value={time}required onChange={handleChangeTime} /><br />
 
         <input type="submit" value="Confirm" />
+        <button type="button" onClick={handleBack}>Back</button>
       </form>
       {error && <p>{error}</p>}
       <FooterForLoggedin></FooterForLoggedin>

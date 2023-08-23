@@ -3,14 +3,17 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import HeaderForLoggedin from '../Layout/LoggedinHeader';
 import FooterForLoggedin from '../Layout/LoggedinFooter';
+import { useAuth } from '../utils/authentication';
 
 export default function Notification() {
   const [notifications, setNotification] = useState([]);
   const [error, setError] = useState('');
   const router = useRouter();
+  const { user } = useAuth(); 
+
 
   const handleBackClick = () => {
-    router.push('/LoggedinPage');
+    router.push('../Doctor/LoggedinPage');
   };
   useEffect(() => {
     fetchData();
@@ -18,7 +21,10 @@ export default function Notification() {
   
   const fetchData = async () => {
     try {
-      const response = await axios.get(`http://localhost:3000/Doctor/notification/1`);
+      const userEmail = user.email;
+      const response = await axios.get(`http://localhost:3000/Doctor/notification`, {
+        withCredentials: true, 
+      })
       console.log("Backend Response:", response.data);
   
       if (Array.isArray(response.data)) {

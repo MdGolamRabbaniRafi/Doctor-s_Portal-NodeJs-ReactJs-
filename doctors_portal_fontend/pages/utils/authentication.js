@@ -9,6 +9,9 @@ export const AuthProvider = ({ children }) => {
 
 
   const login = (email, cookie) => {
+  //  sessionStorage.setItem('email', email); 
+  console.log("EEEEEEEEE:"+email)
+  console.log("ccccccccccccc:"+cookie)
     setUser({ email, cookie });
 
   };

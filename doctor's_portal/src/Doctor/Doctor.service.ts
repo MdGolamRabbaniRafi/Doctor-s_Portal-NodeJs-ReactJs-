@@ -12,6 +12,7 @@ import { PatientEntity } from 'src/Patient/Patient.dto';
 import { FileEntity } from './file.entity';
 import { MailerService } from '@nestjs-modules/mailer';
 import { MailerEntity } from './mailer.entity';
+import { AdminEntity } from 'src/Admin/admin.entity';
 
 @Injectable()
 export class DoctorService {
@@ -32,7 +33,9 @@ export class DoctorService {
     private fileRepo: Repository<FileEntity>,
     @InjectRepository(MailerEntity)
     private mailerRepo: Repository<MailerEntity>,
-    private mailerService: MailerService
+    private mailerService: MailerService,
+    @InjectRepository(AdminEntity)
+    private adminRepo: Repository<AdminEntity>,
   ) {}
   async addDoctor(data: AddDocotorDTO): Promise<string> {
     const salt = await bcrypt.genSalt();
@@ -60,8 +63,8 @@ export class DoctorService {
   }
   
   
-  async viewNotification(id: number): Promise<NotificationEntity[]> {
-    const doctor = await this.DoctorRepo.findOne({ where: { id } })
+  async viewNotification(email: string): Promise<NotificationEntity[]> {
+    const doctor = await this.DoctorRepo.findOne({ where: { email } })
   
     const notifications = await this.notificationRepo.find({
       where: {
@@ -74,8 +77,8 @@ export class DoctorService {
   
   
   
-  async ViewProfile(id: number): Promise<DoctorEntity[]> {
-    const visit = await this.DoctorRepo.find({
+  async ViewProfile(email: string): Promise<DoctorEntity> {
+    const visit = await this.DoctorRepo.findOne({
       select: {
         name: true,
         email: true,
@@ -86,7 +89,7 @@ export class DoctorService {
         password: false
       },
       where: {
-        id: id,
+        email: email,
       }
     });
   
@@ -104,8 +107,8 @@ export class DoctorService {
   }
 
   async Edit(email: string, updateDoctor: AddDocotorDTO): Promise<DoctorEntity> {
-    const salt = await bcrypt.genSalt();
-    updateDoctor.password = await bcrypt.hash(updateDoctor.password, salt);
+    // const salt = await bcrypt.genSalt();
+    // updateDoctor.password = await bcrypt.hash(updateDoctor.password, salt);
     
     const updateResult = await this.DoctorRepo.update({ email }, updateDoctor);
     const doctor = await this.DoctorRepo.findOne({
@@ -130,39 +133,38 @@ export class DoctorService {
   }
   
   
-  async Searching(id: number, email: string): Promise<DoctorEntity[]> {
-
-    
-    try {
-      const search = await this.DoctorRepo.find({
-        select: {
-          name: true,
-          email: true,
-          id: true,
-          password: false,
-        },
-        where: {
-          id: id,
-        },
-      });
-    
-      const searchDoctor = await this.DoctorRepo.find({
-        select: {
-          name: true,
-          email: true,
-          id: true,
-          password: false,
-        },
-        where: {
-          email: email,
-        },
-      });
-    
-      if (search.length === 0) {
-        throw new HttpException('Doctor not found', HttpStatus.NOT_FOUND);
+  async Searching(id: string, email: string): Promise<DoctorEntity|PatientEntity|AdminEntity|string> {
+    const searchDoctor = await this.DoctorRepo.findOne({
+      where: {
+        email: email,
       }
+    });
     
-      const doctor = searchDoctor[0];
+    const doctorUser = await this.DoctorRepo.findOne({
+      where: {
+        email: id,
+      }
+    });
+  
+    const patientUser = await this.patientRepo.findOne({
+      where: {
+        email: id,
+      }
+    });
+  
+    const AdminUser = await this.adminRepo.findOne({
+      where: {
+        email: id,
+      }
+    });
+  
+  
+    
+      // if (!doctorUser&&!patientUser&&!AdminUser) {
+      //   throw new HttpException('user not found', HttpStatus.NOT_FOUND);
+      // }
+    
+      const doctor = searchDoctor;
       const notiFication: NotificationEntity = new NotificationEntity();
       notiFication.doctor = doctor;
       notiFication.Message = 'Search a profile';
@@ -173,13 +175,19 @@ export class DoctorService {
       notiFication.time = currentTime.getCurrentTime();
       await this.notificationRepo.save(notiFication);
     
-      return search;
-    } catch (error) {
-
-      throw new HttpException('Data Not found', HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+      if (doctorUser) {
+        return doctorUser;
+      } else if (patientUser) {
+        return patientUser;
+      } else if (AdminUser) {
+      } else if (AdminUser) {
+        return ;
+      } else {
+        return  "User Not Found";
+      }
+    } 
     
-  }
+  
   
   // async ChangePassword(email: string, password: string): Promise<DoctorEntity> {
   //   const doctor = await this.DoctorRepo.findOne({
@@ -279,9 +287,9 @@ export class DoctorService {
     await this.notificationRepo.save(notiFication);
     return savedRefer;
   }
-  async addAppointment(appointment: any,id): Promise<AppointmentEntity | string> {
+  async addAppointment(appointment: any,email): Promise<AppointmentEntity | string> {
     const makeAppointment: AppointmentEntity = new AppointmentEntity();
-    const doctor = await this.DoctorRepo.findOne({ where: { id } });
+    const doctor = await this.DoctorRepo.findOne({ where: { email } });
   
     const PatientEmail = appointment.email;
     let Patient: PatientEntity;
@@ -295,7 +303,7 @@ export class DoctorService {
     }
   
     appointment.patient = Patient.id;
-    appointment.doctor = id;
+    appointment.doctor = doctor.id;
     makeAppointment.name = Patient.name; 
     makeAppointment.age = appointment.age;
     makeAppointment.email = Patient.email;
@@ -324,14 +332,14 @@ export class DoctorService {
   
   
 
-  async viewAppointment(id:any): Promise<DoctorEntity[]> {
+  async viewAppointment(email:any): Promise<DoctorEntity[]> {
     const AllAppointment = await this.DoctorRepo.find({
-      where: { id },
+      where: { email },
       relations: {
         appointment: true,
       },
     });
-    const doctor = await this.DoctorRepo.findOne({ where: { id } });
+    const doctor = await this.DoctorRepo.findOne({ where: { email } });
 
     const notiFication: NotificationEntity = new NotificationEntity();
     const currentDate: CurrentDate = new CurrentDate();
@@ -344,8 +352,8 @@ export class DoctorService {
     await this.notificationRepo.save(notiFication);
     return AllAppointment;
   }
-  async deleteAllAppointments(id: number): Promise<string> {
-    const doctor = await this.DoctorRepo.findOne({ where: { id } });
+  async deleteAllAppointments(email: string): Promise<string> {
+    const doctor = await this.DoctorRepo.findOne({ where: { email } });
     const appointments = await this.appointmentRepo.find({
       where: { doctor },
       relations: ['doctor'], 
@@ -367,8 +375,8 @@ export class DoctorService {
 
  
   
-  async deleteOneAppointment(id: number, serial: number): Promise<string> {
-    const doctor = await this.DoctorRepo.findOne({ where: { id } });
+  async deleteOneAppointment(email: string, serial: number): Promise<string> {
+    const doctor = await this.DoctorRepo.findOne({ where: { email } });
     let appointment: AppointmentEntity;
   
     try {
@@ -400,8 +408,8 @@ export class DoctorService {
   
   
 
-  async updateAppointment(id: any, serial: number, data: AppointmentEntity): Promise<AppointmentEntity  | string> {
-    const doctor = await this.DoctorRepo.findOne({ where: { id } });
+  async updateAppointment(email: any, serial: number, data: AppointmentEntity): Promise<AppointmentEntity  | string> {
+    const doctor = await this.DoctorRepo.findOne({ where: { email } });
     const appointment = await this.appointmentRepo.findOne({
       where: { doctor: doctor, Serial: serial },
       relations: ['doctor'],
@@ -599,7 +607,45 @@ export class DoctorService {
     await this.notificationRepo.save(notiFication);
     return mailes;
   }
+  async searchUser(email: string): Promise<string> {
+    const doctorUser = await this.DoctorRepo.findOne({
+      where: {
+        email: email,
+      }
+    });
   
+    const patientUser = await this.patientRepo.findOne({
+      where: {
+        email: email,
+      }
+    });
+  
+    const AdminUser = await this.adminRepo.findOne({
+      where: {
+        email: email,
+      }
+    });
+  
+    if (doctorUser) {
+      return "Doctor";
+    } else if (patientUser) {
+      return "Patient";
+    } else if (AdminUser) {
+      return "Admin";
+    } else {
+      return "Not found";
+    }
+  }
+
+
+
+  async viewArticle(): Promise<ArticleEntity[]> {
+    const AllArtiicle = await this.articleRepo.find();
+
+
+    return AllArtiicle;
+  }
+    
   
   }
   

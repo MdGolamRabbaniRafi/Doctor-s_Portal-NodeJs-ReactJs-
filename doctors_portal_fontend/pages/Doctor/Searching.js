@@ -3,41 +3,31 @@ import axios from 'axios';
 import React, { useState } from 'react';
 import HeaderForLoggedin from '../Layout/LoggedinHeader';
 import FooterForLoggedin from '../Layout/LoggedinFooter';
-
-export default function AddAppointment() {
-  const [name, setName] = useState('');
-  const [Link, setLink] = useState('');
+//import { useAuth } from '../utils/authentication';
+export default function Searching() {
+  const [email, setEmail] = useState('');
   const router = useRouter();
   const [error, setError] = useState('');
+ // const { user } = useAuth(); 
 
 
-  const handleChangeName = (e) => {
-    setName(e.target.value);
-  };
-  const handleChangeLink = (e) => {
-    setLink(e.target.value);
+  const handleChangeEmail = (e) => {
+    setEmail(e.target.value);
   };
   const handleBack = (e) => {
     router.push('../Doctor/LoggedinPage');
-
   };
-
-
-
   const handleSubmit = async (e) => {
-    e.preventDefault();
+ 
 
-    if (!name || !Link) {
+    if (!email) {
       setError('All fields are required');
     } else {
       setError('');
 
       try {
        // const userEmail = user.email;
-        const response = await axios.post(`http://localhost:3000/Doctor/addArticle`, {
-          name: name,
-          Link: Link,
-        },
+        const response = await axios.post(`http://localhost:3000/Doctor/Searching/${email}`,
         {
           withCredentials: true,
         }
@@ -46,12 +36,15 @@ export default function AddAppointment() {
         console.log("Backend Response:", response);
         console.log(5418525)
 
-        
-          router.push('../Doctor/LoggedinPage');
+        if (response.data === "User Not Found") {
+          setError('user Does not found');
+        } else {
+          router.push('../Doctor/Found_user');
+        }
       } catch (error) {
         console.error('Failed:', error);
         console.log('Error Response:', error.response); 
-        setError('An error occurred during Add Article. Please try again later.');
+        setError('An error occurred. Please try again later.');
       }
     }
   };
@@ -59,19 +52,13 @@ export default function AddAppointment() {
   return (
     <div>
       <HeaderForLoggedin></HeaderForLoggedin>
-      <h1>Add Appointment</h1>
+      <h1>Searching</h1>
       <form onSubmit={handleSubmit}>
-        <label htmlFor="Name">Name:</label>
-        <input type="text" id="name" name="name" value={name} required onChange={handleChangeName} /><br />
-
-        <label htmlFor="Link">Article Link:</label>
-        <input type="text" id="Link" name="Link" value={Link}required onChange={handleChangeLink} /><br />
-
-        <input type="submit" value="Confirm" />
+        <label htmlFor="email">Email:</label>
+        <input type="email" id="email" name="email" value={email} required onChange={handleChangeEmail} placeholder='Enter a Email' /><br />
+        <input type="submit" value="Search" />
         <button type="button" onClick={handleBack}>Back</button>
-
       </form>
-
       {error && <p>{error}</p>}
       <FooterForLoggedin></FooterForLoggedin>
     </div>

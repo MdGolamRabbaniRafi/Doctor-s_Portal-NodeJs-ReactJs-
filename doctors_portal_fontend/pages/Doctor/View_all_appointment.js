@@ -1,8 +1,8 @@
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import HeaderForLoggedin from './Layout/LoggedinHeader';
-import FooterForLoggedin from './Layout/LoggedinFooter';
+import HeaderForLoggedin from '../Layout/LoggedinHeader';
+import FooterForLoggedin from '../Layout/LoggedinFooter';
 
 export default function View_all_appointment() {
   const [appointments, setAppointments] = useState([]);
@@ -10,12 +10,12 @@ export default function View_all_appointment() {
   const router = useRouter();
 
   const handleBackClick = () => {
-    router.push('/Appointment');
+    router.push('../Doctor/Appointment');
   };
 
   const handleEditClick = (appointment) => {
     router.push({
-      pathname: '/EditAppointment',
+      pathname: '../Doctor/EditAppointment',
       query: {
         serial: appointment.Serial,
         email: appointment.email,
@@ -28,7 +28,7 @@ export default function View_all_appointment() {
 
   const handleDeleteClick = (appointment) => {
     router.push({
-      pathname: '/Delete_one_appointment',
+      pathname: '../Doctor/Delete_one_appointment',
       query: {
         serial: appointment.Serial,
         email: appointment.email,
@@ -45,7 +45,9 @@ export default function View_all_appointment() {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get('http://localhost:3000/Doctor/viewAppointment/1');
+      const response = await axios.get('http://localhost:3000/Doctor/viewAppointment',{
+        withCredentials: true,
+      });
   
       console.log("Backend Response:", response);
   

@@ -39,11 +39,11 @@ export default function FeedbackForm() {
         });
 
         console.log('Backend Response:', response);
-    
+        // Reset form fields after successful submission
         setName('');
         setEmail('');
         setFeedback('');
-       
+        // Redirect or show a success message
         setError('Feedback Submitted Successfully! Thank you for your feedback.');
       } catch (error) {
         console.error('Failed:', error);
@@ -56,7 +56,7 @@ export default function FeedbackForm() {
   return (
     <div className="p-6 max-w-sm mx-auto bg-white rounded-xl shadow-md space-y-2 mt-24">
       <h2 className="text-xl font-semibold">Feedback Form</h2>
-      {error && <p className="text-red-600">{error}</p>}
+
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label htmlFor="name" className="block font-semibold text-gray-600">Name:</label>

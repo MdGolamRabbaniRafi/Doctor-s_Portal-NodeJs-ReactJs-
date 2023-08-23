@@ -10,7 +10,7 @@ export default function Cancel_All_appointment() {
   const [error, setError] = useState('');
 
   const handleBackClick = () => {
-    router.push('/Appointment');
+    router.push('../Doctor/Appointment');
   };
   const handleAllDeleteForm = async () => { 
       try {
@@ -22,7 +22,7 @@ export default function Cancel_All_appointment() {
           setError('Error updating appointment');
         } else if(response.data === "All appointments deleted") {
           setError('');
-          router.push('/Appointment')
+          router.push('../Doctor/Appointment')
         }
       } catch (error) {
         console.error('Failed:', error);

@@ -1,8 +1,8 @@
 import axios from 'axios';
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
-import HeaderForLoggedin from './Layout/LoggedinHeader';
-import FooterForLoggedin from './Layout/LoggedinFooter';
+import HeaderForLoggedin from '../Layout/LoggedinHeader';
+import FooterForLoggedin from '../Layout/LoggedinFooter';
 
 export default function Delete_one_appointment() {
   const router = useRouter();
@@ -10,7 +10,7 @@ export default function Delete_one_appointment() {
   const [error, setError] = useState('');
 
   const handleBackClick = () => {
-    router.push('/View_all_appointment');
+    router.push('../Doctor/View_all_appointment');
   };
   const handleDeleteForm = async () => {
     console.log(email+"   "+age+"      "+"   "+serial)
@@ -18,7 +18,9 @@ export default function Delete_one_appointment() {
       setError('An error occurred');
     } else {
       try {
-        const response = await axios.delete(`http://localhost:3000/Doctor/deleteOneAppointment/1/${serial}`);
+        const response = await axios.delete(`http://localhost:3000/Doctor/deleteOneAppointment/${serial}`,{
+          withCredentials: true,
+        });
 
 
         console.log("Backend Response:", response);
@@ -26,7 +28,7 @@ export default function Delete_one_appointment() {
           setError('Error updating appointment');
         } else if(response.data === "Appointment deleted") {
           setError('');
-          router.push('/View_all_appointment')
+          router.push('../Doctor/View_all_appointment')
         }
       } catch (error) {
         console.error('Failed:', error);

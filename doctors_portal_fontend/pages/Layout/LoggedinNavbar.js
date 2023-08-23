@@ -13,41 +13,45 @@ const NavigationBarLoggedin = () => {
       <ul>
 
         <li>
-          <button onClick={() => handleNavigation("/profile")}>Profile</button><br />
+          <button onClick={() => handleNavigation("../Doctor/profile")}>Profile</button><br />
 
         </li>
         <li>
-        <Link href ="/Appointment">Appointment</Link><br />
+        <button onClick={() => handleNavigation("../Doctor/Appointment")}>Appointment</button><br />
 
 
-        </li>
-
-        <li>
-
-        <Link href="Refer_doctor">Refer</Link> 
 
         </li>
 
         <li>
+        <button onClick={() => handleNavigation("../Doctor/Refer_doctor")}>Refer</button><br />
 
-<Link href="Edit_profile">Edit Profile</Link> 
+
+        </li>
+
+        <li>
+
+<button onClick={() => handleNavigation("../Doctor/Edit_profile")}>Edit Profile</button><br />
+
 
 </li>
 <li>
+<button onClick={() => handleNavigation("../Doctor/Post-article")}>Post Article</button><br />
 
-<Link href="Article">Article</Link> 
 
 </li>
 <li>
+<button onClick={() => handleNavigation("../Doctor/Send_email")}>Email</button><br />
 
-<Link href="Send_email">Send An Email</Link> 
 
 </li>
 
 <li>
+<button onClick={() => handleNavigation("../Doctor/Notification")}>Notification</button><br />
 
-<Link href="/Notification">Notification</Link><br />
-
+</li>
+<li>
+<button onClick={() => handleNavigation("../Doctor/Searching")}>Searching</button><br />
 
 </li>
       </ul>

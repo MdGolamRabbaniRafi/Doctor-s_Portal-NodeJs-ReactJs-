@@ -14,9 +14,9 @@ export default function Appointent() {
       <HeaderForLoggedin />
       
       <button onClick={() => handleNavigation('Add_appointment')}>Add Appointment</button><br />
-      <button onClick={() => handleNavigation("/View_all_appointment")}>View All Appointment</button><br />
-      <button onClick={() => handleNavigation("/Cancel_All_appointment")}>Delete All Appointment</button><br />
-      <button onClick={() => handleNavigation("/LoggedinPage")}>Back</button><br />
+      <button onClick={() => handleNavigation("../Doctor/View_all_appointment")}>View All Appointment</button><br />
+      <button onClick={() => handleNavigation("../Doctor/Cancel_All_appointment")}>Delete All Appointment</button><br />
+      <button onClick={() => handleNavigation("../Doctor/LoggedinPage")}>Back</button><br />
 
       <FooterForLoggedin />
     </>

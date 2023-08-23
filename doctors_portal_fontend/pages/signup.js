@@ -165,13 +165,7 @@ export default function Signup() {
         <label htmlFor="confirm_password" className="block font-medium mb-1">Confirm Password:</label>
         <input type="password" id="confirm_password" name="confirm_password" value={confirmPassword} onChange={handleChangeConfirmPassword} required className="w-full px-3 py-2 border rounded-md" />
       </div>
-
-      <div className="mb-6">
-        <input type="submit" value="Sign Up" className="w-full px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 cursor-pointer" />
-      </div>
-    </form>
-
-    <div className="signup-as max-w-md mx-auto mt-4 p-4 bg-slate-900 shadow-md rounded-lg">
+      <div className="signup-as max-w-md mx-auto mt-4 p-4 bg-slate-900 shadow-md rounded-lg">
       <h3 className="text-lg font-semibold mb-2">Sign Up as?</h3>
       <div className="flex">
         <label className="mr-4">
@@ -188,6 +182,15 @@ export default function Signup() {
         </label>
       </div>
     </div>
+
+
+
+      <div className="mb-6">
+        <input type="submit" value="Sign Up" className="w-full px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 cursor-pointer" />
+      </div>
+    </form>
+
+
   </>
   );
 }

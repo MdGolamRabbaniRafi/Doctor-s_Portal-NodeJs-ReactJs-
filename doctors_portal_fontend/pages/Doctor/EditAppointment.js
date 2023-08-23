@@ -14,7 +14,7 @@ export default function EditAppointment() {
   const [error, setError] = useState('');
 
   const handleBackClick = () => {
-    router.push('/View_all_appointment');
+    router.push('../Doctor/View_all_appointment');
   };
   const handleChangeEmail = (e) => {
     setUpdatedEmail(e.target.value);
@@ -33,11 +33,14 @@ export default function EditAppointment() {
       setError('All fields are required');
     } else {
       try {
-        const response = await axios.put(`http://localhost:3000/Doctor/updateAppointment/1/${serial}`, {
+        const response = await axios.put(`http://localhost:3000/Doctor/updateAppointment/${serial}`, {
           email: updatedEmail,
           age: updatedAge,
           date: updatedDate,
           time: updatedTime,
+        }
+        ,{
+          withCredentials: true,
         });
 
         console.log("Backend Response:", response);
@@ -45,7 +48,7 @@ export default function EditAppointment() {
           setError('Error updating appointment');
         } else {
           setError('');
-          router.push('/View_all_appointment')
+          router.push('../Doctor/View_all_appointment')
         }
       } catch (error) {
         console.error('Failed:', error);

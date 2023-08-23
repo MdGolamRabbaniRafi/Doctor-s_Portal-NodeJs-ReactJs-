@@ -12,6 +12,7 @@ import { PatientEntity } from 'src/Patient/Patient.dto';
 import { FileEntity } from './file.entity';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { MailerEntity } from './mailer.entity';
+import { AdminEntity } from 'src/Admin/admin.entity';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { MailerEntity } from './mailer.entity';
       PatientEntity,
       FileEntity,
       MailerEntity,
+      AdminEntity,
     ]),
   ],
   controllers: [DoctorController],

@@ -2,11 +2,13 @@ import HomeLogo from './Layout/HomeLogo';
 import Link from 'next/link';
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
 
 const HomePage = () => {
   const [currentSlide, setCurrentSlide] = useState(1);
   const [notice, setNotice] = useState([]);
   const [error, setError] = useState('');
+  const router = useRouter();
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -46,8 +48,13 @@ const HomePage = () => {
       console.log('Error Response:', error.response);
       setError('An error occurred. Please try again later.');
     }
+
   };
 
+  const handleViewArticle = () => {
+    router.push('../Doctor/View_article');
+  };
+  
 
 
     return (
@@ -75,7 +82,9 @@ const HomePage = () => {
             <div class="text-center">
               <h1 class="text-6xl font-serif text-white">Your health is our priority</h1>
               <p class="mt-4 font-medium text-white">CHECK FOR DOCTORS GUIDANCE</p>
-              <button class="btn btn-error text-white mt-7">View Articles</button>
+              <button class="btn btn-error text-white mt-7" onClick={handleViewArticle}>
+                 View Articles
+            </button>
              
             </div>
           </div>
@@ -93,7 +102,7 @@ const HomePage = () => {
             <div class="text-center">
               <h1 class="text-6xl font-serif text-white">Your health is our priority</h1>
               <p class="mt-4 font-medium text-white">CHECK FOR DOCTORS GUIDANCE</p>
-              <button class="btn btn-error text-white mt-7">View Articles</button>
+              <button class="btn btn-error text-white mt-7"onClick={handleViewArticle}>View Articles</button>
              
             </div>
           </div>
@@ -147,12 +156,12 @@ const HomePage = () => {
   </div> 
   <div>
     <span className="footer-title">Services</span> 
-    <a className="link link-hover">Articles</a> 
+    <a className="link link-hover" href='../Doctor/View_article'>Articles</a> 
 
   </div> 
   <div>
     <span className="footer-title">Company</span> 
-    <a className="link link-hover">About us</a> 
+    <a className="link link-hover"href='/aboutUs'>About us</a> 
     <a className="link link-hover">Contact</a> 
   </div> 
   <div>

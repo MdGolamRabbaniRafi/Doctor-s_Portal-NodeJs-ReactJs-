@@ -19,6 +19,7 @@ import { ReferEntity } from 'src/Doctor/refer.entity';
 import { PatientEntity } from 'src/Patient/Patient.dto';
 import { FileEntity } from 'src/Doctor/file.entity';
 import { MailerEntity } from 'src/Doctor/mailer.entity';
+import { AdminEntity } from 'src/Admin/admin.entity';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { MailerEntity } from 'src/Doctor/mailer.entity';
       ReferEntity,
       PatientEntity,
       MailerEntity,
+      AdminEntity
     ]),
 
     MailerModule.forRoot({
