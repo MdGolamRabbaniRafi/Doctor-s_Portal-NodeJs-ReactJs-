@@ -491,11 +491,29 @@ async addDoctor(data: AddDocotorDTO, email: string): Promise<DoctorEntity> {
   if (!data.password) {
     throw new BadRequestException('Password is required');
   }
+  if (!data.Degree) {
+    throw new BadRequestException('Degree is required');
+  }
+  if (!data.Blood_group) {
+    throw new BadRequestException('Blood group is required');
+  }
+  if (!data.Gender) {
+    throw new BadRequestException('Gender is required');
+  }
+  if (!data.User) {
+    throw new BadRequestException('User is required');
+  }
 
   const addDoctor: DoctorEntity = new DoctorEntity();
   addDoctor.name = data.name;
   addDoctor.email = data.email;
   addDoctor.password = data.password; 
+  addDoctor.Degree = data.Degree; 
+  addDoctor.Blood_group = data.Blood_group; 
+  addDoctor.Gender = data.Gender; 
+  addDoctor.User = data.User; 
+
+
   addDoctor.admin = admin;
 
   const savedDoctor = await this.doctorRepo.save(addDoctor);
@@ -619,11 +637,27 @@ async getDoctorById(doctorId: number, email: string): Promise<DoctorEntity> {
     if (!data.password) {
       throw new BadRequestException('Password is required');
     }
+    if (!data.Degree) {
+      throw new BadRequestException('Degree is required');
+    }
+    if (!data.Blood_group) {
+      throw new BadRequestException('Blood group is required');
+    }
+    if (!data.Gender) {
+      throw new BadRequestException('Gender is required');
+    }
+    if (!data.User) {
+      throw new BadRequestException('User is required');
+    }
   
     const addPatients: PatientEntity = new PatientEntity();
     addPatients.name = data.name;
     addPatients.email = data.email;
     addPatients.password = data.password; 
+    addPatients.Degree = data.Degree; 
+    addPatients.Blood_group = data.Blood_group; 
+    addPatients.Gender = data.Gender; 
+    addPatients.User = data.User; 
     addPatients.admin = admin;
   
     const savedPatient = await this.patientRepo.save(addPatients);
