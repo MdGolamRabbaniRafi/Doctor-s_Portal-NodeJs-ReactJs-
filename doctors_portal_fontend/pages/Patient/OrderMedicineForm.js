@@ -52,7 +52,7 @@ export default function OrderMedicineForm() {
   return (
     <div className="p-6 max-w-sm mx-auto bg-white rounded-xl shadow-md space-y-2 mt-24">
       <h2 className="text-xl font-semibold">Order Medicine Form</h2>
-
+      {error && <p className="text-red-600">{error}</p>}
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label htmlFor="name" className="block font-semibold text-gray-600">Name:</label>
