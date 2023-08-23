@@ -39,11 +39,11 @@ export default function FeedbackForm() {
         });
 
         console.log('Backend Response:', response);
-        // Reset form fields after successful submission
+    
         setName('');
         setEmail('');
         setFeedback('');
-        // Redirect or show a success message
+       
         setError('Feedback Submitted Successfully! Thank you for your feedback.');
       } catch (error) {
         console.error('Failed:', error);

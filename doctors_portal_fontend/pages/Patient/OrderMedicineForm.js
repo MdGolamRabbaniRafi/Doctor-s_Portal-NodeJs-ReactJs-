@@ -35,11 +35,11 @@ export default function OrderMedicineForm() {
         });
 
         console.log('Backend Response:', response);
-        // Reset form fields after successful submission
+     
         setName('');
         setEmail('');
         setorderMedicine('');
-        // Redirect or show a success message
+ 
         setError('Medicine Order Submitted Successfully! Thank you.');
       } catch (error) {
         console.error('Failed:', error);

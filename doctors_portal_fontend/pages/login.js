@@ -5,10 +5,8 @@ import HeaderForPage from './Layout/Header';
 import FooterForPage from './Layout/footer';
 import NavigationBar from './Layout/navbar';
 import { useAuth } from '../pages/utils/authentication';
-<<<<<<< HEAD
-=======
+
 import Link from 'next/link';
->>>>>>> a8fd558b6cfa55b13126b21bb78c9940eb2824e6
 
 export default function Signin() {
   const [email, setEmail] = useState('');
@@ -65,16 +63,10 @@ export default function Signin() {
         } else if (userRole === 'Patient') {
           router.push('../Patient/Patient_LoggedinPage');
         }
-<<<<<<< HEAD
+
       } 
-      else {
-=======
-      } else if (
-        response.data === 'Already logged in an account. Please log out first.'
-      ) {
-        setError('Already logged in an account. Please log out first.');
-      } else {
->>>>>>> a8fd558b6cfa55b13126b21bb78c9940eb2824e6
+    else {
+
         setError('Incorrect Password or Email');
       }
 
