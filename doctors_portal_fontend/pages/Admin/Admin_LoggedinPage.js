@@ -3,6 +3,7 @@ import axios from 'axios';
 import React, { useState } from 'react';
 import HomeLogo from '../Layout/HomeLogo';
 import Admin_NavigationBar from '../Layout/Admin_LoggedinNavbar';
+import Link from 'next/link';
 
 export default function LoggedinPage() {
   const router = useRouter();
@@ -51,9 +52,32 @@ export default function LoggedinPage() {
     <>
       <title>Admin</title>
       <Admin_NavigationBar />
+      <div className="bg-gray-300 flex items-center justify-center h-screen">
+  <div className="flex flex-col items-start">
+  <div className="card w-96 bg-stone-800 shadow-xl">
+  <figure><img src="/manage.gif" alt="Shoes" /></figure>
+  <div className="card-body">
+    <h2 className="card-title">
+      Manage!
+      <div className="badge badge-secondary">Active</div>
+    </h2>
+    <p>Get your company stakeholders into new level</p>
+    <div className="card-actions justify-end">
+      <Link href='/Admin/Admin_Add_Doctor'>
+    
+      <div className="badge badge-outline">Add Users</div> 
+      </Link>
+      <Link href=''>
+      <div className="badge badge-outline">View</div>
+      </Link>
+     
+    </div>
+  </div>
+</div>
+  </div>
 
-      <div className="bg-gray-100 min-h-screen flex flex-col items-center justify-center">
-        <div className="w-full max-w-md bg-white p-8 rounded-lg shadow">
+  <div className="w-full max-w-md bg-white 100 p-8 rounded-lg shadow-2xl ml-36">
+          
           <div className="mb-4 text-center">
             <div className="avatar indicator">
               <div className="w-20 h-20 rounded-lg">
@@ -62,6 +86,7 @@ export default function LoggedinPage() {
             </div>
             <h1 className="text-3xl font-semibold mt-4">Post a Notice</h1>
           </div>
+          
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
               <label htmlFor="subject" className="block text-gray-600 font-semibold mb-2">
@@ -116,7 +141,9 @@ export default function LoggedinPage() {
             </button>
           </div>
         </div>
-      </div>
+</div>
+
+    
     </>
   );
 }

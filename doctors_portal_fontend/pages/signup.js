@@ -2,6 +2,10 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import HeaderForPage from './Layout/Header';
 import { useRouter } from 'next/router';
+import PatiLogo from './Layout/PatientLogo';
+import HomeLogo from './Layout/HomeLogo';
+import AdminLogo from './Layout/AdminLogo';
+
 
 
 export default function Signup() {
@@ -19,6 +23,8 @@ export default function Signup() {
   const handleChangeName = (e) => {
     setName(e.target.value);
   };
+  const [selectedLogo, setSelectedLogo] = useState('homelogo'); // Default logo
+
 
   const handleChangeEmail = (e) => {
     setEmail(e.target.value);
@@ -46,7 +52,16 @@ export default function Signup() {
 
   const handleSignUpAsChange = (e) => {
     setSignUpAs(e.target.value);
+    
+  if (e.target.value === 'Doctor') {
+    setSelectedLogo('doctorLogo'); // Change to the doctor logo
+  } else if (e.target.value === 'Patient') {
+    setSelectedLogo('patientLogo'); // Change to the patient logo
+  } else {
+    setSelectedLogo('homelogo'); // Default logo for other cases
+  }
   };
+
 
   const handleSignUp = async (e) => {
     e.preventDefault();
@@ -98,11 +113,28 @@ export default function Signup() {
     <title>Sign Up</title>
     
     <form onSubmit={handleSignUp} className="max-w-md mx-auto mt-8 p-4 bg-slate-900 shadow-md rounded-md">
-      <div className="mb-2">
-        <center><HeaderForPage></HeaderForPage></center>
+    <div className="mb-2">
+        <center>
+          {/* Conditional rendering of logo based on selectedLogo */}
+          {selectedLogo === 'homelogo' && <AdminLogo />}
+          {selectedLogo === 'doctorLogo' && <HomeLogo />}
+          {selectedLogo === 'patientLogo' && <PatiLogo />}
+        </center>
         <h2 className="text-2xl font-bold mb-2">Sign Up</h2>
-        
-
+        <div className="flex">
+        <label className="mr-4">
+          <input type="radio" value="Admin" name="Admin" checked={signUpAs === 'Admin'} onChange={handleSignUpAsChange} />
+          Admin
+        </label>
+        <label className="mr-4">
+          <input type="radio" value="Doctor" name="Doctor" checked={signUpAs === 'Doctor'} onChange={handleSignUpAsChange} />
+          Doctor
+        </label>
+        <label>
+          <input type="radio" value="Patient" name="Patient" checked={signUpAs === 'Patient'} onChange={handleSignUpAsChange} />
+          Patient
+        </label>
+      </div>
       </div>
 
       <div className="mb-4">
@@ -165,23 +197,6 @@ export default function Signup() {
         <label htmlFor="confirm_password" className="block font-medium mb-1">Confirm Password:</label>
         <input type="password" id="confirm_password" name="confirm_password" value={confirmPassword} onChange={handleChangeConfirmPassword} required className="w-full px-3 py-2 border rounded-md" />
       </div>
-      <div className="signup-as max-w-md mx-auto mt-4 p-4 bg-slate-900 shadow-md rounded-lg">
-      <h3 className="text-lg font-semibold mb-2">Sign Up as?</h3>
-      <div className="flex">
-        <label className="mr-4">
-          <input type="radio" value="Admin" name="Admin" checked={signUpAs === 'Admin'} onChange={handleSignUpAsChange} />
-          Admin
-        </label>
-        <label className="mr-4">
-          <input type="radio" value="Doctor" name="Doctor" checked={signUpAs === 'Doctor'} onChange={handleSignUpAsChange} />
-          Doctor
-        </label>
-        <label>
-          <input type="radio" value="Patient" name="Patient" checked={signUpAs === 'Patient'} onChange={handleSignUpAsChange} />
-          Patient
-        </label>
-      </div>
-    </div>
 
 
 
