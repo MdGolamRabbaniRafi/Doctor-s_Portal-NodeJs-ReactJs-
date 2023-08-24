@@ -3,10 +3,13 @@ import axios from 'axios';
 
 const AuthContext = createContext();
 
+
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
-
+  const updateUser = (newUser) => {
+    setUser(newUser);
+  };
 
   const login = (email, cookie) => {
   //  sessionStorage.setItem('email', email); 
@@ -55,10 +58,11 @@ export const AuthProvider = ({ children }) => {
     }
   }
   return (
-    <AuthContext.Provider value={{ user, login, logout,checkUser }}>
+    <AuthContext.Provider value={{ user, login, logout, checkUser, updateUser }}>
       {children}
     </AuthContext.Provider>
   );
 };
+
 
 export const useAuth = () => useContext(AuthContext);

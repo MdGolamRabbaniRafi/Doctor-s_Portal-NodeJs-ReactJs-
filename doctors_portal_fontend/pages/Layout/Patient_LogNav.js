@@ -5,7 +5,7 @@ import HeaderForLoggedin from './LoggedinHeader';
 import FooterForLoggedin from "./LoggedinFooter"
 
 
-const NavigationBarLoggedin = () => {
+const PatiLogo = () => {
   const router = useRouter();
 
   const handleNavigation = (path) => {
@@ -47,4 +47,4 @@ const NavigationBarLoggedin = () => {
   );
 };
 
-export default NavigationBarLoggedin;
+export default PatiLogo;

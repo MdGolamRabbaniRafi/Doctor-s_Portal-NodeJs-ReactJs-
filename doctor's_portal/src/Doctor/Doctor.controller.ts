@@ -158,7 +158,74 @@ async uploadFile(
   const fileName = file.filename;
   return await this.doctorService.uploadFile(session.email, fileName);
 }
-  
+
+
+
+
+@Put('/changePicture')
+@UseGuards(SessionGuard)
+@UseInterceptors(
+  FileInterceptor('DoctorPicture', {
+    fileFilter: (req, file, cb) => {
+      if (file.originalname.match(/^.*\.(jpg|webp|png|jpeg)$/)) {
+        cb(null, true);
+      } else {
+        cb(new Error('LIMIT_UNEXPECTED_FILE'), false);
+      }
+    },
+    limits: { fileSize: 300000 },
+    storage: diskStorage({
+      destination: './DoctorFiles',
+      filename: (req, file, cb) => {
+        const fileName = Date.now() + file.originalname;
+        cb(null, fileName);
+      },
+    }),
+  }),
+)
+async changePicture(
+  @UploadedFile() file: Express.Multer.File,
+  @Session() session,
+): Promise<string> {
+  const fileName = file.filename;
+  return await this.doctorService.changePicture(session.email, fileName);
+}
+
+
+
+
+
+@Post('/uploadDefaultPicture/:email')
+@UseInterceptors(
+  FileInterceptor('DoctorPicture', {
+    fileFilter: (req, file, cb) => {
+      if (file.originalname.match(/^.*\.(jpg|webp|png|jpeg)$/)) {
+        cb(null, true);
+      } else {
+        cb(new Error('LIMIT_UNEXPECTED_FILE'), false);
+      }
+    },
+    limits: { fileSize: 300000 },
+    storage: diskStorage({
+      destination: './DoctorFiles',
+      filename: (req, file, cb) => {
+        const fileName = Date.now() + file.originalname;
+        cb(null, fileName);
+      },
+    }),
+  }),
+
+)
+async uploadDefaultPicture(
+  @UploadedFile() DoctorPicture: Express.Multer.File,  @Param('email') email: string
+
+): Promise<string> {
+  const fileName = DoctorPicture.filename;
+  return await this.doctorService.uploadDefaultPicture(email, fileName);
+}
+
+
+
   
 
   @Get('/viewProfilePicture')
@@ -182,6 +249,8 @@ async uploadFile(
     const userType = await this.doctorService.searchUser(email);
     return userType;
   }
+
+
   
 
 }

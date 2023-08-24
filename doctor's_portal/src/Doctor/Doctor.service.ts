@@ -355,6 +355,7 @@ export class DoctorService {
     await this.notificationRepo.save(notiFication);
     return AllAppointment;
   }
+
   async deleteAllAppointments(email: string): Promise<string> {
     const doctor = await this.DoctorRepo.findOne({ where: { email } });
     const appointments = await this.appointmentRepo.find({
@@ -514,8 +515,53 @@ export class DoctorService {
   
     return 'File uploaded successfully';
   }
+
+
+
+
+
+
+
+  
+  async changePicture(email: string, FileFullName: string): Promise<string> {
+    const doctor = await this.DoctorRepo.findOne({ where: { email } });
+    console.log(FileFullName);
+  
+    await this.fileRepo.update({ doctor: doctor }, { File: FileFullName });
+  
+    const notiFication: NotificationEntity = new NotificationEntity();
+    notiFication.doctor = doctor;
+    notiFication.Message = "Profile Picture Uploaded";
+  
+    const currentDate: CurrentDate = new CurrentDate();
+    const currentTime: CurrentTime = new CurrentTime();
+  
+    notiFication.date = currentDate.getCurrentDate();
+    notiFication.time = currentTime.getCurrentTime();
+  
+    await this.notificationRepo.save(notiFication);
+  
+    return 'File uploaded successfully';
+  }
   
 
+
+
+
+
+
+  async uploadDefaultPicture(email: string, FileFullName: string): Promise<string> {
+    const doctor = await this.DoctorRepo.findOne({ where: { email } });    
+    console.log(FileFullName)
+  
+    const Fileobj: FileEntity = new FileEntity();
+    Fileobj.File = FileFullName;
+  
+    Fileobj.doctor = doctor;
+    await this.fileRepo.save(Fileobj);
+    return 'File uploaded successfully';
+  }
+  
 
 
   async getImages(email: string, res: any) {
@@ -526,33 +572,39 @@ export class DoctorService {
     });
   
     try {
-      const nameFile = await this.fileRepo.findOne({
+      const nameFile : FileEntity= await this.fileRepo.findOne({
         where: {
           doctor: doctor,
         },
       });
-      const name=nameFile.File;
+      const name = nameFile.File;
   
-      res.sendFile(name, { root: './DoctorFiles' })
+        res.sendFile(name, { root: './DoctorFiles' }, (err) => {
+        if (err) {
+            console.error('Error sending file:', err);
+            return res.status(404).send('Missing Profile Picture');
+        } else {
 
-      
-      const notiFication: NotificationEntity = new NotificationEntity();
-      notiFication.doctor = doctor;
-      notiFication.Message = "Preview Profile Picture";
-  
-      const currentDate: CurrentDate = new CurrentDate();
-      const currentTime: CurrentTime = new CurrentTime();
-  
-      notiFication.date = currentDate.getCurrentDate();
-      notiFication.time = currentTime.getCurrentTime();
-  
-      await this.notificationRepo.save(notiFication);
-    } catch (error) {
-      return "Missing Profile Picture";
+            console.log('File sent successfully:', name);
+        }
     }
-  
-    return "Preview Profile Picture";
+    );
+    } catch (error) {
+      return res.status(404).send('Missing Profile Picture');
+    }
   }
+
+
+
+
+
+
+
+
+
+
+
+
   
   async sendEmail(email: string, emailData: any):Promise<String> {
     const doctor = await this.DoctorRepo.findOne({

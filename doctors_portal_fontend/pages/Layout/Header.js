@@ -1,4 +1,4 @@
-export default function HeaderForPage() {
+export default function DoctorLogo() {
   return (
     <><div className="HomeLogo">
       <header>

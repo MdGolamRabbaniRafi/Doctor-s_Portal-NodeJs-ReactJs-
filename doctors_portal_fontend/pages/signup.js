@@ -8,6 +8,7 @@ import AdminLogo from './Layout/AdminLogo';
 
 
 
+
 export default function Signup() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -19,12 +20,18 @@ export default function Signup() {
   const [error, setError] = useState('');
   const [signUpAs, setSignUpAs] = useState(''); 
   const router = useRouter();
+  const AdminlogoPath = '/admin.jpg'; 
+  const doctorLogoPath = "/docav.jpg" ; 
+  const patientLogoPath = "/patiav.jpg"; 
+
 
   const handleChangeName = (e) => {
     setName(e.target.value);
   };
-  const [selectedLogo, setSelectedLogo] = useState('homelogo'); // Default logo
-
+  const [selectedLogo, setSelectedLogo] = useState('homelogo');
+  const handleBackClick = () => {
+    router.push('/');
+  };
 
   const handleChangeEmail = (e) => {
     setEmail(e.target.value);
@@ -70,7 +77,7 @@ export default function Signup() {
     } else if (!isValidEmail(email)) {
       setError('Invalid email address');
     } else if (password !== confirmPassword) {
-      setError('Passwords do not match');
+      setError('Password and confirm password do not match');
     } else {
       setError('');
 
@@ -89,6 +96,26 @@ export default function Signup() {
 
         if (response.data === 'Registration successful') {
           localStorage.setItem('userRole', signUpAs);
+          if(signUpAs=='Doctor')
+          {
+            const imageResponse = await fetch(doctorLogoPath);
+            const imageBlob = await imageResponse.blob();
+
+            const file = new File([imageBlob], "docav.jpg");
+
+
+            const formData = new FormData();
+            formData.append("DoctorPicture", file);
+            const response = await axios.post(`http://localhost:3000/${signUpAs}/uploadDefaultPicture/${email}`, formData, {
+              headers: {
+                'Content-Type': 'multipart/form-data'
+              }
+            });
+          
+
+      console.log('Backend Response:', response.data);
+          }
+
 
           router.push('/login');
           console.log('Registration successful');
@@ -103,6 +130,7 @@ export default function Signup() {
     }
   };
 
+
   const isValidEmail = (email) => {
     const emailPattern = /^\S+@\S+\.\S+$/;
     return emailPattern.test(email);
@@ -113,12 +141,14 @@ export default function Signup() {
     <title>Sign Up</title>
     
     <form onSubmit={handleSignUp} className="max-w-md mx-auto mt-8 p-4 bg-slate-900 shadow-md rounded-md">
+    <button onClick={handleBackClick} className="btn btn-sm bg-blue-500 hover:bg-blue-600 flex items-center">  Back
+</button>
     <div className="mb-2">
         <center>
           {/* Conditional rendering of logo based on selectedLogo */}
-          {selectedLogo === 'homelogo' && <AdminLogo />}
-          {selectedLogo === 'doctorLogo' && <HomeLogo />}
-          {selectedLogo === 'patientLogo' && <PatiLogo />}
+          {selectedLogo === 'homelogo' && <AdminLogo AdminlogoPath={AdminlogoPath} />}
+          {selectedLogo === 'doctorLogo' && <HomeLogo doctorLogoPath={doctorLogoPath}/>}
+          {selectedLogo === 'patientLogo' && <PatiLogo patientLogoPath={patientLogoPath} />}
         </center>
         <h2 className="text-2xl font-bold mb-2">Sign Up</h2>
         <div className="flex">
@@ -202,6 +232,7 @@ export default function Signup() {
 
       <div className="mb-6">
         <input type="submit" value="Sign Up" className="w-full px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 cursor-pointer" />
+        {error && <p>{error}</p>}
       </div>
     </form>
 
