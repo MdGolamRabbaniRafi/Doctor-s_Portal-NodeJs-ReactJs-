@@ -201,7 +201,7 @@ async editProfile(id: number, updatedPatientData: Partial<PatientEntity>): Promi
 async getDoctorById(id: number): Promise<DoctorEntity> {
   return this.doctorRepo.findOne({ 
     where: { id },
-    select: ['id', 'name', 'email', ],
+    select: ['id', 'name', 'email', 'Gender', 'Degree' ],
   });
 }
 async addAppointment(appointment: any): Promise<AppointmentEntity> {
