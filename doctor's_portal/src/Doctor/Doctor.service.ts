@@ -177,11 +177,14 @@ export class DoctorService {
     
       if (doctorUser) {
         return doctorUser;
-      } else if (patientUser) {
+      } 
+      
+      else if (patientUser) {
         return patientUser;
-      } else if (AdminUser) {
-      } else if (AdminUser) {
-        return ;
+      }
+      
+      else if (AdminUser) {
+        return AdminUser;
       } else {
         return  "User Not Found";
       }

@@ -19,6 +19,7 @@ export default function Searching() {
   };
   const handleSubmit = async (e) => {
  
+    e.preventDefault();
 
     if (!email) {
       setError('All fields are required');
@@ -27,7 +28,8 @@ export default function Searching() {
 
       try {
        // const userEmail = user.email;
-        const response = await axios.post(`http://localhost:3000/Doctor/Searching/${email}`,
+        const response = await axios.get(`http://localhost:3000/Doctor/Searching/${email}`,
+        
         {
           withCredentials: true,
         }
@@ -39,7 +41,13 @@ export default function Searching() {
         if (response.data === "User Not Found") {
           setError('user Does not found');
         } else {
-          router.push('../Doctor/Found_user');
+          console.log("responseaaaaaaa   :"+response.data)
+          router.push({
+            pathname: '../Doctor/Found_user',
+            query: {
+              data: JSON.stringify(response.data),
+            },
+          });
         }
       } catch (error) {
         console.error('Failed:', error);
