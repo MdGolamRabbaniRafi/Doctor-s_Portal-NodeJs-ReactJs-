@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import HeaderForLoggedin from '../Layout/LoggedinHeader';
 import FooterForLoggedin from '../Layout/LoggedinFooter';
+import Link from 'next/link';
 
 export default function View_all_appointment() {
   const [appointments, setAppointments] = useState([]);
@@ -88,7 +89,10 @@ export default function View_all_appointment() {
         {appointments.map(appointment => (
           <li key={appointment.Serial}>
             Serial: {appointment.Serial}<br />
-            Name: {appointment.name}<br />
+  
+            Name:<Link href={`../Doctor/Dynamic_user/Dynamic/?email=${appointment.email}`}>{appointment.name}</Link>
+            <br/>
+
             Age: {appointment.age}<br />
             Date: {appointment.date}<br />
             Time: {appointment.time}<br />

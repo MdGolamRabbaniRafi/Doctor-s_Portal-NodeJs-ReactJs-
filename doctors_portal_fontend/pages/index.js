@@ -10,6 +10,8 @@ const HomePage = () => {
   const [notice, setNotice] = useState([]);
   const [error, setError] = useState('');
   const router = useRouter();
+  const doctorLogoPath = "/docav.jpg" ; 
+
   
   useEffect(() => {
     const timer = setInterval(() => {
@@ -62,7 +64,7 @@ const HomePage = () => {
       <div className='h-screen w-screen bg-white'>
       <div className="navbar bg-teal-800 py-0 shadow-xl">
       <div className="flex-1">
-        <a><HomeLogo></HomeLogo></a>
+        <a><HomeLogo doctorLogoPath={doctorLogoPath}></HomeLogo></a>
         <a className="btn btn-ghost normal-case text-xl">Doctor's Portal</a>
       </div>
       <div className="flex-none ">
@@ -77,13 +79,13 @@ const HomePage = () => {
     <div className="carousel w-full">
   <div id="slide1" className={`carousel-item relative w-full ${currentSlide === 1 ? 'block' : 'hidden'}`}>
     <img src="/doctor1.jpg" className="w-full" />
-    <div class="absolute inset-0 bg-black bg-opacity-50 flex  items-center justify-center"></div>
-          <div class="absolute inset-0 flex items-center justify-center">
+    <div className="absolute inset-0 bg-black bg-opacity-50 flex  items-center justify-center"></div>
+          <div className="absolute inset-0 flex items-center justify-center">
          
-            <div class="text-center">
-              <h1 class="text-6xl font-serif text-white">Your health is our priority</h1>
-              <p class="mt-4 font-medium text-white">CHECK FOR DOCTORS GUIDANCE</p>
-              <button class="btn btn-error text-white mt-7" onClick={handleViewArticle}>
+            <div className="text-center">
+              <h1 className="text-6xl font-serif text-white">Your health is our priority</h1>
+              <p className="mt-4 font-medium text-white">CHECK FOR DOCTORS GUIDANCE</p>
+              <button className="btn btn-error text-white mt-7" onClick={handleViewArticle}>
                  View Articles
             </button>
              
@@ -97,13 +99,13 @@ const HomePage = () => {
   </div> 
   <div id="slide2" className={`carousel-item relative w-full ${currentSlide === 2 ? 'block' : 'hidden'}`}>
     <img src="/doctor2.jpg" className="w-full" />
-    <div class="absolute inset-0 bg-black bg-opacity-50 flex  place-items-end justify-center"></div>
-          <div class="absolute inset-0 flex items-center justify-center">
+    <div className="absolute inset-0 bg-black bg-opacity-50 flex  place-items-end justify-center"></div>
+          <div className="absolute inset-0 flex items-center justify-center">
          
-            <div class="text-center">
-              <h1 class="text-6xl font-serif text-white">Your health is our priority</h1>
-              <p class="mt-4 font-medium text-white">CHECK FOR DOCTORS GUIDANCE</p>
-              <button class="btn btn-error text-white mt-7"onClick={handleViewArticle}>View Articles</button>
+            <div className="text-center">
+              <h1 className="text-6xl font-serif text-white">Your health is our priority</h1>
+              <p className="mt-4 font-medium text-white">CHECK FOR DOCTORS GUIDANCE</p>
+              <button className="btn btn-error text-white mt-7"onClick={handleViewArticle}>View Articles</button>
              
             </div>
           </div>
