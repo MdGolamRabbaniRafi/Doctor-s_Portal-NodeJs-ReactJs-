@@ -2,6 +2,7 @@
 # Advance_webtech_Full-Stack_project
 
 Educational
+NEST JS->
 
 To create a new project-> in folder
 1. npm i -g @nestjs/cli
@@ -38,3 +39,23 @@ Controller-> User request for output in postman through GET(Showing), POST(Uploa
 Service-> Data results for the controller.
 dto-> Validations...
 Module->Imports all and connectivity.
+
+
+
+
+
+
+NEXT JS->
+
+
+To install project->
+#npx create-next-app@latest
+
+To connect with client server->
+#npm run dev
+
+Install daisy Ui->
+#npm install daisyui
+#yarn add daisyui
+
+
