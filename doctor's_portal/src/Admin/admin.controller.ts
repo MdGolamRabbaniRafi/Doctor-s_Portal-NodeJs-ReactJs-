@@ -15,6 +15,9 @@ import { SessionGuard } from './session.guards';
 import { Response } from 'express';
 import session from 'express-session';
 import { ProfileEntity } from './profile.entity';
+import { plainToClass } from 'class-transformer';
+import { join } from 'path';
+
 
 
 
@@ -27,12 +30,12 @@ export class AdminController {
 
   
 
-  @Get('/ViewMyProfile')
-  @UseGuards(SessionGuard)
-  ViewPersonalInfo(@Session() session): Object{
-    return this.adminService.ViewPersonalInfo(session.email);
+  // @Get('/ViewMyProfile')
+  // @UseGuards(SessionGuard)
+  // ViewPersonalInfo(@Session() session): Object{
+  //   return this.adminService.ViewPersonalInfo(session.email);
 
-  }
+  // }
 
   @Put('/EditProfile')
   @UseGuards(SessionGuard)
@@ -48,34 +51,59 @@ export class AdminController {
     
   }
 
-  // @Get('/ViewMyProfile')
-  // @UseGuards(SessionGuard)
-  // ViewMyProfile(@Session() session): Promise<{ admin: AdminEntity }> {
-  //   return this.adminService.ViewMyProfile(session.email);
-  // }
+  @Get('/ViewMyProfile')
+  @UseGuards(SessionGuard)
+  ViewMyProfile(@Session() session): Promise<{ admin: AdminEntity }> {
+    return this.adminService.ViewMyProfile(session.email);
+  }
 
 
   @Post('/addProfile')
   @UseGuards(SessionGuard)
-  async addProfile(@Body() profileData: ProfileEntity, @Session() session): Promise<ProfileEntity> {
+  @UseInterceptors(FileInterceptor('image',
+        {
+            fileFilter: (req, file, cb) => {
+                if (file.originalname.match(/^.*\.(jpg|webp|png|jpeg)$/))
+                    cb(null, true);
+                else {
+                    cb(new MulterError('LIMIT_UNEXPECTED_FILE', 'image'), false);
+                }
+            },
+            limits: { fileSize: 30000 },
+            storage: diskStorage({
+                destination: './uploads',
+                filename: function (req, file, cb) {
+                    cb(null, Date.now() + file.originalname)
+                },
+            })
+        }
+    ))
+  async addProfile(@Body() myData: ProfileEntity, @Session() session, @UploadedFile() imageobj: Express.Multer.File): Promise<ProfileEntity> {
     const email = session.email;
-    return this.adminService.addProfile(profileData, email);
+    myData.filenames = imageobj.filename;
+    const profile = await this.adminService.addProfile(myData, email);
+    return plainToClass(ProfileEntity, profile);
   }
   
 
-  // @Get('/myphoto')
-  // @UseGuards(SessionGuard)
-  // async showProfilePicture(@Session() session: any, @Res() res: Response): Promise<void> {
-  //   try {
-  //     const email: string = session.email;
-  //     const filename: string = await this.adminService.getProfilePictureFilename(email);
-  //     this.adminService.sendProfilePicture(res, filename);
-  //   } catch (error) {
-  //     console.error(error);
-  //     res.status(500).send('Internal Server Error');
-  //   }
-  // }
-
+  @Get('/myphoto')
+  @UseGuards(SessionGuard)
+  async showProfilePicture(@Session() session: any, @Res() res: Response): Promise<void> {
+    try {
+      const email: string = session.email;
+      const filename: string = await this.adminService.getProfilePictureFilename(email);
+      
+      // Construct the path to the image file
+      const filePath = join(__dirname, '..', '..', 'uploads', filename);
+      
+      // Send the image file
+      res.sendFile(filePath);
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('Internal Server Error');
+    }
+  }
+  
   // @Post('/signup')
   //   @UseInterceptors(FileInterceptor('image',
   //       {
@@ -257,10 +285,10 @@ viewDoctorsByAdmin(@Param('adminid', ParseIntPipe) adminid: number): Promise<Adm
     return this.adminService.deleteAllDoctors();
   }
 
-  @Delete('/doctor/:id')
+  @Delete('/Doctor/:id')
   @UseGuards(SessionGuard)
-  deleteDoctor(@Param('id') id: number, @Session() session): Promise<{ message: string }> {
-    return this.adminService.deleteDoctorById(id, session.email);
+  deleteDoctor(@Param('id') id: number, ): Promise<{ message: string }> {
+    return this.adminService.deleteDoctorById(id);
   }
   
 
@@ -312,10 +340,12 @@ getPatientById(@Param('id', ParseIntPipe) id: number): object {
     return this.adminService.deleteAllPatients();
   }
 
-  @Delete('/deleteOnePatient/:id')
-  deleteOnePatient(@Param('id', ParseIntPipe) Id: number): Promise<{ message: string }> {
-    return this.adminService.deleteOnePatient(Id);
+  @Delete('/Patient/:id')
+  @UseGuards(SessionGuard)
+  deletePatient(@Param('id') id: number, ): Promise<{ message: string }> {
+    return this.adminService.deletePatientById(id);
   }
+  
 
   @Put('/Patient/:id')
   updatePatientById(

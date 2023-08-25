@@ -21,6 +21,9 @@ export class ProfileEntity {
   @Column({ type: 'varchar', length: 150, nullable: true })
   experience: string;
 
+  @Column({ nullable: true })
+  filenames: string;
+
 
   @OneToOne(() => AdminEntity, admin => admin.profile)
   @JoinColumn()

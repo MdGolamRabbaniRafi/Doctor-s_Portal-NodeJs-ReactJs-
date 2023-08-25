@@ -59,9 +59,11 @@ const NavigationBarLoggedin = () => {
           <ul tabIndex={0} className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
             <li><button onClick={() => handleNavigation("/profile")}>Profile</button></li>
             <li><Link href="/Admin/Admin_notice">Notice</Link></li>
-            <li><Link href="/Refer_doctor">Refer</Link></li>
+            <li><Link href="/Admin/Admin_Add_Doctor">Add Doctor</Link></li>
             <li><Link href="/Edit_profile">Edit Profile</Link></li>
             <li><Link href="/Admin/Admin_Notification">Notifications</Link></li>
+            <li><Link href="/Admin/Admin_Profile">Profile</Link></li>
+
             <li><Link href="/Send_email">Email</Link></li>
             <li><button onClick={handleLogout}>Logout</button></li>
 
@@ -104,6 +106,14 @@ const NavigationBarLoggedin = () => {
 
   </Link>
 </button>
+          <Link href={"/Admin/Admin_Profile"}>
+          <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
+            <div className="w- rounded-full">
+              <img src={'http://localhost:3000/Admin/myphoto'} />
+            </div>
+          </label>
+          </Link>
+
 
 
 
