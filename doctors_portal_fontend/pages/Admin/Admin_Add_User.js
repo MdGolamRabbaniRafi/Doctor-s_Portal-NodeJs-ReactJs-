@@ -6,14 +6,14 @@ import HeaderForLoggedin from '../Layout/LoggedinHeader';
 import FooterForLoggedin from '../Layout/LoggedinFooter';
 import PatiLogo from '../Layout/PatientLogo';
 
-export default function AddAppointment() {
+export default function AddUser() {
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
   const [degree, setDegree] = useState('');
   const [bloodGroup, setBlood] = useState('');
   const [gender, setGender] = useState('');
-  const [userType, setUserType] = useState('Doctor'); // Default to Doctor
+  const [userType, setUserType] = useState('Doctor'); 
   const router = useRouter();
   const [error, setError] = useState('');
 

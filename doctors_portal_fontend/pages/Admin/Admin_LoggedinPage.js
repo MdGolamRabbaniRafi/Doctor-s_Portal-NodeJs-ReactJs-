@@ -63,11 +63,11 @@ export default function LoggedinPage() {
     </h2>
     <p>Get your company stakeholders into new level</p>
     <div className="card-actions justify-end">
-      <Link href='/Admin/Admin_Add_Doctor'>
+      <Link href='/Admin/Admin_Add_User'>
     
       <div className="badge badge-outline">Add Users</div> 
       </Link>
-      <Link href=''>
+      <Link href='/Admin/Admin_View_User'>
       <div className="badge badge-outline">View</div>
       </Link>
      

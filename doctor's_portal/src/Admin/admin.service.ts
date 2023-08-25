@@ -524,20 +524,44 @@ async addDoctor(data: AddDocotorDTO, email: string): Promise<DoctorEntity> {
 
 
 
-async getAllDoctors(): Promise<DoctorEntity[]> {
-  const doctors = await this.doctorRepo.find({ relations: ['admin'] });
+// async getAllDoctors(): Promise<DoctorEntity[]> {
+//   const doctors = await this.doctorRepo.find({ relations: ['admin'] });
   
-  doctors.forEach(doctor => {
-    doctor.password = undefined;
-    if (doctor.admin) {
-      doctor.admin.password = undefined;
-      // doctor.admin.filenames = undefined;
-      // doctor.admin.phone = undefined;
-      doctor.admin.email = undefined;
-    }
+//   doctors.forEach(doctor => {
+//     doctor.password = undefined;
+//     if (doctor.admin) {
+//       doctor.admin.password = undefined;
+//       // doctor.admin.filenames = undefined;
+//       // doctor.admin.phone = undefined;
+//       doctor.admin.email = undefined;
+//     }
+//   });
+
+//   return doctors;
+// }
+
+async getAllDoctors(): Promise<DoctorEntity[]|string> {
+
+  const doctors = await this.doctorRepo.find({
+    select: ['name', 'email', 'id', 'Degree'],
+    relations: ['admin'],
   });
 
-  return doctors;
+  if (doctors.length === 0) {
+    return "Doctor not found"
+  }
+
+  const updatedDoctors: DoctorEntity[] = doctors.map(doctor => {
+    const updatedDoctor = { ...doctor };
+    if (updatedDoctor.admin) {
+      updatedDoctor.name = `${updatedDoctor.name}. Added by admin ${updatedDoctor.admin.name}`;
+      delete updatedDoctor.admin.password;
+      delete updatedDoctor.admin.email;
+    }
+    return updatedDoctor;
+  });
+
+  return updatedDoctors;
 }
 
 async viewDoctorsByAdmin(id: any): Promise<AdminEntity[]> {
@@ -667,20 +691,28 @@ async getDoctorById(doctorId: number, email: string): Promise<DoctorEntity> {
   }
   
 
-  async getAllPatient(): Promise<PatientEntity[]> {
-    const patients = await this.patientRepo.find({ relations: ['admin'] });
-    
-    patients.forEach(patient => {
-      patient.password = undefined;
-      if (patient.admin) {
-        patient.admin.password = undefined;
-        // patient.admin.filenames = undefined;
-        // patient.admin.phone = undefined;
-        patient.admin.email = undefined;
-      }
+  async getAllPatient(): Promise<PatientEntity[]|string> {
+
+    const patients = await this.patientRepo.find({
+      select: ['name', 'email', 'id', 'Blood_group'],
+      relations: ['admin'],
     });
   
-    return patients;
+    if (patients.length === 0) {
+      return "Patient not found"
+    }
+  
+    const updatedPatients: PatientEntity[] = patients.map(patient => {
+      const updatedPatient = { ...patient };
+      if (updatedPatient.admin) {
+        updatedPatient.name = `${updatedPatient.name}. Added by admin ${updatedPatient.admin.name}`;
+        delete updatedPatient.admin.password;
+        delete updatedPatient.admin.email;
+      }
+      return updatedPatient;
+    });
+  
+    return updatedPatients;
   }
 async getPatientById(id: number): Promise<PatientEntity> {
   return this.patientRepo.findOne({ 

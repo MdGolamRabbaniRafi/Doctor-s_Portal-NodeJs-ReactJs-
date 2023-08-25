@@ -232,9 +232,9 @@ addDoctor(@Body() doctor: AddDocotorDTO,@Session() session): object {
   return this.adminService.addDoctor(doctor ,session.email);
 }
 
-  @Get('/viewalldoctor')
+  @Get('/viewallDoctor')
   @UseGuards(SessionGuard)
-  async getAllDoctors(): Promise<DoctorEntity[]> {
+  async getAllDoctors(): Promise<DoctorEntity[] | string> {
     return this.adminService.getAllDoctors();
   }
   
@@ -264,7 +264,7 @@ viewDoctorsByAdmin(@Param('adminid', ParseIntPipe) adminid: number): Promise<Adm
   }
   
 
-  @Put('/doctor/:id')
+  @Put('/Doctor/:id')
   updateDoctorById(
     @Param('id', ParseIntPipe) id: number,
     @Body() data: Partial<DoctorEntity>,
@@ -291,9 +291,9 @@ viewDoctorsByAdmin(@Param('adminid', ParseIntPipe) adminid: number): Promise<Adm
     return this.adminService.addPatient(patient, session.email);
   }
 
-  @Get('/viewallpatient')
+  @Get('/viewallPatient')
   @UseGuards(SessionGuard)
-  async getAllPatient(): Promise<PatientEntity[]> {
+  async getAllPatient(): Promise<PatientEntity[]|string> {
     return this.adminService.getAllPatient();
   }
 
@@ -317,7 +317,7 @@ getPatientById(@Param('id', ParseIntPipe) id: number): object {
     return this.adminService.deleteOnePatient(Id);
   }
 
-  @Put('/patient/:id')
+  @Put('/Patient/:id')
   updatePatientById(
     @Param('id', ParseIntPipe) id: number,
     @Body() data: Partial<PatientEntity>,
