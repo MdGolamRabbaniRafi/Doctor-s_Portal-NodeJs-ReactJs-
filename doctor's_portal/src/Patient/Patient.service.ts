@@ -116,36 +116,6 @@ export class PatientService {
     await this.notificationRepo.save(notiFication);
     return visit;
   } 
-
-
-
-
-  async ViewPersonalInfoWithEmail(email: string): Promise<PatientEntity> {
-    const visit = await this.PatientRepo.findOne({
-      select: {
-        name: true,
-        email: true,
-        id: true,
-        Gender:true,
-        Degree:true,
-        Blood_group:true,
-        User:true,
-
-        password: false,
-        
-      },
-      where: {
-        email: email,
-        
-      },
-      relations: ['Profile']
-    });
-  
-    const patient = visit[0];
-    return visit;
-  } 
-
-
   
   async SeeProfile(id: number): Promise<PatientEntity[]> {
     return this.PatientRepo.find({
