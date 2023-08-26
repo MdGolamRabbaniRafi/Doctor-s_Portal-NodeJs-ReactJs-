@@ -30,6 +30,7 @@ export default function () {
         <li><button onClick={() => router.push("../Patient/searchDoctor")}>Search Doctor</button></li>
         <li><button onClick={() => router.push("../Patient/test")}>Test</button></li>
         <li><button onClick={() => router.push("../Patient/update_test")}>Update Test</button></li>
+        <li><button onClick={() => router.push("/Logout")}>Log Out</button></li>
       </ul>
     </div>
   </div>
