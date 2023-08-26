@@ -57,6 +57,7 @@ export default function Signin() {
           console.log('Backend Response:', response.data);
 
           if (response.data === 'Login successful') {
+            console.log("Logoooooooo cookieeeeeeee :"+document.cookie)
             // Fetch the userRole from the response or set it based on your logic
            // const userRole = response.data.userRole; // Adjust this line
 
@@ -73,6 +74,7 @@ export default function Signin() {
             response.data === 'Already logged in an account. Please log out first.'
           ) {
             setError('Already logged in an account. Please log out first.');
+          //  router.push('./Doctor/LoggedinPage')
           } else {
             setError('Incorrect Password or Email');
           }

@@ -17,10 +17,10 @@ export default function dynamic() {
     router.push('../../Doctor/View_all_appointment');
   };
 
-  const handleProfilePicture = (e) => {
-    e.preventDefault();
-    setSelectFile(e.target.files[0]);
-  };
+  // const handleProfilePicture = (e) => {
+  //   e.preventDefault();
+  //   setSelectFile(e.target.files[0]);
+  // };
 
 
   const fetchData = async () => {

@@ -6,34 +6,39 @@ import FooterForLoggedin from '../Layout/LoggedinFooter';
 import { useAuth } from '../utils/authentication';
 
 export default function Notification() {
-  const [notifications, setNotification] = useState([]);
+  const [notifications, setNotifications] = useState([]);
   const [error, setError] = useState('');
   const router = useRouter();
-  const { user } = useAuth(); 
-
+  const { user, checkUser } = useAuth();
 
   const handleBackClick = () => {
     router.push('../Doctor/LoggedinPage');
   };
+
   useEffect(() => {
-    fetchData();
+    if (!checkUser()) {
+      router.push('/');
+    } else {
+      fetchData();
+    }
   }, []);
-  
+
   const fetchData = async () => {
     try {
       const userEmail = user.email;
-      const response = await axios.get(`http://localhost:3000/Doctor/notification`, {
-        withCredentials: true, 
-      })
-      console.log("Backend Response:", response.data);
-  
+      const response = await axios.get('http://localhost:3000/Doctor/notification', {
+        withCredentials: true,
+      });
+
+      console.log('Backend Response:', response.data);
+
       if (Array.isArray(response.data)) {
         const notificationsData = response.data;
-        console.log("Notifications Data:", notificationsData);
-  
+        console.log('Notifications Data:', notificationsData);
+
         if (notificationsData.length > 0) {
-          console.log("Notifications:", notificationsData);
-          setNotification(notificationsData);
+          console.log('Notifications:', notificationsData);
+          setNotifications(notificationsData);
         } else {
           setError('No notifications found');
         }
@@ -46,32 +51,34 @@ export default function Notification() {
       setError('An error occurred. Please try again later.');
     }
   };
-  
-  
 
   return (
-
     <div>
-    <HeaderForLoggedin></HeaderForLoggedin>
-      <h1>Notifications</h1>
-      {error && <p>{error}</p>}
-      <ul>
-        {notifications.map(notification => (
-          
-          <li>
-            Serial: {notification.Serial}<br />
-            Activity: {notification.Message}<br />
-            Date: {notification.date}<br />
-            Time: {notification.time}<br />
-            <br></br>
-
-          </li>
-          
-        ))}
-      </ul>
-      <input type="submit" value="Back" onClick={handleBackClick} />
-      <FooterForLoggedin></FooterForLoggedin>
-
+      {checkUser() ? (
+        <>
+          <HeaderForLoggedin />
+          <h1>Notifications</h1>
+          {error && <p>{error}</p>}
+          <ul>
+            {notifications.map(notification => (
+              <li key={notification.Serial}>
+                Serial: {notification.Serial}<br />
+                Activity: {notification.Message}<br />
+                Date: {notification.date}<br />
+                Time: {notification.time}<br />
+                <br />
+              </li>
+            ))}
+          </ul>
+          <input type="submit" value="Back" onClick={handleBackClick} />
+          <FooterForLoggedin />
+        </>
+      ) : (
+        <div className="flex justify-center items-center h-screen">
+          <div className="w-16 h-16 border-t-4 border-blue-500 border-solid rounded-full animate-spin"></div>
+          <p>Login First</p>
+        </div>
+      )}
     </div>
   );
 }

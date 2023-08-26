@@ -1,38 +1,31 @@
 import { createContext, useContext, useState } from 'react';
 import axios from 'axios';
+import Cookies from 'js-cookie';
+import { useRouter } from 'next/router';
 
 const AuthContext = createContext();
 
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const router = useRouter();
 
   const updateUser = (newUser) => {
     setUser(newUser);
   };
 
   const login = (email, cookie) => {
-  //  sessionStorage.setItem('email', email); 
+  sessionStorage.setItem('email', email); 
   console.log("EEEEEEEEE:"+email)
   console.log("ccccccccccccc:"+cookie)
+  console.log("session:::::"+sessionStorage.getItem('email'))
     setUser({ email, cookie });
 
   };
 
   const checkUser = () => {
-    console.log("user:  "+user.email)
-    console.log("user:  "+user.cookie)
-    if(user.email!=null && user.cookie!=null) {
-      return true;
-    }
-    else
-    {
-      return false;
-    }
-
+    return user !== null;
   };
-
-
 
   const logout = () => {
 
@@ -40,15 +33,22 @@ export const AuthProvider = ({ children }) => {
   };
   async function doSignOut() {
     try {
-      const response = await axios.post( 'http://localhost:3000/Admin/signout/',
+      const response = await axios.post( 'http://localhost:3000/Doctor/logout',
         {
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          withCredentials: true
+          // headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+         // withCredentials: true
         }
       );
+      console.log("cookie available?"+document.cookie)
       console.log(response)
         setUser(null);
-        document.cookie = null;
+      //  document.cookie = null;
+      const cookies = Cookies.get();
+  
+      for (const cookieName in cookies) {
+        Cookies.remove(cookieName);
+      }
+      console.log("Cookie distroy?"+document.cookie)
 
         router.push('/login');
       

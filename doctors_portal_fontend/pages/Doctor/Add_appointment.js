@@ -4,6 +4,10 @@ import React, { useState } from 'react';
 import HeaderForLoggedin from '../Layout/LoggedinHeader';
 import FooterForLoggedin from '../Layout/LoggedinFooter';
 //import { useAuth } from '../utils/authentication';
+import { useAuth } from '../utils/authentication';
+import { useEffect } from 'react';
+
+
 export default function AddAppointment() {
   const [email, setEmail] = useState('');
   const [age, setAge] = useState('');
@@ -11,6 +15,9 @@ export default function AddAppointment() {
   const [time, setTime] = useState('');
   const router = useRouter();
   const [error, setError] = useState('');
+
+  const { checkUser } = useAuth();
+
  // const { user } = useAuth(); 
 
 
@@ -29,6 +36,17 @@ export default function AddAppointment() {
   const handleBack = (e) => {
     router.push('../Doctor/Appointment');
   };
+ // const { checkUser } = useAuth();
+
+  useEffect(() => {
+    //fetchData(user);
+    console.log("CheckUser::::"+checkUser())
+    if(!checkUser())
+    {
+      //  alert('Log in first')
+      router.push('/')
+    }
+  }, []);
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("email:"+email)
@@ -71,29 +89,40 @@ export default function AddAppointment() {
       }
     }
   };
-
   return (
     <div>
-      <HeaderForLoggedin></HeaderForLoggedin>
-      <h1>Add Appointment</h1>
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="email">Email:</label>
-        <input type="email" id="email" name="email" value={email} required onChange={handleChangeEmail} /><br />
+      {checkUser() ? (
+        <>
+             <HeaderForLoggedin />
+          <h1>Add Appointment</h1>
+          <form onSubmit={handleSubmit}>
+            <label htmlFor="email">Email:</label>
+            <input type="email" id="email" name="email" value={email} required onChange={handleChangeEmail} /><br />
+  
+            <label htmlFor="age">Age:</label>
+            <input type="text" id="text" name="To" value={age} required onChange={handleChangeAge} /><br />
+  
+            <label htmlFor="date">Date:</label>
+            <input type="date" id="date" name="date" value={date} required onChange={handleChangeDate} /><br />
+  
+            <label htmlFor="time">Time:</label>
+            <input type="time" id="time" name="time" value={time} required onChange={handleChangeTime} /><br />
+  
+            <input type="submit" value="Confirm" />
+            <button type="button" onClick={handleBack}>Back</button>
+          </form>
+          {error && <p>{error}</p>}
+          <FooterForLoggedin />
+        </>
+      ) : (
+        <div className="flex justify-center items-center h-screen">
+           
+            <div class="w-16 h-16 border-t-4 border-blue-500 border-solid rounded-full animate-spin"></div>
+            <p>Login First</p>
 
-        <label htmlFor="age">Age:</label>
-        <input type="text" id="text" name="To" value={age}required onChange={handleChangeAge} /><br />
-
-        <label htmlFor="date">Date:</label>
-        <input type="date" id="date" name="date" value={date}required onChange={handleChangeDate} /><br />
-
-        <label htmlFor="time">Time:</label>
-        <input type="time" id="time" name="time" value={time}required onChange={handleChangeTime} /><br />
-
-        <input type="submit" value="Confirm" />
-        <button type="button" onClick={handleBack}>Back</button>
-      </form>
-      {error && <p>{error}</p>}
-      <FooterForLoggedin></FooterForLoggedin>
+          
+        </div>
+      )}
     </div>
   );
 }

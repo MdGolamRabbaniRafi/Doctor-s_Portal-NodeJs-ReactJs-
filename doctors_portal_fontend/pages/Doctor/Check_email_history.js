@@ -10,14 +10,18 @@ export default function EmailHistory() {
   const [EmailData, setEmailData] = useState([]);
   const [error, setError] = useState('');
   const router = useRouter();
-  const { user } = useAuth();
+  const { checkUser } = useAuth();
 
   const handleBackClick = () => {
     router.push('../Doctor/Send_email');
   };
 
   useEffect(() => {
-    fetchData();
+    if (!checkUser()) {
+      router.push('/');
+    } else {
+      fetchData();
+    }
   }, []);
 
   const fetchData = async () => {
@@ -28,17 +32,17 @@ export default function EmailHistory() {
       console.log("Backend Response:", response.data);
 
       if (Array.isArray(response.data)) {
-        const EmailData = response.data;
-        console.log("EmailData Data:", EmailData);
+        const emailHistoryData = response.data;
+        console.log("Email History Data:", emailHistoryData);
 
-        if (EmailData.length > 0) {
-          console.log("EmailData:", EmailData);
-          setEmailData(EmailData);
+        if (emailHistoryData.length > 0) {
+          console.log("Email History Data:", emailHistoryData);
+          setEmailData(emailHistoryData);
         } else {
-          setError('No EmailData found');
+          setError('No Email Data found');
         }
       } else {
-        setError('No EmailData found');
+        setError('No Email Data found');
       }
     } catch (error) {
       console.error('Failed:', error);
@@ -49,27 +53,36 @@ export default function EmailHistory() {
 
   return (
     <div>
-      <HeaderForLoggedin></HeaderForLoggedin>
-      <h1>Email History</h1>
-      {error && <p>{error}</p>}
-      <ul>
-        {EmailData.map((emailData) => (
-          <li key={emailData.id}>
-            {emailData.mail.map((email) => (
-              <div key={email.Serial}>
-                Sent to: {email.to}<br />
-                Subject: {email.subject}<br />
-                Body: {email.text}<br />
-                Date: {email.Date}<br />
-                Time: {email.Time}<br />
-                <br />
-              </div>
+      {checkUser() ? (
+        <>
+          <HeaderForLoggedin />
+          <h1>Email History</h1>
+          {error && <p>{error}</p>}
+          <ul>
+            {EmailData.map((emailData) => (
+              <li key={emailData.id}>
+                {emailData.mail.map((email) => (
+                  <div key={email.Serial}>
+                    Sent to: {email.to}<br />
+                    Subject: {email.subject}<br />
+                    Body: {email.text}<br />
+                    Date: {email.Date}<br />
+                    Time: {email.Time}<br />
+                    <br />
+                  </div>
+                ))}
+              </li>
             ))}
-          </li>
-        ))}
-      </ul>
-      <input type="submit" value="Back" onClick={handleBackClick} />
-      <FooterForLoggedin></FooterForLoggedin>
+          </ul>
+          <input type="submit" value="Back" onClick={handleBackClick} />
+          <FooterForLoggedin />
+        </>
+      ) : (
+        <div className="flex justify-center items-center h-screen">
+          <div className="w-16 h-16 border-t-4 border-blue-500 border-solid rounded-full animate-spin"></div>
+          <p>Login First</p>
+        </div>
+      )}
     </div>
   );
 }

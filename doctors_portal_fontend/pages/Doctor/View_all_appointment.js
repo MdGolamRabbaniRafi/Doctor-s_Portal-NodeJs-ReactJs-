@@ -4,11 +4,13 @@ import { useRouter } from 'next/router';
 import HeaderForLoggedin from '../Layout/LoggedinHeader';
 import FooterForLoggedin from '../Layout/LoggedinFooter';
 import Link from 'next/link';
+import { useAuth } from '../utils/authentication';
 
 export default function View_all_appointment() {
   const [appointments, setAppointments] = useState([]);
   const [error, setError] = useState('');
   const router = useRouter();
+  const { checkUser } = useAuth();
 
   const handleBackClick = () => {
     router.push('../Doctor/Appointment');
@@ -41,33 +43,31 @@ export default function View_all_appointment() {
   };
 
   useEffect(() => {
-    fetchData();
+    if (!checkUser()) {
+      router.push('/');
+    } else {
+      fetchData();
+    }
   }, []);
 
   const fetchData = async () => {
     try {
-      const response = await axios.get('http://localhost:3000/Doctor/viewAppointment',{
+      const response = await axios.get('http://localhost:3000/Doctor/viewAppointment', {
         withCredentials: true,
       });
-  
-      console.log("Backend Response:", response);
-  
+
+      console.log('Backend Response:', response);
+
       if (Array.isArray(response.data)) {
-        console.log(response.data)
+        console.log(response.data);
         const doctorData = response.data[0];
         if (Array.isArray(doctorData.appointment)) {
-          if(doctorData.appointment[0])
-          {
+          if (doctorData.appointment[0]) {
             setAppointments(doctorData.appointment);
-
-          }
-          else
-          {
+          } else {
             setError('No appointments found');
-
           }
-        } 
-       else {
+        } else {
           setError('No appointments found');
         }
       } else {
@@ -83,26 +83,43 @@ export default function View_all_appointment() {
   return (
     <div>
       <HeaderForLoggedin />
-      <h1>View Appointments</h1>
-      {error && <p>{error}</p>}
-      <ul>
-        {appointments.map(appointment => (
-          <li key={appointment.Serial}>
-            Serial: {appointment.Serial}<br />
-  
-            Name:<Link href={`../Doctor/Dynamic_user/Dynamic/?email=${appointment.email}`}>{appointment.name}</Link>
-            <br/>
 
-            Age: {appointment.age}<br />
-            Date: {appointment.date}<br />
-            Time: {appointment.time}<br />
-            <input type="submit" value="Edit" onClick={() => handleEditClick(appointment)} />
-            <input type="submit" value="Delete" onClick={() => handleDeleteClick(appointment)} />
-          </li>
-        ))}
-      </ul>
-      <input type="submit" value="Back" onClick={handleBackClick} />
-      <FooterForLoggedin />
+      {checkUser() ? (
+        <>
+          <h1>View Appointments</h1>
+          {error && <p>{error}</p>}
+          <ul>
+            {appointments.map((appointment) => (
+              <li key={appointment.Serial}>
+                Serial: {appointment.Serial}<br />
+
+                Name:
+                <Link href={`../Doctor/Dynamic_user/Dynamic/?email=${appointment.email}`}>
+                  {appointment.name}
+                </Link>
+                <br />
+
+                Age: {appointment.age}<br />
+                Date: {appointment.date}<br />
+                Time: {appointment.time}<br />
+                <input type="submit" value="Edit" onClick={() => handleEditClick(appointment)} />
+                <input
+                  type="submit"
+                  value="Delete"
+                  onClick={() => handleDeleteClick(appointment)}
+                />
+              </li>
+            ))}
+          </ul>
+          <input type="submit" value="Back" onClick={handleBackClick} />
+          <FooterForLoggedin />
+        </>
+      ) : (
+        <div className="flex justify-center items-center h-screen">
+          <div className="w-16 h-16 border-t-4 border-blue-500 border-solid rounded-full animate-spin"></div>
+          <p>Login First</p>
+        </div>
+      )}
     </div>
   );
 }

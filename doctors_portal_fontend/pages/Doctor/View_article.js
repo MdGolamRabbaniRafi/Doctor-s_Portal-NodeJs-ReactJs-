@@ -5,6 +5,7 @@ import HeaderForLoggedin from '../Layout/LoggedinHeader';
 import FooterForLoggedin from '../Layout/LoggedinFooter';
 import Link from 'next/link';
 
+
 export default function Notification() {
   const [notifications, setArticle] = useState([]);
   const [error, setError] = useState('');

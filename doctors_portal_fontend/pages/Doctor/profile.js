@@ -11,6 +11,7 @@ export default function Profile() {
   const router = useRouter();
   const { user } = useAuth();
   const [selectedFile, setSelectFile] = useState(null);
+  const { checkUser } = useAuth();
 
   const handleBackClick = () => {
     router.push('../Doctor/LoggedinPage');
@@ -75,40 +76,53 @@ export default function Profile() {
 
   // Fetch data when the component mounts
   useEffect(() => {
-    fetchData(user);
+    if (!checkUser()) {
+      router.push('/');
+    } else {
+      fetchData(user);
+    }
   }, []);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen">
-      <HeaderForLoggedin className="self-start" />
-      <div className="flex items-center justify-center space-x-4">
-        <div className="w-24 h-24 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2 overflow-hidden">
-          <img className="w-full h-full object-cover" src={`http://localhost:3000/Doctor/viewProfilePicture?${Date.now()}`} alt="Profile Picture" />
+      {checkUser() ? (
+        <>
+          <HeaderForLoggedin className="self-start" />
+          <div className="flex items-center justify-center space-x-4">
+            <div className="w-24 h-24 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2 overflow-hidden">
+              <img className="w-full h-full object-cover" src={`http://localhost:3000/Doctor/viewProfilePicture?${Date.now()}`} alt="Profile Picture" />
+            </div>
+            <div className="space-y-2">
+              <input type="file" id="myfile" name="myfile" className="btn btn-xs" accept="image/*" onChange={handleProfilePicture} />
+              {selectedFile && <button className="btn btn-xs" onClick={postData}>Save</button>}
+            </div>
+          </div>
+          {error && <p className="text-red-500 mt-2">{error}</p>}
+          <ul className="my-4">
+            {Profiles.map((profile, index) => (
+              <li key={index} className="mb-2">
+                Name: {profile.name}
+                <br />
+                Email: {profile.email}
+                <br />
+                Gender: {profile.Gender}
+                <br />
+                Degree: {profile.Degree}
+                <br />
+                Blood Group: {profile.Blood_group}
+                <br />
+              </li>
+            ))}
+          </ul>
+          <input type="submit" value="Back" onClick={handleBackClick} className="btn btn-primary" />
+          <FooterForLoggedin />
+        </>
+      ) : (
+        <div className="flex justify-center items-center h-screen">
+          <div className="w-16 h-16 border-t-4 border-blue-500 border-solid rounded-full animate-spin"></div>
+          <p>Login First</p>
         </div>
-        <div className="space-y-2">
-          <input type="file" id="myfile" name="myfile" className="btn btn-xs" accept="image/*" onChange={handleProfilePicture} />
-          {selectedFile && <button className="btn btn-xs" onClick={postData}>Save</button>}
-        </div>
-      </div>
-      {error && <p className="text-red-500 mt-2">{error}</p>}
-      <ul className="my-4">
-        {Profiles.map((profile, index) => (
-          <li key={index} className="mb-2">
-            Name: {profile.name}
-            <br />
-            Email: {profile.email}
-            <br />
-            Gender: {profile.Gender}
-            <br />
-            Degree: {profile.Degree}
-            <br />
-            Blood Group: {profile.Blood_group}
-            <br />
-          </li>
-        ))}
-      </ul>
-      <input type="submit" value="Back" onClick={handleBackClick} className="btn btn-primary" />
-      <FooterForLoggedin />
+      )}
     </div>
   );
 }
