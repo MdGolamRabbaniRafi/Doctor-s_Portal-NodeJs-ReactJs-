@@ -43,40 +43,40 @@ export class AdminService {
   ) {}
 
 
-  async ViewPersonalInfo(email: string): Promise<AdminEntity[]> {
-    const visit = await this.AdminRepo.find({
-      select: {
-        name: true,
-        email: true,
-        id: true,
-        password: false,
-        // filenames: false,
-        // phone: true
-        // Gender: true,
-        // Degree: true,
-        // Blood_group: true
+  // async ViewPersonalInfo(email: string): Promise<AdminEntity[]> {
+  //   const visit = await this.AdminRepo.find({
+  //     select: {
+  //       name: true,
+  //       email: true,
+  //       id: true,
+  //       password: false,
+  //       // filenames: false,
+  //       // phone: true
+  //       // Gender: true,
+  //       // Degree: true,
+  //       // Blood_group: true
 
 
-      },
-      where: {
-        email: email,
+  //     },
+  //     where: {
+  //       email: email,
         
-      },
-      relations: ['profile']
-    });
+  //     },
+  //     relations: ['profile']
+  //   });
   
-    const admin = visit[0];
-    const notiFication: NotificationEntity = new NotificationEntity();
-    notiFication.admin = admin; 
-    notiFication.Message = "Profile Visited";
-    const currentDate: CurrentDate = new CurrentDate();
-    const currentTime: CurrentTime = new CurrentTime();
+  //   const admin = visit[0];
+  //   const notiFication: NotificationEntity = new NotificationEntity();
+  //   notiFication.admin = admin; 
+  //   notiFication.Message = "Profile Visited";
+  //   const currentDate: CurrentDate = new CurrentDate();
+  //   const currentTime: CurrentTime = new CurrentTime();
   
-    notiFication.date = currentDate.getCurrentDate();
-    notiFication.time = currentTime.getCurrentTime();
-    await this.notificationRepo.save(notiFication);
-    return visit;
-  }
+  //   notiFication.date = currentDate.getCurrentDate();
+  //   notiFication.time = currentTime.getCurrentTime();
+  //   await this.notificationRepo.save(notiFication);
+  //   return visit;
+  // }
 
 
   async updateProfile(email: string, profileData: ProfileDTO): Promise<ProfileEntity> {
@@ -86,11 +86,13 @@ export class AdminService {
       throw new NotFoundException('Admin not found');
     }
   
-    const { website, experience, education } = profileData;
+    const { website, experience, education, filenames } = profileData;
   
     admin.profile.website = website;
     admin.profile.experience = experience;
     admin.profile.education = education;
+    admin.profile.filenames = filenames;
+
   
     try {
       await this.profileRepo.save(admin.profile);
@@ -128,18 +130,17 @@ export class AdminService {
   
 
 
-  // async ViewMyProfile(email: string): Promise<{ admin: AdminEntity }> {
-  //   const admin = await this.AdminRepo.findOne({ where: { email }, relations: ['profile'] });
+  async ViewMyProfile(email: string): Promise<{ admin: AdminEntity }> {
+    const admin = await this.AdminRepo.findOne({ where: { email }, relations: ['profile'] });
   
-  //   if (!admin) {
-  //     throw new NotFoundException('Admin profile not found');
-  //   }
+    if (!admin) {
+      throw new NotFoundException('Admin profile not found');
+    }
   
-  //   admin.filenames = undefined;
-  //   admin.password = undefined;
+    admin.password = undefined;
   
-  //   return { admin };
-  // }
+    return { admin };
+  }
 
 
   
@@ -149,33 +150,36 @@ export class AdminService {
 
   async addProfile(profileData: ProfileEntity, email: string): Promise<ProfileEntity> {
     const admin = await this.AdminRepo.findOne({ where: { email } });
-
+  
     if (!admin) {
       throw new NotFoundException('Admin not found');
     }
-
+  
     const profile = this.profileRepo.create(profileData);
-    profile.admin = admin;
-
+    admin.profile = profile; // Set the profile reference in admin
+  
+    await this.AdminRepo.save(admin); // Save the admin to update the relationship
+  
     return this.profileRepo.save(profile);
   }
   
 
-  // async getProfilePictureFilename(email: string): Promise<string> {
-  //   const admin = await this.AdminRepo.findOneBy({ email });
-
-  //   if (admin && admin.filenames) {
-  //     return admin.filenames;
-  //   }
-
-  //   throw new Error('Profile picture not found');
-  // }
-
-  // sendProfilePicture(res: Response, filename: string): void {
-  //   const filePath = join(__dirname, '..', '..', 'uploads', filename);
-  //   res.sendFile(filePath);
-  // }
-
+  async getProfilePictureFilename(email: string): Promise<string> {
+    const admin = await this.AdminRepo
+      .createQueryBuilder('admin')
+      .leftJoinAndSelect('admin.profile', 'profile')
+      .where('admin.email = :email', { email })
+      .getOne();
+  
+    if (admin && admin.profile && admin.profile.filenames) {
+      return admin.profile.filenames;
+    }
+  
+    throw new Error('Profile picture not found');
+  }
+  
+  
+  
 
   // async signup(data: AddAdminDTO): Promise<AdminEntity> {
   //   const salt = await bcrypt.genSalt();
@@ -612,14 +616,10 @@ async getDoctorById(doctorId: number, email: string): Promise<DoctorEntity> {
     }
   }
   
-  async deleteDoctorById(id: number, email: string): Promise<{ message: string }> {
-    const admin = await this.AdminRepo.findOne({ where: { email } });
+  async deleteDoctorById(id: number): Promise<{ message: string }> {
+   
   
-    if (!admin) {
-      throw new NotFoundException('Admin not found');
-    }
-  
-    const doctor = await this.doctorRepo.findOne({ where: { id, admin } });
+    const doctor = await this.doctorRepo.findOne({ where: { id } });
   
     if (!doctor) {
       throw new NotFoundException('Doctor not found');
@@ -746,7 +746,7 @@ async viewPatientsByAdmin(id: any): Promise<AdminEntity[]> {
   }
   
   
-  async deleteOnePatient(Id: number): Promise<{ message: string }> {
+  async deletePatientById(Id: number): Promise<{ message: string }> {
     const patient = await this.patientRepo.findOne({
       where: { id: Id },
     });
@@ -758,6 +758,7 @@ async viewPatientsByAdmin(id: any): Promise<AdminEntity[]> {
     await this.patientRepo.remove(patient);
     return { message: 'Patient deleted successfully' };
   }
+  
 
   async updatePatientById(id: number, data: Partial<PatientEntity>, name: string): Promise<{ message: string; updatedPatient: PatientEntity }> {
     const patient = await this.patientRepo.findOne({ where: { id } });

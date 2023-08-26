@@ -47,6 +47,30 @@ export default function ViewUser() {
     setUserType(userType === 'Doctor' ? 'Patient' : 'Doctor');
   };
 
+  const deleteUser = async (id) => {
+    const confirmed = window.confirm(`Are you sure you want to delete this ${userType}?`);
+    if (!confirmed) {
+      return; // User canceled the deletion
+    }
+
+    try {
+      const response = await axios.delete(
+        `http://localhost:3000/Admin/${userType}/${id}`, {
+          withCredentials: true,
+        }
+      );
+
+      if (response) {
+        setError(`${userType} deleted successfully`);
+        fetchData();
+      } else {
+        setError(`Could not delete ${userType}`);
+      }
+    } catch (error) {
+      console.error('Failed:', error);
+      setError(`Not allowed to remove this ${userType}`);    }
+  };
+
   return (
     <div className="bg-gray-100 min-h-screen flex flex-col items-center justify-center">
       <div className="w-full max-w-3xl bg-white p-8 rounded-lg shadow">
@@ -54,7 +78,6 @@ export default function ViewUser() {
         <div className="form-control">
           <label className="label cursor-pointer">
             <span className="label-text">Toggle to view {userType === 'Doctor' ? 'Patients' : 'Doctors'}</span>
-
             <input type="checkbox" className="toggle" checked={userType === 'Patient'} onChange={handleUserTypeToggle} />
           </label>
         </div>
@@ -65,25 +88,30 @@ export default function ViewUser() {
         </div>
         <ul className="space-y-4">
           {users.map((userItem, index) => (
-            <li key={index} className="p-4 bg-gray-200 shadow-md rounded-md">
+            <li key={index} className="p-4 bg-gray-200 shadow-md rounded-md relative">
               <div className="flex justify-between items-center mb-2">
                 <div className="countdown font-mono text-6xl" style={{ '--value': index + 1 }}>
                   <span style={{ '--value': index + 1 }}></span>
                 </div>
                 <div>
-                    <div className="text-gray-600">
-                {userType === 'Doctor' ? 'Degree' : 'Blood Group'}: {userType === 'Doctor' ? userItem.Degree : userItem.Blood_group}
-                </div>
+                  <div className="text-gray-600">
+                    {userType === 'Doctor' ? 'Degree' : 'Blood Group'}: {userType === 'Doctor' ? userItem.Degree : userItem.Blood_group}
+                  </div>
                   <p className="text-gray-600">Email: {userItem.email}</p>
                 </div>
               </div>
               <p className="text-gray-600"> ID: {userItem.id}</p>
               <div className='font-semibold text-blue-600'>
-              <Link href={`/Admin/Info/${userItem.id}?userType=${userType}`}>
-                 {userType === 'Doctor' ? 'Doctor' : 'Patient'}: {userItem.name}
-              </Link>
+                <Link href={`/Admin/Info/${userItem.id}?userType=${userType}`}>
+                  {userType === 'Doctor' ? 'Doctor' : 'Patient'}: {userItem.name}
+                </Link>
               </div>
-
+              <button
+                className="absolute top-2 right-2 text-red-600 hover:text-red-800"
+                onClick={() => deleteUser(userItem.id)}
+              >
+                Delete
+              </button>
             </li>
           ))}
         </ul>

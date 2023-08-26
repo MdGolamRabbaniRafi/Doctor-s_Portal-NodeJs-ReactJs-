@@ -53,6 +53,7 @@ export class ProfileDTO {
   website: string;
   education: string;
   experience: string
+  filenames: string;
 }
 
 

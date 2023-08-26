@@ -33,8 +33,7 @@ Blood_group: string;
 @Column({nullable: true})
 User: string;
 
-// @Column({ nullable: true })
-// filenames: string;
+
 
   @OneToMany(() => DoctorEntity, doctor => doctor.admin)
   doctor: AdminEntity[];
