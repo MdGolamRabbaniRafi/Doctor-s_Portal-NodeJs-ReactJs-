@@ -146,9 +146,9 @@ export default function Signup() {
     <div className="mb-2">
         <center>
           {/* Conditional rendering of logo based on selectedLogo */}
-          {selectedLogo === 'homelogo' && <AdminLogo AdminlogoPath={AdminlogoPath} />}
+          {selectedLogo === 'homelogo' && <HomeLogo doctorLogoPath={AdminlogoPath} />}
           {selectedLogo === 'doctorLogo' && <HomeLogo doctorLogoPath={doctorLogoPath}/>}
-          {selectedLogo === 'patientLogo' && <PatiLogo patientLogoPath={patientLogoPath} />}
+          {selectedLogo === 'patientLogo' && <HomeLogo doctorLogoPath={patientLogoPath} />}
         </center>
         <h2 className="text-2xl font-bold mb-2">Sign Up</h2>
         <div className="flex">

@@ -5,6 +5,8 @@ import HeaderForLoggedin from '../Layout/LoggedinHeader';
 import FooterForLoggedin from '../Layout/LoggedinFooter';
 import { useAuth } from '../utils/authentication';
 import { useEffect } from 'react';
+import NavigationBarLoggedin from "../Layout/LoggedinNavbar"
+
 
 
 export default function Edit_profile() {
@@ -127,7 +129,9 @@ export default function Edit_profile() {
     <div>
       {checkUser() ? (
         <>
-          <HeaderForLoggedin />
+          {/* <HeaderForLoggedin /> */}
+          <NavigationBarLoggedin></NavigationBarLoggedin>
+
           <h1>Edit Profile</h1>
           <label htmlFor="name">Name:</label>
           <input type="name" id="name" value={name} required onChange={handleChangeName} />

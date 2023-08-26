@@ -4,6 +4,8 @@ import FooterForLoggedin from '../Layout/LoggedinFooter';
 import { useRouter } from 'next/router';
 import { useAuth } from '../utils/authentication';
 import axios from 'axios';
+import NavigationBarLoggedin from "../Layout/LoggedinNavbar"
+
 
 export default function Send_email() {
   const [Subject, setSubject] = useState('');
@@ -12,6 +14,7 @@ export default function Send_email() {
   const { checkUser } = useAuth();
   const router = useRouter();
   const [error, setError] = useState('');
+  const [showToast, setShowToast] = useState(false);
 
   const handleChangeEmail = (e) => {
     setemail(e.target.value);
@@ -33,6 +36,37 @@ export default function Send_email() {
     router.push('../Doctor/Check_email_history');
   };
 
+  const handleSend = async () => {
+    setShowToast(true);
+    try {
+      const response = await axios.post(
+        'http://localhost:3000/Doctor/sendEmail',
+        {
+          to: email,
+          subject: Subject,
+          text: Body,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+
+      console.log('Backend Response:', response);
+
+      if (response.data === "Email doesn't sent") {
+        setError('Email does not Sent');
+      } else {
+        setShowToast(false);
+        router.push('../Doctor/LoggedinPage');
+      }
+    } catch (error) {
+      console.error('Failed:', error);
+      console.log('Error Response:', error.response);
+      setError('An error occurred during sending email. Please try again later.');
+      setShowToast(false);
+    }
+  };
+
   useEffect(() => {
     console.log('CheckUser::::' + checkUser());
     if (!checkUser()) {
@@ -40,77 +74,59 @@ export default function Send_email() {
     }
   }, []);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    if (!email || !Body || !Subject) {
-      setError('All fields are required');
-    } else {
-      setError('');
-
-      try {
-        const response = await axios.post(
-          'http://localhost:3000/Doctor/sendEmail',
-          {
-            to: email,
-            subject: Subject,
-            text: Body,
-          },
-          {
-            withCredentials: true,
-          }
-        );
-
-        console.log('Backend Response:', response);
-
-        if (response.data === "Email doesn't sent") {
-          setError('Email does not Sent');
-        } else {
-          router.push('../Doctor/LoggedinPage');
-        }
-      } catch (error) {
-        console.error('Failed:', error);
-        console.log('Error Response:', error.response);
-        setError('An error occurred during sending email. Please try again later.');
-      }
-    }
-  };
-
   return (
     <div>
-      <HeaderForLoggedin />
+      {/* <HeaderForLoggedin /> */}
+      <NavigationBarLoggedin></NavigationBarLoggedin>
+
       {checkUser() ? (
         <>
           <h1>Send Email</h1>
-          <form onSubmit={handleSubmit}>
-            <label htmlFor="Subject">Subject:</label>
-            <input
-              type="text"
-              id="Subject"
-              name="Subject"
-              value={Subject}
-              required
-              onChange={handleChangeSubject}
-            /><br />
+          <form onSubmit={(e) => { e.preventDefault(); handleSend(); }}>
 
-            <label htmlFor="email">Email:</label>
-            <input
-              type="email"
-              id="email"
-              name="email"
+          <div className="form-control">
+  <label className="input-group input-group-sm">
+    <span>Email</span>
+    <input type="text"  className="input input-bordered input-sm" name="email"
               value={email}
               required
-              onChange={handleChangeEmail}
-            /><br />
+              onChange={handleChangeEmail} placeholder="email@site.com"/>
+  </label>
+</div>
 
-            <label htmlFor="body">Body:</label>
+
+<br></br>
+<div className="form-control">
+  <label className="input-group input-group-sm">
+    <span>Subject</span>
+    <input type="text"  className="input input-bordered input-sm"
+              required
+               id="Subject"
+              name="Subject"
+              value={Subject}
+              onChange={handleChangeSubject} placeholder="Subject"/>
+  </label>
+</div>
+
+
+<br></br>
+
+
+
+
+
+            <label htmlFor="body"></label>
             <textarea
+            className="textarea textarea-success" placeholder='Write your mail'
               id="body"
               name="body"
               value={Body}
               required
               onChange={handleChangeBody}
-              rows={5}
+              rows={10}
+              cols={30} 
+              style={{ resize: 'both' }}
+              
             /><br />
 
             <button type="submit" onClick={HandleCheckEmail}>
@@ -121,7 +137,6 @@ export default function Send_email() {
             <button type="button" onClick={handleBack}>Back</button>
 
             {error && <p>{error}</p>}
-
           </form>
         </>
       ) : (
@@ -131,6 +146,14 @@ export default function Send_email() {
         </div>
       )}
       <FooterForLoggedin />
+
+      {showToast && (
+        <div className="toast toast-top toast-start">
+          <div className="alert alert-success">
+            <span>Message sent successfully.</span>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

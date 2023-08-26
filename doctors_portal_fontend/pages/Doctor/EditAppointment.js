@@ -5,6 +5,8 @@ import HeaderForLoggedin from '../Layout/LoggedinHeader';
 import FooterForLoggedin from '../Layout/LoggedinFooter';
 import { useAuth } from '../utils/authentication';
 import { useEffect } from 'react';
+import NavigationBarLoggedin from "../Layout/LoggedinNavbar"
+
 
 export default function EditAppointment() {
   const router = useRouter();
@@ -75,7 +77,9 @@ export default function EditAppointment() {
     <div>
       {checkUser() ? (
         <>
-          <HeaderForLoggedin />
+          {/* <HeaderForLoggedin /> */}
+          <NavigationBarLoggedin></NavigationBarLoggedin>
+
           <h1>Edit Appointment</h1>
   
           <label htmlFor="email">Email:</label>

@@ -4,6 +4,8 @@ import { useRouter } from 'next/router';
 import HeaderForLoggedin from '../Layout/LoggedinHeader';
 import FooterForLoggedin from '../Layout/LoggedinFooter';
 import Link from 'next/link';
+import NavigationBarLoggedin from "../Layout/LoggedinNavbar"
+
 
 
 export default function Notification() {
@@ -49,7 +51,9 @@ export default function Notification() {
   return (
 
     <div>
-    <HeaderForLoggedin></HeaderForLoggedin>
+    {/* <HeaderForLoggedin></HeaderForLoggedin> */}
+    <NavigationBarLoggedin></NavigationBarLoggedin>
+
       <h1>Articles</h1>
       {error && <p>{error}</p>}
       <ul>

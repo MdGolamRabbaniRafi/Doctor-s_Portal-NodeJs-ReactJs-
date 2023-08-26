@@ -6,6 +6,7 @@ import { useRouter } from 'next/router';
 const AuthContext = createContext();
 
 
+
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const router = useRouter();
@@ -22,10 +23,14 @@ export const AuthProvider = ({ children }) => {
     setUser({ email, cookie });
 
   };
+  
 
   const checkUser = () => {
+  //  const sessionEmail = sessionStorage.getItem('email');
+    //console.log(sessionStorage.getItem('email'))
     return user !== null;
   };
+  
 
   const logout = () => {
 
@@ -48,6 +53,7 @@ export const AuthProvider = ({ children }) => {
       for (const cookieName in cookies) {
         Cookies.remove(cookieName);
       }
+      sessionStorage.removeItem('email')
       console.log("Cookie distroy?"+document.cookie)
 
         router.push('/login');

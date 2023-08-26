@@ -4,6 +4,8 @@ import { useRouter } from 'next/router';
 import HeaderForLoggedin from '../Layout/LoggedinHeader';
 import FooterForLoggedin from '../Layout/LoggedinFooter';
 import { useAuth } from '../utils/authentication';
+import NavigationBarLoggedin from "../Layout/LoggedinNavbar"
+
 
 export default function Delete_one_appointment() {
   const router = useRouter();
@@ -51,7 +53,9 @@ export default function Delete_one_appointment() {
     <div>
       {checkUser() ? (
         <>
-          <HeaderForLoggedin />
+          {/* <HeaderForLoggedin /> */}
+          <NavigationBarLoggedin></NavigationBarLoggedin>
+
           <h1>Delete Appointment</h1>
           <label htmlFor="serial">Serial: {serial}</label>
           <br />

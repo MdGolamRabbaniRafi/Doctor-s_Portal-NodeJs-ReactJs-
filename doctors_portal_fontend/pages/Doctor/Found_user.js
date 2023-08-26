@@ -4,6 +4,8 @@ import { useRouter } from 'next/router';
 import HeaderForLoggedin from '../Layout/LoggedinHeader';
 import FooterForLoggedin from '../Layout/LoggedinFooter';
 import { useAuth } from '../utils/authentication';
+import NavigationBarLoggedin from "../Layout/LoggedinNavbar"
+
 
 export default function Found_user() {
   const router = useRouter();
@@ -45,7 +47,9 @@ export default function Found_user() {
     <div>
       {checkUser() ? (
         <>
-          <HeaderForLoggedin />
+          {/* <HeaderForLoggedin /> */}
+          <NavigationBarLoggedin></NavigationBarLoggedin>
+
           <h1>User Profile</h1>
           {error && <p>{error}</p>}
           <ul>

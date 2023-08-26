@@ -4,6 +4,8 @@ import { useRouter } from 'next/router';
 import HeaderForLoggedin from '../Layout/LoggedinHeader';
 import FooterForLoggedin from '../Layout/LoggedinFooter';
 import { useAuth } from '../utils/authentication';
+import NavigationBarLoggedin from "../Layout/LoggedinNavbar"
+
 
 export default function Searching() {
   const [email, setEmail] = useState('');
@@ -65,8 +67,11 @@ export default function Searching() {
     <div>
       {checkUser() ? (
         <>
-          <HeaderForLoggedin></HeaderForLoggedin>
+          {/* <HeaderForLoggedin></HeaderForLoggedin> */}
+
           <h1>Searching</h1>
+          <NavigationBarLoggedin></NavigationBarLoggedin>
+
           <form onSubmit={handleSubmit}>
             <label htmlFor="email">Email:</label>
             <input

@@ -123,10 +123,9 @@ export class DoctorController {
   
   
   @Post('/logout')
- // @UseGuards(SessionGuard)
+  //@UseGuards(SessionGuard)
   async logout(@Session() session) {
     return this.doctorService.Logout(session,session.email);
-
   
   }
 

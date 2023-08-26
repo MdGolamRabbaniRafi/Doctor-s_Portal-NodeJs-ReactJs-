@@ -4,6 +4,8 @@ import { useRouter } from 'next/router';
 import HeaderForLoggedin from '../Layout/LoggedinHeader';
 import FooterForLoggedin from '../Layout/LoggedinFooter';
 import { useAuth } from '../utils/authentication';
+import NavigationBarLoggedin from "../Layout/LoggedinNavbar"
+
 
 export default function Profile() {
   const [Profiles, setProfile] = useState([]);
@@ -76,53 +78,81 @@ export default function Profile() {
 
   // Fetch data when the component mounts
   useEffect(() => {
+    // Wait until the user is available from the AuthProvider
+    if (user === null) {
+      // If user is null, it means authentication check is not complete yet.
+      // You might want to show a loading screen or redirect to login.
+      console.log("User Nulllllllllllllll")
+    }
+
     if (!checkUser()) {
       router.push('/');
     } else {
       fetchData(user);
     }
-  }, []);
+  }, [user]); // Include user in the dependency array
+
+  // ... rest of the component code ...
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen">
-      {checkUser() ? (
-        <>
-          <HeaderForLoggedin className="self-start" />
-          <div className="flex items-center justify-center space-x-4">
-            <div className="w-24 h-24 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2 overflow-hidden">
-              <img className="w-full h-full object-cover" src={`http://localhost:3000/Doctor/viewProfilePicture?${Date.now()}`} alt="Profile Picture" />
+    <div>
+      <NavigationBarLoggedin></NavigationBarLoggedin>
+      <div className="flex flex-col items-center justify-center min-h-screen">
+        {checkUser() ? (
+          <>
+            {/* <HeaderForLoggedin className="self-start" /> */}
+  
+            <div className="flex items-center justify-center space-x-4">
+              <div className="w-24 h-24 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2 overflow-hidden">
+                <img
+                  className="w-full h-full object-cover"
+                  src={`http://localhost:3000/Doctor/viewProfilePicture?${Date.now()}`}
+                  alt="Profile Picture"
+                />
+              </div>
+              <div className="space-y-2">
+                <input
+                  type="file"
+                  id="myfile"
+                  name="myfile"
+                  className="file-input file-input-ghost w-full max-w-xs"
+                  accept="image/*"
+                  onChange={handleProfilePicture}
+                />
+                {selectedFile && (
+                  <button className="btn btn-xs" onClick={postData}>
+                    Save
+                  </button>
+                )}
+              </div>
             </div>
-            <div className="space-y-2">
-              <input type="file" id="myfile" name="myfile" className="btn btn-xs" accept="image/*" onChange={handleProfilePicture} />
-              {selectedFile && <button className="btn btn-xs" onClick={postData}>Save</button>}
-            </div>
+            {error && <p className="text-red-500 mt-2">{error}</p>}
+            <ul className="my-4">
+              {Profiles.map((profile, index) => (
+                <li key={index} className="mb-2">
+                  <p className="text-lg font-semibold">{profile.name}</p>
+                  <p>Email: {profile.email}</p>
+                  <p>Gender: {profile.Gender}</p>
+                  <p>Degree: {profile.Degree}</p>
+                  <p>Blood Group: {profile.Blood_group}</p>
+                </li>
+              ))}
+            </ul>
+            <input
+              type="submit"
+              value="Back"
+              onClick={handleBackClick}
+              className="btn btn-primary"
+            />
+            <FooterForLoggedin />
+          </>
+        ) : (
+          <div className="flex justify-center items-center h-screen">
+            <div className="w-16 h-16 border-t-4 border-blue-500 border-solid rounded-full animate-spin"></div>
+            <p>Login First</p>
           </div>
-          {error && <p className="text-red-500 mt-2">{error}</p>}
-          <ul className="my-4">
-            {Profiles.map((profile, index) => (
-              <li key={index} className="mb-2">
-                Name: {profile.name}
-                <br />
-                Email: {profile.email}
-                <br />
-                Gender: {profile.Gender}
-                <br />
-                Degree: {profile.Degree}
-                <br />
-                Blood Group: {profile.Blood_group}
-                <br />
-              </li>
-            ))}
-          </ul>
-          <input type="submit" value="Back" onClick={handleBackClick} className="btn btn-primary" />
-          <FooterForLoggedin />
-        </>
-      ) : (
-        <div className="flex justify-center items-center h-screen">
-          <div className="w-16 h-16 border-t-4 border-blue-500 border-solid rounded-full animate-spin"></div>
-          <p>Login First</p>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
-}
+  }

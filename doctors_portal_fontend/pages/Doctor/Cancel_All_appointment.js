@@ -4,6 +4,8 @@ import { useRouter } from 'next/router';
 import HeaderForLoggedin from '../Layout/LoggedinHeader';
 import FooterForLoggedin from '../Layout/LoggedinFooter';
 import { useAuth } from '../utils/authentication';
+import NavigationBarLoggedin from "../Layout/LoggedinNavbar"
+
 
 export default function Cancel_All_appointment() {
   const { checkUser } = useAuth();
@@ -44,7 +46,9 @@ export default function Cancel_All_appointment() {
     <div>
       {checkUser() ? (
         <>
-          <HeaderForLoggedin />
+          {/* <HeaderForLoggedin /> */}
+          <NavigationBarLoggedin></NavigationBarLoggedin>
+
           <h1>Are you sure to delete all appointment?</h1>
           <br />
           {error && <p>{error}</p>}

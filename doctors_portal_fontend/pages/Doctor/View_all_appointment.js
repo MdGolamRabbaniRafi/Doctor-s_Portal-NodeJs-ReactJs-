@@ -5,6 +5,8 @@ import HeaderForLoggedin from '../Layout/LoggedinHeader';
 import FooterForLoggedin from '../Layout/LoggedinFooter';
 import Link from 'next/link';
 import { useAuth } from '../utils/authentication';
+import NavigationBarLoggedin from "../Layout/LoggedinNavbar"
+
 
 export default function View_all_appointment() {
   const [appointments, setAppointments] = useState([]);
@@ -82,7 +84,9 @@ export default function View_all_appointment() {
 
   return (
     <div>
-      <HeaderForLoggedin />
+      {/* <HeaderForLoggedin /> */}
+      <NavigationBarLoggedin></NavigationBarLoggedin>
+
 
       {checkUser() ? (
         <>

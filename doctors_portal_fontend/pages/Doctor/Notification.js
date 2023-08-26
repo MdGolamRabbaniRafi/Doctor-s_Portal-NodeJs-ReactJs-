@@ -4,6 +4,8 @@ import { useRouter } from 'next/router';
 import HeaderForLoggedin from '../Layout/LoggedinHeader';
 import FooterForLoggedin from '../Layout/LoggedinFooter';
 import { useAuth } from '../utils/authentication';
+import NavigationBarLoggedin from "../Layout/LoggedinNavbar"
+
 
 export default function Notification() {
   const [notifications, setNotifications] = useState([]);
@@ -56,7 +58,7 @@ export default function Notification() {
     <div>
       {checkUser() ? (
         <>
-          <HeaderForLoggedin />
+             <NavigationBarLoggedin></NavigationBarLoggedin>
           <h1>Notifications</h1>
           {error && <p>{error}</p>}
           <ul>

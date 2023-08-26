@@ -4,6 +4,8 @@ import { useRouter } from 'next/router';
 import HeaderForLoggedin from '../Layout/LoggedinHeader';
 import FooterForLoggedin from '../Layout/LoggedinFooter';
 import { useAuth } from '../utils/authentication';
+import NavigationBarLoggedin from "../Layout/LoggedinNavbar"
+
 
 export default function AddAppointment() {
   const [name, setName] = useState('');
@@ -65,8 +67,10 @@ export default function AddAppointment() {
     <div>
       {checkUser() ? (
         <>
-          <HeaderForLoggedin></HeaderForLoggedin>
-          <h1>Add Appointment</h1>
+          {/* <HeaderForLoggedin></HeaderForLoggedin> */}
+          <NavigationBarLoggedin></NavigationBarLoggedin>
+
+          <h1>Post Article</h1>
           <form onSubmit={handleSubmit}>
             <label htmlFor="name">Name:</label>
             <input

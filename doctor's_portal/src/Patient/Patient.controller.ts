@@ -26,6 +26,13 @@ export class PatientController {
     
   //   return this.patientService.addPatient(patient);
   // }
+  @Get('/ViewMyProfile/:email')
+  @UseGuards(SessionGuard)
+  ViewPersonalInfoWithEmail( @Param('email') email: string): Object{
+    return this.patientService.ViewPersonalInfoWithEmail(email);
+
+  }
+  
   @Get('/ViewMyProfile')
   @UseGuards(SessionGuard)
   ViewPersonalInfo(@Session() session): Object{

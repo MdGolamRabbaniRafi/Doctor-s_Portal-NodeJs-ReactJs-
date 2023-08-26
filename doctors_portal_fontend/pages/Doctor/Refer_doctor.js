@@ -4,6 +4,8 @@ import axios from 'axios'; // Make sure to add this import
 import HeaderForLoggedin from '../Layout/LoggedinHeader';
 import FooterForLoggedin from '../Layout/LoggedinFooter';
 import { useAuth } from '../utils/authentication';
+import NavigationBarLoggedin from "../Layout/LoggedinNavbar"
+
 
 export default function Refer_doctor() {
   const [Doctor_name, setDoctorName] = useState('');
@@ -72,7 +74,9 @@ export default function Refer_doctor() {
       {checkUser() ? (
         <>
           <h1>Refer A Doctor</h1>
-          <HeaderForLoggedin></HeaderForLoggedin>
+          <NavigationBarLoggedin></NavigationBarLoggedin>
+
+          {/* <HeaderForLoggedin></HeaderForLoggedin> */}
 
           <form onSubmit={handleSubmit}>
             <label htmlFor="Doctor_name">Doctor Name:</label>

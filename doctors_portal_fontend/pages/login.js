@@ -220,7 +220,7 @@ export default function Signin() {
                 </label>
                 <input
                   type="email"
-                  placeholder="email"
+                  placeholder="Email"
                   className="input input-bordered"
                   value={email}
                   onChange={handleChangeEmail}
@@ -232,7 +232,7 @@ export default function Signin() {
                 </label>
                 <input
                   type="password"
-                  placeholder="password"
+                  placeholder="Password"
                   className="input input-bordered"
                   value={password}
                   onChange={handleChangePassword}

@@ -3,6 +3,8 @@ import FooterForLoggedin from "../Layout/LoggedinFooter"; // Adjust the path acc
 import HeaderForLoggedin from "../Layout/LoggedinHeader"; // Adjust the path accordingly
 import { useAuth } from '../utils/authentication';
 import { useEffect } from "react";
+import NavigationBarLoggedin from "../Layout/LoggedinNavbar"
+
 
 export default function Appointent() {
   const router = useRouter();
@@ -23,7 +25,9 @@ export default function Appointent() {
     <div>
       {checkUser() ? (
         <>
-          <HeaderForLoggedin />
+          {/* <HeaderForLoggedin /> */}
+          <NavigationBarLoggedin></NavigationBarLoggedin>
+
           
           <button onClick={() => handleNavigation('Add_appointment')}>Add Appointment</button><br />
           <button onClick={() => handleNavigation("../Doctor/View_all_appointment")}>View All Appointment</button><br />

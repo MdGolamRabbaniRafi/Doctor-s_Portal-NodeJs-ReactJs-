@@ -6,7 +6,7 @@ import FooterForLoggedin from '../Layout/LoggedinFooter';
 //import { useAuth } from '../utils/authentication';
 import { useAuth } from '../utils/authentication';
 import { useEffect } from 'react';
-
+import NavigationBarLoggedin from "../Layout/LoggedinNavbar"
 
 export default function AddAppointment() {
   const [email, setEmail] = useState('');
@@ -93,7 +93,8 @@ export default function AddAppointment() {
     <div>
       {checkUser() ? (
         <>
-             <HeaderForLoggedin />
+             {/* <HeaderForLoggedin /> */}
+             <NavigationBarLoggedin></NavigationBarLoggedin>
           <h1>Add Appointment</h1>
           <form onSubmit={handleSubmit}>
             <label htmlFor="email">Email:</label>
