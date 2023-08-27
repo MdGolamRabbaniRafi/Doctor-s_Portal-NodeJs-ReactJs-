@@ -86,33 +86,6 @@ export class PatientService {
     return this.PatientProfileRepo.save(profile);
   }
   
-
-
-  async ViewPersonalInfoWithEmail(email: string): Promise<PatientEntity> {
-    const visit = await this.PatientRepo.findOne({
-      select: {
-        name: true,
-        email: true,
-        id: true,
-        Gender:true,
-        Degree:true,
-        Blood_group:true,
-        User:true,
-
-        password: false,
-        
-      },
-      where: {
-        email: email,
-        
-      },
-      relations: ['Profile']
-    });
-  
-    const patient = visit[0];
-    return visit;
-  } 
-  
  
   async ViewPersonalInfo(email: string): Promise<PatientEntity[]> {
     const visit = await this.PatientRepo.find({
@@ -209,9 +182,11 @@ export class PatientService {
   async orderMedicine(orderMedicine: any): Promise<MedicineEntity> {
     return this.medicineRepo.save(orderMedicine);
   }
-  async sendEmail(to: string, subject: string, text: string): Promise<void> {
+  async sendEmail(to: string, subject: string, text: string): Promise<{ status: string; message: string }> {
     await this.mailerService.sendMail(to, subject, text);
+    return { status: 'success', message: 'Email sent successfully' };
   }
+  
 
 
 async editProfile(id: number, updatedPatientData: Partial<PatientEntity>): Promise<PatientEntity> {

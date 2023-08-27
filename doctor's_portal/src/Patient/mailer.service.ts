@@ -17,7 +17,7 @@ export class MailerService {
     });
   }
 
-  async sendMail(to: string, subject: string, text: string): Promise<void> {
+  async sendMail(to: string, subject: string, text: string): Promise<{ status: string; message: string }>{
     const mailOptions: nodemailer.SendMailOptions = {
       from: 'shohanmehedi18@gmail.com',
       to,
@@ -26,6 +26,8 @@ export class MailerService {
     };
 
     await this.transporter.sendMail(mailOptions);
+    return { status: 'success', message: 'Email sent successfully' };
+
   }
 }
 
