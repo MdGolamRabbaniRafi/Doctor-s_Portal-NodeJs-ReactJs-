@@ -2,7 +2,6 @@ import { useRouter } from 'next/router';
 import axios from 'axios';
 import React, { useState } from 'react';
 import HeaderForLoggedin from '../Layout/LoggedinHeader';
-import FooterForLoggedin from '../Layout/LoggedinFooter';
 import Link from 'next/link';
 
 export default function AddAppointment() {
@@ -20,8 +19,20 @@ export default function AddAppointment() {
     setConfirmPassword(e.target.value);
   };
 
-  const handleBack = (e) => {
+  const handleBack = () => {
     router.push('../Admin/Admin_LoggedinPage');
+  };
+
+  const isStrongPassword = (password) => {
+    // Define your strong password criteria here
+    const minLength = 8;
+    const hasUppercase = /[A-Z]/.test(password);
+    const hasLowercase = /[a-z]/.test(password);
+    const hasDigit = /[0-9]/.test(password);
+
+    return (
+      password.length >= minLength && hasUppercase && hasLowercase && hasDigit
+    );
   };
 
   const handleSubmit = async (e) => {
@@ -31,6 +42,13 @@ export default function AddAppointment() {
 
     if (password !== confirmPassword) {
       setErrorMessage("Passwords don't match. Please make sure they match.");
+      return;
+    }
+
+    if (!isStrongPassword(password)) {
+      setErrorMessage(
+        'Password must be at least 8 characters long and contain uppercase, lowercase, and a digit.'
+      );
       return;
     }
 
@@ -67,7 +85,8 @@ export default function AddAppointment() {
 
   return (
     <div>
-      <HeaderForLoggedin />
+      <center>      <HeaderForLoggedin /> </center>
+
       <div className="mx-auto p-8 max-w-md">
         <h1 className="text-2xl font-semibold mb-4">Give a new password</h1>
         <form onSubmit={handleSubmit}>
