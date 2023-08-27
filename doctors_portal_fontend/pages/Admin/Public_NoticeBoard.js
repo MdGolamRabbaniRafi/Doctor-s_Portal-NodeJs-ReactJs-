@@ -19,7 +19,7 @@ export default function NoticeBoard() {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get(`http://localhost:3000/Admin/viewallnotice`);
+      const response = await axios.get(`http://localhost:3000/Admin/publicNotice`);
 
       if (Array.isArray(response.data)) {
         const noticeData = response.data;
@@ -40,29 +40,6 @@ export default function NoticeBoard() {
 
     
   };
-  const handleDeleteNotice = async (sl) => {
-    const confirmed = window.confirm('Are you sure you want to delete this Notice?');
-    if (!confirmed) {
-      return; // User canceled the deletion
-    }
-
-    try {
-      const response = await axios.delete(`http://localhost:3000/Admin/deletenotice/${sl}`, {
-        withCredentials: true,
-      });
-
-      if (response.status === 200) {
-        setError('Notice deleted successfully');
-        fetchData();
-      } else {
-        setError('Could not delete Notice');
-      }
-    } catch (error) {
-      console.error('Failed:', error);
-      setError('Something went wrong');
-    }
-  };
-
 
   return (
     <div>
@@ -80,12 +57,7 @@ export default function NoticeBoard() {
           <ul className="space-y-4">
             {notice.map((noticeItem, index) => (
               <li key={index} className="p-4 bg-gray-200 shadow-md rounded-md relative">
-              <button
-  className="absolute top-0 right-0 p-2 text-red-500"
-  onClick={() => handleDeleteNotice(noticeItem.sl)}
->
-  Delete
-</button>                
+           
                 <div className="flex justify-between items-center mb-2">
                   <div className="countdown font-mono text-6xl" style={{ '--value': index + 1 }}>
                     <span style={{ '--value': index + 1 }}></span>

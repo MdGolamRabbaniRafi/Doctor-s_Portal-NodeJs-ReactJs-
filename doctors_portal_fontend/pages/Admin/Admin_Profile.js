@@ -8,6 +8,10 @@ export default function Profile() {
   const [profilePhoto, setProfilePhoto] = useState('http://localhost:3000/Admin/myphoto');
   const router = useRouter();
 
+  const handleEditProfile = () => {
+    router.push('/Admin/Admin_Edit_Profile');
+  };
+
   useEffect(() => {
     fetchData();
   }, []);
@@ -51,14 +55,20 @@ export default function Profile() {
       
       </div>
       </center>
-      <center>
-     
-        </center>
+    
       <div className="w-full max-w-3xl bg-white p-8 rounded-lg shadow mt-4">
+      <button
+          onClick={handleEditProfile}
+          className="float-right text-blue-500 hover:underline"
+        >
+          Edit
+        </button>
+    
         {error && <p className="text-red-500 mb-4">{error}</p>}
         {adminInfo.profile && (
           <>
            <div className="ml-8">
+            
           <h1 className="text-3xl font-semibold text-gray-900">{adminInfo.name}</h1>
           <p className="text-gray-800">{adminInfo.email}</p>
         </div>
@@ -83,6 +93,7 @@ export default function Profile() {
                 </a>
               </div>
             </div>
+            
             <div className="grid grid-cols-2 gap-4">
               <div className="mb-4">
                 <p className="text-gray-600 font-semibold">Education:</p>
@@ -113,7 +124,6 @@ export default function Profile() {
                 <p className="text-gray-600">{adminInfo.User}</p>
               </div>
             </div>
-            {/* Add more fields as needed */}
           </>
         )}
       </div>
