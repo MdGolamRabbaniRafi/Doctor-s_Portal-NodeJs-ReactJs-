@@ -14,6 +14,8 @@ export class AddAdminDTO {
   Degree: string;
   Blood_group: string;
   User:string;
+  currentPassword: string;
+
   // filenames: string;
 }
 

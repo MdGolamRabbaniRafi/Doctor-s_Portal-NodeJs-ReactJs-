@@ -24,35 +24,7 @@ const HomePage = () => {
     };
   }, [currentSlide]);
   
-  useEffect(() => {
-    fetchData();
-  }, []);
-  
-  const fetchData = async () => {
-    try {
-      const response = await axios.get(`http://localhost:3000/Admin/viewallnotice`);
-      console.log("Backend Response:", response.data);
-  
-      if (Array.isArray(response.data)) {
-        const noticeData = response.data;
-        console.log("Notice Data:", noticeData);
-  
-        if (noticeData.length > 0) {
-          console.log("Notice:", noticeData);
-          setNotice(noticeData);
-        } else {
-          setError('No Notice found');
-        }
-      } else {
-        setError('No Notice found');
-      }
-    } catch (error) {
-      console.error('Failed:', error);
-      console.log('Error Response:', error.response);
-      setError('An error occurred. Please try again later.');
-    }
 
-  };
 
   const handleViewArticle = () => {
     router.push('../Doctor/View_article');
@@ -131,7 +103,7 @@ const HomePage = () => {
       <p className="py-3 lg:py-6 text-base lg:text-lg">
         La vida es corta. Vive apasionadamente y siente la felicidad.
       </p>
-      <Link href="Admin/Admin_NoticeBoard">
+      <Link href="Admin/Public_NoticeBoard">
         <button className="btn btn-primary">Check Notices</button>
       </Link>
     </div>

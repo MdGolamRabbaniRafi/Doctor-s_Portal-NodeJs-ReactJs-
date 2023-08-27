@@ -79,28 +79,45 @@ export class AdminService {
   // }
 
 
-  async updateProfile(email: string, profileData: ProfileDTO): Promise<ProfileEntity> {
-    const admin = await this.AdminRepo.findOne({ where: { email }, relations: ['profile'] });
-  
-    if (!admin) {
-      throw new NotFoundException('Admin not found');
-    }
-  
-    const { website, experience, education, filenames } = profileData;
-  
-    admin.profile.website = website;
-    admin.profile.experience = experience;
-    admin.profile.education = education;
-    admin.profile.filenames = filenames;
+  async updateProfile(email: string, updateProfile: ProfileDTO): Promise<ProfileEntity | string> {
+    const admin = await this.AdminRepo.findOne({ where: { email } });
 
-  
-    try {
-      await this.profileRepo.save(admin.profile);
-      return admin.profile;
-    } catch (error) {
-      throw new InternalServerErrorException('Failed to update profile');
+    if (!admin) {
+      return 'Admin not found';
     }
+
+    const profile = await this.profileRepo.findOne({
+      where: { admin: admin },
+      relations: ['admin'],
+    });
+
+    if (!profile) {
+      return "Don't find any profile";
+    }
+
+    profile.bio = updateProfile.bio;
+    profile.education = updateProfile.education;
+    profile.filenames = updateProfile.filenames;
+    profile.location = updateProfile.location;
+    profile.experience = updateProfile.experience;
+    profile.website = updateProfile.website;
+
+
+    await this.profileRepo.save(profile);
+
+    const notiFication: NotificationEntity = new NotificationEntity();
+    const currentDate: CurrentDate = new CurrentDate();
+    const currentTime: CurrentTime = new CurrentTime();
+    notiFication.Message = 'Updated Profile';
+    notiFication.date = currentDate.getCurrentDate();
+    notiFication.time = currentTime.getCurrentTime();
+    notiFication.admin = admin;
+    await this.notificationRepo.save(notiFication);
+
+    return profile; // Return the updated profile
   }
+  
+
 
   async updatePass(email: string, updatePass: AddAdminDTO): Promise<AdminEntity> {
     const salt = await bcrypt.genSalt();
@@ -148,19 +165,28 @@ export class AdminService {
   
   
 
-  async addProfile(profileData: ProfileEntity, email: string): Promise<ProfileEntity> {
+  async addProfile(profileDTO: ProfileDTO, email: string): Promise<ProfileDTO> {
     const admin = await this.AdminRepo.findOne({ where: { email } });
   
     if (!admin) {
       throw new NotFoundException('Admin not found');
     }
   
-    const profile = this.profileRepo.create(profileData);
-    admin.profile = profile; // Set the profile reference in admin
+    const profile = new ProfileEntity();
+    profile.bio = profileDTO.bio;
+    profile.location = profileDTO.location;
+    profile.website = profileDTO.website;
+    profile.education = profileDTO.education;
+    profile.experience = profileDTO.experience;
+    profile.filenames = profileDTO.filenames;
   
-    await this.AdminRepo.save(admin); // Save the admin to update the relationship
+    admin.profile = profile;
+    profile.admin = admin;
   
-    return this.profileRepo.save(profile);
+    await this.AdminRepo.save(admin);
+    await this.profileRepo.save(profile);
+  
+    return profileDTO;
   }
   
 
@@ -414,6 +440,30 @@ async getAllNotice(): Promise<NoticeEntity[]|string> {
   return updatedNotices;
 }
 
+
+async publicNotice(): Promise<NoticeEntity[]|string> {
+
+  const notices = await this.noticeRepo.find({
+    select: ['sl', 'subject', 'message', 'postedTime'],
+    relations: ['admin'],
+  });
+
+  if (notices.length === 0) {
+    return "Notice not found"
+  }
+
+  const updatedNotices: NoticeEntity[] = notices.map(notice => {
+    const updatedNotice = { ...notice };
+    if (updatedNotice.admin) {
+      updatedNotice.message = `Posted by ${updatedNotice.admin.name}: ${updatedNotice.message}`;
+      delete updatedNotice.admin.password;
+      delete updatedNotice.admin.email;
+    }
+    return updatedNotice;
+  });
+
+  return updatedNotices;
+}
 // async getAllNotice(id: any): Promise<NoticeEntity[]> {
 //   const notices = await this.noticeRepo.find({
 //     where: id ,
@@ -459,9 +509,9 @@ async deleteAllNotice(): Promise<{ message: string }> {
   }
 }
 
-async deleteOneNotice(SL: number): Promise<{ message: string }> {
+async deleteOneNotice(sl: number): Promise<{ message: string }> {
   const notice = await this.noticeRepo.findOne({
-    where: { sl: SL },
+    where: { sl: sl},
   });
   
   if (!notice) {
@@ -469,8 +519,11 @@ async deleteOneNotice(SL: number): Promise<{ message: string }> {
   }
 
   await this.noticeRepo.remove(notice);
-  return { message: 'Notice removed successfully' };
+  return { message: `Notice  ${sl} deleted successfully` };
 }
+
+
+
 
 
 

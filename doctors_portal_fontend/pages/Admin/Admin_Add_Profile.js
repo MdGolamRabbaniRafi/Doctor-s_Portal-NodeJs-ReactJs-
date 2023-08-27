@@ -38,7 +38,7 @@ export default function AddProfile() {
   };
 
   const handleChangeImage = (e) => {
-    setImage(e.target.files[0]); // Update image state with selected file
+    setImage(e.target.files[0]); 
   };
 
   const handleSubmit = async (e) => {
@@ -48,7 +48,7 @@ export default function AddProfile() {
       setError('All fields are required');
     } else {
       try {
-        const formData = new FormData(); // Create FormData to send the image
+        const formData = new FormData(); 
         formData.append('bio', bio);
         formData.append('location', location);
         formData.append('experience', experience);
@@ -62,7 +62,7 @@ export default function AddProfile() {
           {
             withCredentials: true,
             headers: {
-              'Content-Type': 'multipart/form-data', // Set appropriate content type
+              'Content-Type': 'multipart/form-data', 
             },
           }
         );
@@ -82,8 +82,8 @@ export default function AddProfile() {
     
 
     
-    <div className="bg-gray-100 min-h-screen flex flex-col items-center justify-center">
-    <div className="w-full max-w-3xl bg-white p-8 rounded-lg shadow">
+    <div className="bg-gray-100 h-fit flex flex-col items-center justify-center">
+    <div className="min-w-fit max-w-3xl bg-white p-8 rounded-lg shadow">
       <h1 className="text-3xl font-semibold mb-4">Add Profile</h1>
       {error && <p className="text-red-500 mb-4">{error}</p>}
       <form onSubmit={handleSubmit} encType="multipart/form-data">
@@ -124,7 +124,7 @@ export default function AddProfile() {
           />
         </div>
         <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700">Education:</label>
+          <label className="block text-lg font-medium text-gray-700">Education:</label>
           <input
             type="text"
             name="education"
@@ -134,13 +134,7 @@ export default function AddProfile() {
         </div>
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-700">Photo:</label>
-          <input
-            type="file"
-            name="photo"
-            accept="image/*"
-            className="w-full px-3 py-2 border rounded-md"
-            onChange={handleChangeImage}
-          />
+          <input type="file"  accept="image/*"  name="photo"  onChange={handleChangeImage}  className="file-input file-input-bordered file-input-primary w-full max-w-xs" />
         </div>
         <button
           type="submit"

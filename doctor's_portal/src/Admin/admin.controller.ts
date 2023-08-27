@@ -78,13 +78,16 @@ export class AdminController {
             })
         }
     ))
-  async addProfile(@Body() myData: ProfileEntity, @Session() session, @UploadedFile() imageobj: Express.Multer.File): Promise<ProfileEntity> {
-    const email = session.email;
-    myData.filenames = imageobj.filename;
-    const profile = await this.adminService.addProfile(myData, email);
-    return plainToClass(ProfileEntity, profile);
-  }
-  
+    async addProfile(
+      @Body() profileDTO: ProfileDTO,
+      @Session() session,
+      @UploadedFile() imageobj: Express.Multer.File
+    ): Promise<ProfileDTO> {
+      const email = session.email;
+      profileDTO.filenames = imageobj.filename;
+      const profile = await this.adminService.addProfile(profileDTO, email);
+      return profile;
+    }
 
   @Get('/myphoto')
   @UseGuards(SessionGuard)
@@ -225,11 +228,19 @@ addNotice(@Body() notice: NoticeDTO,@Session() session): object {
 
 
 @Get('/viewallnotice')
-
+@UseGuards(SessionGuard)
 getAllNotice(): Promise<NoticeEntity[]|string> {
-
 return this.adminService.getAllNotice();
 }
+
+
+@Get('/publicNotice')
+
+publicNotice(): Promise<NoticeEntity[]|string> {
+
+return this.adminService.publicNotice();
+}
+
 
 
 
@@ -244,10 +255,12 @@ deleteAllNotice(): object {
 }
 
 @Delete('/deletenotice/:sl')
-  deleteOneNotice(@Param('sl', ParseIntPipe) SL: number): Promise<{ message: string }> {
-    return this.adminService.deleteOneNotice(SL);
+@UseGuards(SessionGuard)
+  deleteOneNotice(@Param('sl') sl: number): Promise<{ message: string }> {
+    return this.adminService.deleteOneNotice(sl);
   }
 
+ 
 
 
 
@@ -359,9 +372,11 @@ getPatientById(@Param('id', ParseIntPipe) id: number): object {
   // Appointment
 
   @Get('/viewallAppoinment')
+  @UseGuards(SessionGuard)
   viewallAppoinment(): Promise<AppointmentEntity[]> {
   return this.adminService.viewallAppoinment();
 }
+
 
 
   @Delete('/deleteappointment')

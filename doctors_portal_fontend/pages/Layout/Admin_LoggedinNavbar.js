@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import HeaderForLoggedin from './LoggedinHeader';
-import FooterForLoggedin from "./LoggedinFooter";
+
 import HomeLogo from './HomeLogo';
-import { useAuth } from '../utils/authentication';
 
 const NavigationBarLoggedin = () => {
   const router = useRouter();
@@ -23,30 +21,6 @@ const NavigationBarLoggedin = () => {
   const handleSearchToggle = () => {
     setSearchBarOpen(!searchBarOpen);
   };
-  const logout = () => {
-
-    doSignOut()
-  };
-  async function doSignOut() {
-    try {
-      const response = await axios.post( 'http://localhost:3000/Admin/signout/',
-        {
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          withCredentials: true
-        }
-      );
-      console.log(response)
-        setUser(null);
-        document.cookie = null;
-
-        router.push('/login');
-      
-
-    } catch (error) {
-      console.error('error failed: ', error);
-    }
-  }
-  
 
   return (
     <div className="navbar bg-teal-800 py-2 shadow-xl">
@@ -59,8 +33,8 @@ const NavigationBarLoggedin = () => {
           <ul tabIndex={0} className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
             <li><button onClick={() => handleNavigation("/profile")}>Profile</button></li>
             <li><Link href="/Admin/Admin_notice">Notice</Link></li>
-            <li><Link href="/Admin/Admin_Add_Doctor">Add Doctor</Link></li>
-            <li><Link href="/Edit_profile">Edit Profile</Link></li>
+            <li><Link href="/Admin/Admin_Add_Profile">Add Profile</Link></li>
+            <li><Link href="/Admin/Admin_Update_Pass">Set new password</Link></li>
             <li><Link href="/Admin/Admin_Notification">Notifications</Link></li>
             <li><Link href="/Admin/Admin_Profile">Profile</Link></li>
 
