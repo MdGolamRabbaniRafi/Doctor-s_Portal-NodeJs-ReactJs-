@@ -73,35 +73,55 @@ export default function Refer_doctor() {
     <div>
       {checkUser() ? (
         <>
-          <h1>Refer A Doctor</h1>
           <NavigationBarLoggedin></NavigationBarLoggedin>
 
           {/* <HeaderForLoggedin></HeaderForLoggedin> */}
+          
+          <div className="navbar bg-teal-800 shadow-xl">
+  <div className="navbar-start">
+    <div className="dropdown">
+      
+      
+    </div>
+    <a className="btn btn-ghost normal-case text-xl">Post Article</a>
+  </div>
+ 
+</div>
+<div className="flex flex-col items-center justify-center min-h-screen bg-black-100">
 
-          <form onSubmit={handleSubmit}>
-            <label htmlFor="Doctor_name">Doctor Name:</label>
+          <form onSubmit={handleSubmit} className='w-full max-w-md p-6 bg-black shadow-md rounded-md'>
+          <h1 className="text-2xl font-semibold mb-4">Refer A Doctor</h1>
+          <div className="form-control">
+            <label htmlFor="Doctor_name" className='input-group input-group-sm'><span>Doctor Name:</span>
             <input
+            className=''
               type="text"
               id="Doctor_name"
               name="Doctor_name"
               onChange={handleChangeDoctorName}
             />
+            </label>
+            </div>
             <br />
-            <label htmlFor="Patient Name">Patient Name:</label>
+
+
+
+            <label className='input-group input-group-sm' htmlFor="Patient Name"><span>Patient Name:</span>
             <input
               type="text"
               id="Patient Name"
               name="Patient Name"
               onChange={handleChangePatientName}
             />
+            </label>
             <br />
-            <button onClick={handleBack}>Back</button>
             <br />
 
-            <button>Confirm</button>
+            <button class="btn btn-outline">Confirm</button>
             <br />
           </form>
           <FooterForLoggedin></FooterForLoggedin>
+          </div>
         </>
       ) : (
         <div className="flex justify-center items-center h-screen">

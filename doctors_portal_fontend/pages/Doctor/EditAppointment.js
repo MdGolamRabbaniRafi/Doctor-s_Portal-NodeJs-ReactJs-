@@ -74,39 +74,92 @@ export default function EditAppointment() {
   
 
   return (
-    <div>
-      {checkUser() ? (
-        <>
-          {/* <HeaderForLoggedin /> */}
-          <NavigationBarLoggedin></NavigationBarLoggedin>
+    <>
+      <NavigationBarLoggedin />
+  
+      <div className="flex flex-col items-center justify-center min-h-screen bg-black-100">
 
-          <h1>Edit Appointment</h1>
-  
-          <label htmlFor="email">Email:</label>
-          <input type="email" id="email" value={updatedEmail} required onChange={handleChangeEmail} />
-          <br />
-          <label htmlFor="age">Age:</label>
-          <input type="text" id="age" value={updatedAge} required onChange={handleChangeAge} />
-          <br />
-          <label htmlFor="date">Date:</label>
-          <input type="date" id="date" value={updatedDate} required onChange={handleChangeDate} />
-          <br />
-          <label htmlFor="time">Time:</label>
-          <input type="time" id="time" value={updatedTime} required onChange={handleChangeTime} />
-          <br />
-          {error && <p>{error}</p>}
-  
-          <input type="submit" value="Save" onClick={handleEditForm} />
-  
-          <input type="submit" value="Back" onClick={handleBackClick} />
-          <FooterForLoggedin />
-        </>
-      ) : (
-        <div className="flex justify-center items-center h-screen">
-          <div className="w-16 h-16 border-t-4 border-blue-500 border-solid rounded-full animate-spin"></div>
-          <p>Login First</p>
-        </div>
-      )}
+      <div className="navbar bg-teal-800 shadow-xl">
+  <div className="navbar-start">
+    <div className="dropdown">
+      
+      
     </div>
+    <a className="btn btn-ghost normal-case text-xl">Edit Profile</a>
+  </div>
+ 
+</div>
+
+
+        <div className="w-full max-w-md p-6 bg-black shadow-md rounded-md">
+          
+          {checkUser() ? (
+            <>
+              <h1 className="text-2xl font-semibold mb-4">Edit Appointment</h1>
+  
+              <label htmlFor="email" className="block mb-1">Email:</label>
+              <input
+                type="email"
+                id="email"
+                value={updatedEmail}
+                required
+                onChange={handleChangeEmail}
+                className="input"
+              />
+  
+              <label htmlFor="age" className="block mt-4 mb-1">Age:</label>
+              <input
+                type="text"
+                id="age"
+                value={updatedAge}
+                required
+                onChange={handleChangeAge}
+                className="input"
+              />
+  
+              <label htmlFor="date" className="block mt-4 mb-1">Date:</label>
+              <input
+                type="date"
+                id="date"
+                value={updatedDate}
+                required
+                onChange={handleChangeDate}
+                className="input"
+              />
+  
+              <label htmlFor="time" className="block mt-4 mb-1">Time:</label>
+              <input
+                type="time"
+                id="time"
+                value={updatedTime}
+                required
+                onChange={handleChangeTime}
+                className="input"
+              />
+  
+              {error && <p className="text-red-500 mt-2">{error}</p>}
+  
+              <div className="mt-6 flex space-x-4">
+                <button
+                  className="btn btn-primary"
+                  onClick={handleEditForm}
+                >
+                  Save
+                </button>
+              </div>
+            </>
+          ) : (
+            <div className="flex justify-center items-center h-screen">
+              <div className="w-16 h-16 border-t-4 border-blue-500 border-solid rounded-full animate-spin mr-2"></div>
+              <p className="text-lg font-semibold">Login First</p>
+            </div>
+          )}
+        </div>
+  
+        <FooterForLoggedin />
+      </div>
+    </>
   );
+  
+  
   }

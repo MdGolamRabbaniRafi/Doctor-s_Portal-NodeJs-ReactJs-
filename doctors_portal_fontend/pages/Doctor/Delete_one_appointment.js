@@ -55,9 +55,19 @@ export default function Delete_one_appointment() {
         <>
           {/* <HeaderForLoggedin /> */}
           <NavigationBarLoggedin></NavigationBarLoggedin>
-
-          <h1>Delete Appointment</h1>
-          <label htmlFor="serial">Serial: {serial}</label>
+          <div className="navbar bg-teal-800 shadow-xl">
+  <div className="navbar-start">
+    <div className="dropdown">
+      
+      
+    </div>
+    <a className="btn btn-ghost normal-case text-xl">Delete Appointment</a>
+  </div>
+ 
+</div>
+<div className="flex flex-col items-center justify-center min-h-screen bg-black-100">
+<form className="w-full max-w-md p-6 bg-black shadow-md rounded-md">
+          <label htmlFor="serial" >Serial: {serial}</label>
           <br />
           <label htmlFor="email">Email: {email}</label>
           <br />
@@ -68,10 +78,16 @@ export default function Delete_one_appointment() {
           <label htmlFor="time">Time: {time}</label>
           <br />
           {error && <p>{error}</p>}
+          <div className="button-container" style={{ display: 'flex', justifyContent: 'flex-end', marginRight: '3px' }}>
 
-          <input type="submit" value="Yes" onClick={handleDeleteForm} />
-          <input type="submit" value="No" onClick={handleBackClick} />
+          <input type="submit" value="Delete"className='btn btn-outline btn-error ml-12'  onClick={handleDeleteForm} />
+          <input type="submit" value="Back" className='btn btn-outline btn-success ml-12' onClick={handleBackClick} />
+          </div>
+
+          </form>
           <FooterForLoggedin />
+          </div>
+
         </>
       ) : (
         <div className="flex justify-center items-center h-screen">

@@ -62,49 +62,67 @@ export default function AddAppointment() {
       router.push('/');
     }
   }, []);
-
   return (
-    <div>
+    <>
       {checkUser() ? (
         <>
-          {/* <HeaderForLoggedin></HeaderForLoggedin> */}
-          <NavigationBarLoggedin></NavigationBarLoggedin>
-
-          <h1>Post Article</h1>
-          <form onSubmit={handleSubmit}>
-            <label htmlFor="name">Name:</label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              value={name}
-              required
-              onChange={handleChangeName}
-            /><br />
-
-            <label htmlFor="Link">Article Link:</label>
-            <input
-              type="text"
-              id="Link"
-              name="Link"
-              value={Link}
-              required
-              onChange={handleChangeLink}
-            /><br />
-
-            <input type="submit" value="Confirm" />
-            <button type="button" onClick={handleBack}>Back</button>
-          </form>
-
-          {error && <p>{error}</p>}
-          <FooterForLoggedin></FooterForLoggedin>
+            <NavigationBarLoggedin />
+            <div className="navbar bg-teal-800 shadow-xl">
+  <div className="navbar-start">
+    <div className="dropdown">
+      
+      
+    </div>
+    <a className="btn btn-ghost normal-case text-xl">Post Article</a>
+  </div>
+ 
+</div>
+          <div className="flex flex-col items-center justify-center min-h-screen bg-black-100">
+            <form onSubmit={handleSubmit} className="w-full max-w-md p-6 bg-black shadow-md rounded-md">
+              <h1 className="text-2xl font-semibold mb-4">Post Article</h1>
+              <div className="form-control">
+                <label htmlFor="name" className="input-group input-group-sm">
+                  <span>Name:</span>
+                  <input
+                    type="text"
+                    className="input input-bordered input-sm"
+                    id="name"
+                    name="name"
+                    value={name}
+                    required
+                    onChange={handleChangeName}
+                  />
+                </label>
+              </div>
+              <br />
+              <div className="form-control">
+                <label htmlFor="Link" className="input-group input-group-sm">
+                  <span>Article Link:</span>
+                  <input
+                    type="text"
+                    className="input input-bordered input-sm"
+                    id="Link"
+                    name="Link"
+                    value={Link}
+                    required
+                    onChange={handleChangeLink}
+                  />
+                </label>
+              </div>
+              <br />
+              <input type="submit" className="btn btn-outline btn-accent " value="Post" />
+            </form>
+            {error && <p className="text-red-500 mt-2">{error}</p>}
+            <FooterForLoggedin />
+          </div>
         </>
       ) : (
         <div className="flex justify-center items-center h-screen">
           <div className="w-16 h-16 border-t-4 border-blue-500 border-solid rounded-full animate-spin"></div>
-          <p>Login First</p>
+          <p className="text-lg font-semibold">Login First</p>
         </div>
       )}
-    </div>
+    </>
   );
+  
 }

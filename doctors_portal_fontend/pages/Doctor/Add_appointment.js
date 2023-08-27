@@ -34,7 +34,7 @@ export default function AddAppointment() {
     setTime(e.target.value);
   };
   const handleBack = (e) => {
-    router.push('../Doctor/Appointment');
+    router.push('../Doctor/LoggedinPage');
   };
  // const { checkUser } = useAuth();
 
@@ -80,7 +80,7 @@ export default function AddAppointment() {
         } else if (response.data === "Error fetching patient") {
           setError('Error fetching patient');
         } else {
-          router.push('../Doctor/Appointment');
+          router.push('../Doctor/LoggedinPage');
         }
       } catch (error) {
         console.error('Failed:', error);
@@ -90,40 +90,107 @@ export default function AddAppointment() {
     }
   };
   return (
-    <div>
+    <>
       {checkUser() ? (
         <>
-             {/* <HeaderForLoggedin /> */}
-             <NavigationBarLoggedin></NavigationBarLoggedin>
-          <h1>Add Appointment</h1>
-          <form onSubmit={handleSubmit}>
-            <label htmlFor="email">Email:</label>
-            <input type="email" id="email" name="email" value={email} required onChange={handleChangeEmail} /><br />
+          <NavigationBarLoggedin />
+          <div className="navbar bg-teal-800 shadow-xl">
+  <div className="navbar-start">
+    <div className="dropdown">
+      
+      
+    </div>
+    <a className="btn btn-ghost normal-case text-xl">Add Appointment</a>
+  </div>
+ 
+</div>
   
-            <label htmlFor="age">Age:</label>
-            <input type="text" id="text" name="To" value={age} required onChange={handleChangeAge} /><br />
+          <div className="flex flex-col items-center justify-center min-h-screen bg-black-100">
+
   
-            <label htmlFor="date">Date:</label>
-            <input type="date" id="date" name="date" value={date} required onChange={handleChangeDate} /><br />
+            <form onSubmit={handleSubmit} className="w-full max-w-md p-6 bg-black shadow-md rounded-md">
+              <h1 className="text-2xl font-semibold mb-4">Add Appointment</h1>
   
-            <label htmlFor="time">Time:</label>
-            <input type="time" id="time" name="time" value={time} required onChange={handleChangeTime} /><br />
+              <div className="form-control">
+                <label htmlFor="email" className="input-group input-group-sm">
+                  <span>Email</span>
+                  <input
+                    type="email"
+                    className="input input-bordered input-sm"
+                    id="email"
+                    name="email"
+                    value={email}
+                    required
+                    onChange={handleChangeEmail}
+                  />
+                </label>
+              </div>
   
-            <input type="submit" value="Confirm" />
-            <button type="button" onClick={handleBack}>Back</button>
-          </form>
-          {error && <p>{error}</p>}
-          <FooterForLoggedin />
+              <br />
+  
+              <div className="form-control">
+                <label className="input-group input-group-sm">
+                  <span>Age:</span>
+                  <input
+                    type="text"
+                    className="input input-bordered input-sm"
+                    id="age"
+                    name="age"
+                    value={age}
+                    required
+                    onChange={handleChangeAge}
+                  />
+                </label>
+              </div>
+  
+              <br />
+  
+              <label htmlFor="date" className="flex items-center space-x-1">
+                <span className="mr-1">Date:</span>
+                <input
+                  type="date"
+                  id="date"
+                  name="date"
+                  value={date}
+                  required
+                  onChange={handleChangeDate}
+                  className="input input-bordered input-sm"
+                  style={{ lineHeight: '1.5', padding: '0.25rem 0.5rem' }}
+                />
+              </label>
+  
+              <br />
+  
+              <label htmlFor="time" className="flex items-center space-x-1">
+                <span className="mr-1">Time:</span>
+                <input
+                  type="time"
+                  id="time"
+                  name="time"
+                  value={time}
+                  required
+                  onChange={handleChangeTime}
+                  className="input input-bordered input-sm"
+                  style={{ lineHeight: '1.5', padding: '0.25rem 0.5rem' }}
+                />
+              </label>
+  
+              <br />
+  
+              <input type="submit" className="btn btn-outline btn-accent ml-12" value="ADD" />
+            </form>
+            
+            {error && <p className="text-red-500 mt-2">{error}</p>}
+            
+            <FooterForLoggedin />
+          </div>
         </>
       ) : (
         <div className="flex justify-center items-center h-screen">
-           
-            <div class="w-16 h-16 border-t-4 border-blue-500 border-solid rounded-full animate-spin"></div>
-            <p>Login First</p>
-
-          
+          <div className="w-16 h-16 border-t-4 border-blue-500 border-solid rounded-full animate-spin"></div>
+          <p className="text-lg font-semibold">Login First</p>
         </div>
       )}
-    </div>
+    </>
   );
-}
+  }

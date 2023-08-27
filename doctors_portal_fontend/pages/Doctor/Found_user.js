@@ -42,35 +42,42 @@ export default function Found_user() {
       setError('An error occurred. Please try again later.');
     }
   };
-
   return (
     <div>
-      {checkUser() ? (
-        <>
-          {/* <HeaderForLoggedin /> */}
-          <NavigationBarLoggedin></NavigationBarLoggedin>
-
-          <h1>User Profile</h1>
-          {error && <p>{error}</p>}
-          <ul>
-            <li>
-              Name: {profile.name}<br />
-              Email: {profile.email}<br />
-              Gender: {profile.Gender}<br />
-              Degree: {profile.Degree}<br />
-              Blood Group: {profile.Blood_group}<br />
-              User: {profile.User}<br />
-            </li>
-          </ul>
-          <input type="submit" value="Back" onClick={handleBackClick} />
-          <FooterForLoggedin />
-        </>
-      ) : (
-        <div className="flex justify-center items-center h-screen">
-          <div className="w-16 h-16 border-t-4 border-blue-500 border-solid rounded-full animate-spin"></div>
-          <p>Login First</p>
+      <div className="navbar bg-teal-800 shadow-xl">
+        <div className="navbar-start">
+          <div className="dropdown">
+            {/* Dropdown content */}
+          </div>
+          <a className="btn btn-ghost normal-case text-xl">User</a>
         </div>
-      )}
+      </div>
+
+      <div className="hero min-h-screen bg-base-100">
+        <div className="hero-content flex-col lg:flex-row-reverse">
+          <div className="text-center lg:text-left">
+            <div className="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
+              <div className="card-body">
+                  <div className="flex flex-col items-center justify-center min-h-screen">
+                    {error && <p>{error}</p>}
+                    <ul className="my-4">
+                      <li className="mb-2">
+                        Name: {profile.name}<br />
+                        Email: {profile.email}<br />
+                        Gender: {profile.Gender}<br />
+                        Degree: {profile.Degree}<br />
+                        Blood Group: {profile.Blood_group}<br />
+                        User: {profile.User}<br />
+                      </li>
+                    </ul>
+                  </div>
+              </div>
+            </div>
+            <input type="submit" value="Back" className="btn btn-primary" onClick={handleBackClick} />
+
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

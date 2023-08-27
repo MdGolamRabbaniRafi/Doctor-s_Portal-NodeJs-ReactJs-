@@ -15,7 +15,7 @@ export default function View_all_appointment() {
   const { checkUser } = useAuth();
 
   const handleBackClick = () => {
-    router.push('../Doctor/Appointment');
+    router.push('../Doctor/LoggedinPage');
   };
 
   const handleEditClick = (appointment) => {
@@ -81,49 +81,94 @@ export default function View_all_appointment() {
       setError('An error occurred. Please try again later.');
     }
   };
-
   return (
-    <div>
-      {/* <HeaderForLoggedin /> */}
-      <NavigationBarLoggedin></NavigationBarLoggedin>
+    <div className="bg-black-100 h-screen w-screen justify-between">
+      <NavigationBarLoggedin />
+      <main className="container mx-auto p-4">
+        {checkUser() ? (
+          <>
+<div className="navbar bg-teal-800 shadow-xl">
+  <div className="navbar-start">
+    <div className="dropdown">
+      
+      
+    </div>
+    <a className="btn btn-ghost normal-case text-xl">View Appointments</a>
+  </div>
+ 
+</div>            {error && <p className="text-red-500 mb-4">{error}</p>}
+            <ul className="space-y-4">
+              {appointments.map((appointment) => (
+                <li key={appointment.Serial} className="p-4 bg-black-200 shadow-md rounded-md">
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="text-white font-semibold text-base">
+                      Appointment: <span className="text-blue-500">{appointment.Serial}</span>
+                    </span>
+                    <span className="text-gray-600 text-xs">
+                    <div className="mt-2">
+                    <button
+  className="flex items-center px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-300 ease-in-out"
+  onClick={() => handleEditClick(appointment)}
+>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    className="h-5 w-5 mr-2"
+    viewBox="0 0 20 20"
+    fill="currentColor"
+    aria-hidden="true"
+  >
+    <path
+      fillRule="evenodd"
+      d="M13.293 4.293a1 1 0 011.414 0l2 2a1 1 0 010 1.414l-9 9a1 1 0 01-.39.242l-5 1a1 1 0 01-1.227-1.226l1-5a1 1 0 01.241-.39l9-9z"
+      clipRule="evenodd"
+    />
+  </svg>
+  Edit
+</button>
+
+<button
+  className="flex items-center px-3 py-1 bg-red-500 text-white rounded-md text-sm hover:bg-red-600 transition duration-300 ease-in-out"
+  onClick={() => handleDeleteClick(appointment)}
+>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    className="h-4 w-4 mr-2"
+    viewBox="0 0 20 20"
+    fill="currentColor"
+    aria-hidden="true"
+  >
+    {/* SVG path here */}
+  </svg>
+  Delete
+</button>
 
 
-      {checkUser() ? (
-        <>
-          <h1>View Appointments</h1>
-          {error && <p>{error}</p>}
-          <ul>
-            {appointments.map((appointment) => (
-              <li key={appointment.Serial}>
-                Serial: {appointment.Serial}<br />
-
-                Name:
-                <Link href={`../Doctor/Dynamic_user/Dynamic/?email=${appointment.email}`}>
-                  {appointment.name}
-                </Link>
-                <br />
-
-                Age: {appointment.age}<br />
-                Date: {appointment.date}<br />
-                Time: {appointment.time}<br />
-                <input type="submit" value="Edit" onClick={() => handleEditClick(appointment)} />
-                <input
-                  type="submit"
-                  value="Delete"
-                  onClick={() => handleDeleteClick(appointment)}
-                />
-              </li>
-            ))}
-          </ul>
-          <input type="submit" value="Back" onClick={handleBackClick} />
-          <FooterForLoggedin />
-        </>
-      ) : (
-        <div className="flex justify-center items-center h-screen">
-          <div className="w-16 h-16 border-t-4 border-blue-500 border-solid rounded-full animate-spin"></div>
-          <p>Login First</p>
-        </div>
-      )}
+                  </div>
+                    </span>
+                  </div>
+                  <div className="text-white">
+                    <p>Name:                 <Link href={`../Doctor/Dynamic_user/Dynamic/?email=${appointment.email}`}>
+                  {appointment.name}</Link></p>
+                    <p>Age: {appointment.age}</p>
+                    <p>Date: {appointment.date}</p>
+                    <p>Time: {appointment.time}</p>
+                  </div>
+                 
+                </li>
+              ))}
+            </ul>
+          </>
+        ) : (
+          <div className="flex justify-center items-center h-screen">
+            <div className="w-16 h-16 border-t-4 border-blue-500 border-solid rounded-full animate-spin"></div>
+            <p className="ml-2 text-white">Login First</p>
+          </div>
+        )}
+        <FooterForLoggedin />
+      </main>
     </div>
   );
-}
+  
+  
+  
+  }

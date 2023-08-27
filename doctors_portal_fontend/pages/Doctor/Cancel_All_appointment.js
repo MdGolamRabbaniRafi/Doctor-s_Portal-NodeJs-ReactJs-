@@ -13,7 +13,7 @@ export default function Cancel_All_appointment() {
   const [error, setError] = useState('');
 
   const handleBackClick = () => {
-    router.push('../Doctor/Appointment');
+    router.push('../Doctor/LoggedinPage');
   };
 
   const handleAllDeleteForm = async () => {
@@ -26,7 +26,7 @@ export default function Cancel_All_appointment() {
         setError('Error updating appointment');
       } else if (response.data === "All appointments deleted") {
         setError('');
-        router.push('../Doctor/Appointment');
+        router.push('../Doctor/LoggedinPage');
       }
     } catch (error) {
       console.error('Failed:', error);
@@ -48,15 +48,32 @@ export default function Cancel_All_appointment() {
         <>
           {/* <HeaderForLoggedin /> */}
           <NavigationBarLoggedin></NavigationBarLoggedin>
+          <div className="navbar bg-teal-800 shadow-xl">
+  <div className="navbar-start">
+    <div className="dropdown">
+      
+      
+    </div>
+    <a className="btn btn-ghost normal-case text-xl">Delete Appointments</a>
+  </div>
+ 
+</div>
+<div className="flex flex-col items-center justify-center min-h-screen bg-black-100">
+<form className="w-full max-w-md p-6 bg-black shadow-md rounded-md">
 
-          <h1>Are you sure to delete all appointment?</h1>
+
+          <h1 className="btn btn-ghost normal-case text-xl">Are you sure to delete all appointment?</h1>
           <br />
           {error && <p>{error}</p>}
+          <div className="button-container" style={{ display: 'flex', justifyContent: 'flex-end', marginRight: '3px' }}>
+
+          <input type="submit" value="Yes"  className='btn btn-outline btn-success ml-12' onClick={handleAllDeleteForm} />
           
-          <input type="submit" value="Yes" onClick={handleAllDeleteForm} />
-          
-          <input type="submit" value="No" onClick={handleBackClick} />
+          <input type="submit" value="No" className='btn btn-outline btn-error ml-12' onClick={handleBackClick} />
+         </div>
+          </form>
           <FooterForLoggedin />
+          </div>
         </>
       ) : (
         <div className="flex justify-center items-center h-screen">

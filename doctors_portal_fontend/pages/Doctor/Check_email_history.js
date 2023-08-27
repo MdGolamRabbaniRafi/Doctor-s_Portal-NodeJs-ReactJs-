@@ -13,10 +13,8 @@ export default function EmailHistory() {
   const [error, setError] = useState('');
   const router = useRouter();
   const { checkUser } = useAuth();
+  const index=0
 
-  const handleBackClick = () => {
-    router.push('../Doctor/Send_email');
-  };
 
   useEffect(() => {
     if (!checkUser()) {
@@ -59,27 +57,55 @@ export default function EmailHistory() {
         <>
           {/* <HeaderForLoggedin /> */}
           <NavigationBarLoggedin></NavigationBarLoggedin>
+          <div className="bg-black-100 h-screen w-screen  justify-between">
 
-          <h1>Email History</h1>
-          {error && <p>{error}</p>}
-          <ul>
-            {EmailData.map((emailData) => (
+
+          <div className="navbar bg-teal-800 shadow-xl">
+  <div className="navbar-start">
+    <div className="dropdown">
+      
+      
+    </div>
+    <a className="btn btn-ghost normal-case text-xl">Email History</a>
+  </div>
+ 
+</div>
+          {error && <p  className="text-red-500">{error}</p>}
+          <ul className="space-y-4">
+            {EmailData.map((emailData,index) => (
               <li key={emailData.id}>
-                {emailData.mail.map((email) => (
+                {emailData.mail.map((email,index) => (
                   <div key={email.Serial}>
-                    Sent to: {email.to}<br />
+
+<li key={email.Serial} className="p-4 bg-black-200 shadow-md rounded-md">
+      <div className="flex justify-between items-center">
+        <span className="text-black font-semibold text-base">
+          Email : <span className="text-blue-500">{index + 1}</span>
+        </span>
+        <span className="text-gray-600 text-xs">
+         Date: {email.Date} <br></br>Time: {email.Time}
+        </span>
+      </div>
+      Send to: {email.to}<br />
+      Subject: {email.subject}<br />
+      Body: {email.text}<br />
+
+      <br />
+    </li>
+
+
+                    {/* Sent to: {email.to}<br />
                     Subject: {email.subject}<br />
-                    Body: {email.text}<br />
-                    Date: {email.Date}<br />
-                    Time: {email.Time}<br />
+                    Body: {email.text}<br /> */}
                     <br />
                   </div>
                 ))}
               </li>
             ))}
           </ul>
-          <input type="submit" value="Back" onClick={handleBackClick} />
           <FooterForLoggedin />
+          </div>
+
         </>
       ) : (
         <div className="flex justify-center items-center h-screen">

@@ -8,6 +8,16 @@ const NavigationBarLoggedin = () => {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
+  const [isAppointmentDropdownOpen, setIsAppointmentDropdownOpen] = useState(false);
+  const [isEmailDropdownOpen, setIsEmailDropdownOpen] = useState(false);
+
+  const toggleAppointmentDropdown = () => {
+    setIsAppointmentDropdownOpen(!isAppointmentDropdownOpen);
+  };
+
+  const toggleEmailDropdown = () => {
+    setIsEmailDropdownOpen(!isEmailDropdownOpen);
+  };
   const handleChangeEmail = (e) => {
     console.log("Handleeeeeee:"+e.target.value)
     setEmail(e.target.value);
@@ -93,10 +103,55 @@ const NavigationBarLoggedin = () => {
           </button>
         </li>
         <li><button onClick={() => handleNavigation("../Doctor/Post-article")}>Article</button></li>
-        <li><a onClick={() => handleNavigation("../Doctor/Appointment")}>Appointment</a></li>
-        <li><button onClick={() => handleNavigation("../Doctor/Refer_doctor")}>Refer</button></li>
-        <li><button onClick={() => handleNavigation("../Doctor/Send_email")}>Email</button></li>
+        
 
+
+
+        <ul className={`menu bg-black-200 w-56 rounded-box ${isAppointmentDropdownOpen ? 'menu-show' : ''}`}>
+      <li>
+        <span className={`menu-dropdown-toggle ${isAppointmentDropdownOpen  ? 'menu-dropdown-show' : ''} mr-6`} onClick={toggleAppointmentDropdown}>
+        <span className="mr-8">Appointment</span>
+        </span>
+        <ul className={`menu-dropdown ${isAppointmentDropdownOpen  ? 'menu-dropdown-show' : ''}`}>
+          <li><a onClick={() => handleNavigation("../Doctor/Add_appointment")}>Add Appointment</a></li>
+          <li><a onClick={() => handleNavigation("../Doctor/View_all_appointment")}>View All Appointment</a></li>
+          <li><a onClick={() => handleNavigation("../Doctor/Cancel_All_appointment")}>Cancel All Appointment</a></li>
+
+        </ul>
+      </li>
+    </ul>
+
+
+
+
+
+
+
+
+
+
+        {/* <li><a onClick={() => handleNavigation("../Doctor/Appointment")}>Appointment</a></li> */}
+        <li><button onClick={() => handleNavigation("../Doctor/Refer_doctor")}>Refer</button></li>
+        
+        
+        
+        
+
+
+
+
+
+        <ul className={`menu bg-black-200 w-56 rounded-box ${isEmailDropdownOpen ? 'menu-show' : ''}`}>
+      <li>
+        <span className={`menu-dropdown-toggle ${isEmailDropdownOpen ? 'menu-dropdown-show' : ''} mr-6`} onClick={toggleEmailDropdown}>
+          Email
+        </span>
+        <ul className={`menu-dropdown ${isEmailDropdownOpen ? 'menu-dropdown-show' : ''}`}>
+          <li><a  onClick={() => handleNavigation("../Doctor/Send_email")}>Send Email</a></li>
+          <li><a onClick={() => handleNavigation("../Doctor/Check_email_history")}>Check Email History</a></li>
+        </ul>
+      </li>
+    </ul>
 
 
         <li><button onClick={() => handleNavigation("/Logout")}>Logout</button></li>
