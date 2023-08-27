@@ -1,8 +1,11 @@
 {
   "name": "doctors_portal_fontend",
+  "homepage": "https://MdGolamRabbaniRafi.github.io/Advance-Webtechnology",
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "predeploy":"npm run build",
+    "deploy":"gh-pages -d build",
     "dev": "next dev --port 8000",
     "build": "next build",
     "start": "next start --port 8000",
@@ -17,6 +20,7 @@
     "autoprefixer": "^10.4.14",
     "axios": "^1.4.0",
     "daisyui": "^3.6.1",
+    "gh-pages": "^6.0.0",
     "js-cookie": "^3.0.5",
     "next": "13.4.12",
     "postcss": "^8.4.27",
