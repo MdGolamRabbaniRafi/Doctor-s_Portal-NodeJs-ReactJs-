@@ -26,13 +26,6 @@ export class PatientController {
     
   //   return this.patientService.addPatient(patient);
   // }
-  @Get('/ViewMyProfile/:email')
-  @UseGuards(SessionGuard)
-  ViewPersonalInfoWithEmail( @Param('email') email: string): Object{
-    return this.patientService.ViewPersonalInfoWithEmail(email);
-
-  }
-  
   @Get('/ViewMyProfile')
   @UseGuards(SessionGuard)
   ViewPersonalInfo(@Session() session): Object{
@@ -87,11 +80,12 @@ export class PatientController {
   viewNotification(@Session() session): Promise<NotificationEntity[]> {
     return this.patientService.viewNotification(session.email);
   }
-  @Post('/sendemail')
-  async sendEmail(@Body() emailData: { to: string; subject: string; text: string }): Promise<void> {
-    const { to, subject, text } = emailData;
-    await this.patientService.sendEmail(to, subject, text);
-  }
+  
+ @Post('/sendemail')
+ async sendEmail(@Body() emailData: { to: string; subject: string; text: string }): Promise<void> {
+   const { to, subject, text } = emailData;
+   await this.patientService.sendEmail(to, subject, text);
+ }
 
   
   @Post('/submitFeedback')
