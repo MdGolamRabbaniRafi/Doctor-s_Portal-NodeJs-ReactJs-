@@ -6,7 +6,17 @@ import FooterForLoggedin from '../Layout/LoggedinFooter';
 //import { useAuth } from '../utils/authentication';
 import { useAuth } from '../utils/authentication';
 import { useEffect } from 'react';
+import SessionCheck from '../utils/session';
 import NavigationBarLoggedin from "../Layout/LoggedinNavbar"
+
+import dynamic from "next/dynamic";
+
+
+const Title = dynamic(()=>import('../Layout/Doctor_Title'),{
+
+  ssr: false,
+
+});
 
 export default function AddAppointment() {
   const [email, setEmail] = useState('');
@@ -93,6 +103,9 @@ export default function AddAppointment() {
     <>
       {checkUser() ? (
         <>
+                  <SessionCheck></SessionCheck>
+                  <Title page ="Add Appointment"></Title>
+
           <NavigationBarLoggedin />
           <div className="navbar bg-teal-800 shadow-xl">
   <div className="navbar-start">

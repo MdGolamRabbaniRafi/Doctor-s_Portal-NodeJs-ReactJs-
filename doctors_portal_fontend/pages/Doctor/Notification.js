@@ -7,8 +7,15 @@ import { useAuth } from '../utils/authentication';
 import NavigationBarLoggedin from "../Layout/LoggedinNavbar"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import SessionCheck from '../utils/session';
+import dynamic from "next/dynamic";
 
 
+const Title = dynamic(()=>import('../Layout/Doctor_Title'),{
+
+  ssr: false,
+
+});
 
 export default function Notification() {
   const [notifications, setNotifications] = useState([]);
@@ -22,11 +29,8 @@ export default function Notification() {
   };
 
   useEffect(() => {
-    if (!checkUser()) {
-      router.push('/');
-    } else {
-      fetchData();
-    }
+   fetchData();
+    
   }, []);
 
   const fetchData = async () => {
@@ -60,7 +64,9 @@ export default function Notification() {
 
   return (
     <div>
-      {checkUser() ? (
+      <Title page ="Notification"></Title>
+
+          <SessionCheck></SessionCheck>
         <>
              <NavigationBarLoggedin></NavigationBarLoggedin>
              <div className="bg-black-100 h-screen w-screen  justify-between">
@@ -102,12 +108,7 @@ export default function Notification() {
           </div>
         </>
         
-      ) : (
-        <div className="flex justify-center items-center h-screen">
-          <div className="w-16 h-16 border-t-4 border-blue-500 border-solid rounded-full animate-spin"></div>
-          <p>Login First</p>
-        </div>
-      )}
+      
     </div>
   );
 }

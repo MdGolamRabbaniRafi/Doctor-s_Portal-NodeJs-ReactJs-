@@ -6,7 +6,16 @@ import FooterForLoggedin from '../Layout/LoggedinFooter';
 import { useAuth } from '../utils/authentication';
 import { useEffect } from 'react';
 import NavigationBarLoggedin from "../Layout/LoggedinNavbar"
+import SessionCheck from '../utils/session';
 
+import dynamic from "next/dynamic";
+
+
+const Title = dynamic(()=>import('../Layout/Doctor_Title'),{
+
+  ssr: false,
+
+});
 
 
 export default function Edit_profile() {
@@ -45,15 +54,10 @@ export default function Edit_profile() {
   };
 
   useEffect(() => {
-    if(!checkUser())
-    {
-     //  alert('Log in first')
-      router.push('/')
-    }
-    else{
+ 
       fetchData();
 
-    }
+    
   }, []);
 
   
@@ -127,7 +131,9 @@ export default function Edit_profile() {
 
   return (
     <div>
-      {checkUser() ? (
+      <Title page ="Edit Profile"></Title>
+
+          <SessionCheck></SessionCheck>
         <>
           {/* <HeaderForLoggedin /> */}
           <NavigationBarLoggedin></NavigationBarLoggedin>
@@ -209,12 +215,7 @@ export default function Edit_profile() {
           <input type="submit" value="Back" onClick={handleBackClick} />
           <FooterForLoggedin />
         </>
-      ) : (
-        <div className="flex justify-center items-center h-screen">
-          <div className="w-16 h-16 border-t-4 border-blue-500 border-solid rounded-full animate-spin"></div>
-          <p>Login First</p>
-        </div>
-      )}
+     
     </div>
   );
 }

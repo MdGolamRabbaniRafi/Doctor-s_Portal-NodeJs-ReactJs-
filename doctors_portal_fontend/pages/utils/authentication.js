@@ -56,7 +56,7 @@ export const AuthProvider = ({ children }) => {
       sessionStorage.removeItem('email')
       console.log("Cookie distroy?"+document.cookie)
 
-        router.push('/login');
+        router.push('/');
       
 
     } catch (error) {

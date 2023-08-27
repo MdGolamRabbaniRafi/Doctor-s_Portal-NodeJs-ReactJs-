@@ -2,8 +2,15 @@ import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import NavigationBarLoggedin from '../../Layout/LoggedinNavbar';
+import SessionCheck from '@/pages/utils/session';
+import dynamic from "next/dynamic";
 
-export default function dynamic() {
+const Title = dynamic(()=>import('@/pages/Layout/Doctor_Title'),{
+
+  ssr: false,
+
+});
+export default function Dynamic() {
   const [Profiles, setProfile] = useState([]);
   const [error, setError] = useState('');
   const router = useRouter();
@@ -14,6 +21,7 @@ export default function dynamic() {
   };
 
   const fetchData = async () => {
+    
     try {
       const userEmail = email;
       console.log('User Email:', userEmail);
@@ -44,6 +52,10 @@ export default function dynamic() {
 
   return (
     <div>
+                <SessionCheck></SessionCheck>
+                <Title page ="Patient Profile"></Title>
+
+
       <NavigationBarLoggedin />
       <div className="navbar bg-teal-800 shadow-xl">
         <div className="navbar-start">

@@ -5,7 +5,15 @@ import HeaderForLoggedin from '../Layout/LoggedinHeader';
 import FooterForLoggedin from '../Layout/LoggedinFooter';
 import { useAuth } from '../utils/authentication';
 import NavigationBarLoggedin from "../Layout/LoggedinNavbar"
+import SessionCheck from '../utils/session';
+import dynamic from "next/dynamic";
 
+
+const Title = dynamic(()=>import('../Layout/Doctor_Title'),{
+
+  ssr: false,
+
+});
 
 export default function Found_user() {
   const router = useRouter();
@@ -21,12 +29,8 @@ export default function Found_user() {
   };
 
   useEffect(() => {
-    if (!checkUser()) {
-      //  alert('Log in first')
-      router.push('/');
-    } else {
       fetchData();
-    }
+
   }, []);
 
   const fetchData = async () => {
@@ -44,6 +48,11 @@ export default function Found_user() {
   };
   return (
     <div>
+      <Title page ="Patient Profile"></Title>
+
+                <SessionCheck></SessionCheck>
+                <NavigationBarLoggedin></NavigationBarLoggedin>
+
       <div className="navbar bg-teal-800 shadow-xl">
         <div className="navbar-start">
           <div className="dropdown">

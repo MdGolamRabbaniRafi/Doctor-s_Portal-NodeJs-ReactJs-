@@ -5,7 +5,15 @@ import HeaderForLoggedin from '../Layout/LoggedinHeader';
 import FooterForLoggedin from '../Layout/LoggedinFooter';
 import { useAuth } from '../utils/authentication';
 import NavigationBarLoggedin from "../Layout/LoggedinNavbar"
+import SessionCheck from '../utils/session';
+import dynamic from "next/dynamic";
 
+
+const Title = dynamic(()=>import('../Layout/Doctor_Title'),{
+
+  ssr: false,
+
+});
 
 export default function AddAppointment() {
   const [name, setName] = useState('');
@@ -57,14 +65,14 @@ export default function AddAppointment() {
   };
 
   useEffect(() => {
-    console.log('CheckUser::::' + checkUser());
-    if (!checkUser()) {
-      router.push('/');
-    }
+  
+    
   }, []);
   return (
     <>
-      {checkUser() ? (
+    <Title page ="Post Article"></Title>
+
+          <SessionCheck></SessionCheck>
         <>
             <NavigationBarLoggedin />
             <div className="navbar bg-teal-800 shadow-xl">
@@ -116,12 +124,7 @@ export default function AddAppointment() {
             <FooterForLoggedin />
           </div>
         </>
-      ) : (
-        <div className="flex justify-center items-center h-screen">
-          <div className="w-16 h-16 border-t-4 border-blue-500 border-solid rounded-full animate-spin"></div>
-          <p className="text-lg font-semibold">Login First</p>
-        </div>
-      )}
+    
     </>
   );
   

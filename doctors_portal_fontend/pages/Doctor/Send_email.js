@@ -8,8 +8,16 @@ import NavigationBarLoggedin from "../Layout/LoggedinNavbar"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 // import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 // import { faHistory } from '@fortawesome/free-solid-svg-icons';
+import SessionCheck from '../utils/session';
+
+import dynamic from "next/dynamic";
 
 
+const Title = dynamic(()=>import('../Layout/Doctor_Title'),{
+
+  ssr: false,
+
+});
 
 
 
@@ -74,14 +82,15 @@ export default function Send_email() {
   };
 
   useEffect(() => {
-    console.log('CheckUser::::' + checkUser());
-    if (!checkUser()) {
-      router.push('/');
-    }
+    
   }, []);
 
   return (
     <div>
+      <Title page ="Send Email"></Title>
+
+                <SessionCheck></SessionCheck>
+
       {/* <HeaderForLoggedin /> */}
       <NavigationBarLoggedin></NavigationBarLoggedin>
 <div className="navbar bg-teal-800 shadow-xl">
@@ -95,7 +104,6 @@ export default function Send_email() {
   </div>
  
 </div>
-      {checkUser() ? (
         <>
           <form onSubmit={(e) => { e.preventDefault(); handleSend(); }}>
 
@@ -173,12 +181,7 @@ export default function Send_email() {
             {error && <p>{error}</p>}
           </form>
         </>
-      ) : (
-        <div className="flex justify-center items-center h-screen">
-          <div className="w-16 h-16 border-t-4 border-blue-500 border-solid rounded-full animate-spin"></div>
-          <p>Login First</p>
-        </div>
-      )}
+     
       <FooterForLoggedin />
 
       {showToast && (

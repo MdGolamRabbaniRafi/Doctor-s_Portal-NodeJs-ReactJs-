@@ -5,7 +5,15 @@ import HeaderForLoggedin from '../Layout/LoggedinHeader';
 import FooterForLoggedin from '../Layout/LoggedinFooter';
 import { useAuth } from '../utils/authentication';
 import NavigationBarLoggedin from "../Layout/LoggedinNavbar"
+import SessionCheck from '../utils/session';
+import dynamic from "next/dynamic";
 
+
+const Title = dynamic(()=>import('../Layout/Doctor_Title'),{
+
+  ssr: false,
+
+});
 
 export default function Refer_doctor() {
   const [Doctor_name, setDoctorName] = useState('');
@@ -63,15 +71,14 @@ export default function Refer_doctor() {
   };
 
   useEffect(() => {
-    console.log('CheckUser::::' + checkUser());
-    if (!checkUser()) {
-      router.push('/');
-    }
+  
   }, []);
 
   return (
     <div>
-      {checkUser() ? (
+      <Title page ="Refer"></Title>
+
+          <SessionCheck></SessionCheck>
         <>
           <NavigationBarLoggedin></NavigationBarLoggedin>
 
@@ -123,12 +130,7 @@ export default function Refer_doctor() {
           <FooterForLoggedin></FooterForLoggedin>
           </div>
         </>
-      ) : (
-        <div className="flex justify-center items-center h-screen">
-          <div className="w-16 h-16 border-t-4 border-blue-500 border-solid rounded-full animate-spin"></div>
-          <p>Login First</p>
-        </div>
-      )}
+
     </div>
   );
 }

@@ -5,7 +5,7 @@ import { useRouter } from 'next/router';
 import PatiLogo from './Layout/PatientLogo';
 import HomeLogo from './Layout/HomeLogo';
 import AdminLogo from './Layout/AdminLogo';
-
+import Title from './Layout/Doctor_Title';
 
 
 
@@ -138,7 +138,7 @@ export default function Signup() {
 
   return (
     <>
-    <title>Sign Up</title>
+<Title page ="Sign Up"></Title>
     
     <form onSubmit={handleSignUp} className="max-w-md mx-auto mt-8 p-4 bg-slate-900 shadow-md rounded-md">
     <button onClick={handleBackClick} className="btn btn-sm bg-blue-500 hover:bg-blue-600 flex items-center">  Back

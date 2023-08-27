@@ -6,7 +6,16 @@ import HeaderForLoggedin from '../Layout/LoggedinHeader';
 import FooterForLoggedin from '../Layout/LoggedinFooter';
 import { useAuth } from '../utils/authentication';
 import NavigationBarLoggedin from "../Layout/LoggedinNavbar"
+import SessionCheck from '../utils/session';
 
+import dynamic from "next/dynamic";
+
+
+const Title = dynamic(()=>import('../Layout/Doctor_Title'),{
+
+  ssr: false,
+
+});
 
 export default function EmailHistory() {
   const [EmailData, setEmailData] = useState([]);
@@ -17,11 +26,9 @@ export default function EmailHistory() {
 
 
   useEffect(() => {
-    if (!checkUser()) {
-      router.push('/');
-    } else {
+
       fetchData();
-    }
+    
   }, []);
 
   const fetchData = async () => {
@@ -53,7 +60,9 @@ export default function EmailHistory() {
 
   return (
     <div>
-      {checkUser() ? (
+      <Title page ="Dashboard"></Title>
+
+          <SessionCheck></SessionCheck>
         <>
           {/* <HeaderForLoggedin /> */}
           <NavigationBarLoggedin></NavigationBarLoggedin>
@@ -107,12 +116,7 @@ export default function EmailHistory() {
           </div>
 
         </>
-      ) : (
-        <div className="flex justify-center items-center h-screen">
-          <div className="w-16 h-16 border-t-4 border-blue-500 border-solid rounded-full animate-spin"></div>
-          <p>Login First</p>
-        </div>
-      )}
+     
     </div>
   );
 }

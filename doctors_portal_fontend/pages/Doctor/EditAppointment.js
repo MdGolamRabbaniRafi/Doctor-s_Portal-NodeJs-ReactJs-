@@ -6,7 +6,15 @@ import FooterForLoggedin from '../Layout/LoggedinFooter';
 import { useAuth } from '../utils/authentication';
 import { useEffect } from 'react';
 import NavigationBarLoggedin from "../Layout/LoggedinNavbar"
+import SessionCheck from '../utils/session';
+import dynamic from "next/dynamic";
 
+
+const Title = dynamic(()=>import('../Layout/Doctor_Title'),{
+
+  ssr: false,
+
+});
 
 export default function EditAppointment() {
   const router = useRouter();
@@ -29,11 +37,6 @@ export default function EditAppointment() {
     setUpdatedAge(e.target.value);
   };
   useEffect(() => {
-    console.log("CheckUser::::"+checkUser())
-    if(!checkUser())
-    {
-      router.push('/')
-    }
   }, []);
   
   const handleChangeDate = (e) => {
@@ -75,6 +78,9 @@ export default function EditAppointment() {
 
   return (
     <>
+              <SessionCheck></SessionCheck>
+              <Title page ="Edit Appointment"></Title>
+
       <NavigationBarLoggedin />
   
       <div className="flex flex-col items-center justify-center min-h-screen bg-black-100">

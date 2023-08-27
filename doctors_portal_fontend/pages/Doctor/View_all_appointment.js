@@ -6,6 +6,15 @@ import FooterForLoggedin from '../Layout/LoggedinFooter';
 import Link from 'next/link';
 import { useAuth } from '../utils/authentication';
 import NavigationBarLoggedin from "../Layout/LoggedinNavbar"
+import SessionCheck from '../utils/session';
+import dynamic from "next/dynamic";
+
+
+const Title = dynamic(()=>import('../Layout/Doctor_Title'),{
+
+  ssr: false,
+
+});
 
 
 export default function View_all_appointment() {
@@ -45,11 +54,9 @@ export default function View_all_appointment() {
   };
 
   useEffect(() => {
-    if (!checkUser()) {
-      router.push('/');
-    } else {
+
       fetchData();
-    }
+    
   }, []);
 
   const fetchData = async () => {
@@ -83,9 +90,12 @@ export default function View_all_appointment() {
   };
   return (
     <div className="bg-black-100 h-screen w-screen justify-between">
+      <Title page ="Appointments"></Title>
+
+                <SessionCheck></SessionCheck>
+
       <NavigationBarLoggedin />
       <main className="container mx-auto p-4">
-        {checkUser() ? (
           <>
 <div className="navbar bg-teal-800 shadow-xl">
   <div className="navbar-start">
@@ -102,9 +112,9 @@ export default function View_all_appointment() {
                 <li key={appointment.Serial} className="p-4 bg-black-200 shadow-md rounded-md">
                   <div className="flex justify-between items-center mb-2">
                     <span className="text-white font-semibold text-base">
-                      Appointment: <span className="text-blue-500">{appointment.Serial}</span>
+                      Serial: <span className="text-whte-500">{appointment.Serial}</span>
                     </span>
-                    <span className="text-gray-600 text-xs">
+                    <span className="text-white-600 text-xs">
                     <div className="mt-2">
                     <button
   className="flex items-center px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-300 ease-in-out"
@@ -147,7 +157,7 @@ export default function View_all_appointment() {
                     </span>
                   </div>
                   <div className="text-white">
-                    <p>Name:                 <Link href={`../Doctor/Dynamic_user/Dynamic/?email=${appointment.email}`}>
+                    <p>Name:                 <Link  class="text-blue-500" href={`../Doctor/Dynamic_user/Dynamic/?email=${appointment.email}`}>
                   {appointment.name}</Link></p>
                     <p>Age: {appointment.age}</p>
                     <p>Date: {appointment.date}</p>
@@ -158,12 +168,6 @@ export default function View_all_appointment() {
               ))}
             </ul>
           </>
-        ) : (
-          <div className="flex justify-center items-center h-screen">
-            <div className="w-16 h-16 border-t-4 border-blue-500 border-solid rounded-full animate-spin"></div>
-            <p className="ml-2 text-white">Login First</p>
-          </div>
-        )}
         <FooterForLoggedin />
       </main>
     </div>

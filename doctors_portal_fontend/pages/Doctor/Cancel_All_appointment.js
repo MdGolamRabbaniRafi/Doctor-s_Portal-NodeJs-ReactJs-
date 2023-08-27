@@ -5,28 +5,46 @@ import HeaderForLoggedin from '../Layout/LoggedinHeader';
 import FooterForLoggedin from '../Layout/LoggedinFooter';
 import { useAuth } from '../utils/authentication';
 import NavigationBarLoggedin from "../Layout/LoggedinNavbar"
+import SessionCheck from '../utils/session';
+import dynamic from "next/dynamic";
 
+
+const Title = dynamic(()=>import('../Layout/Doctor_Title'),{
+
+  ssr: false,
+
+});
 
 export default function Cancel_All_appointment() {
   const { checkUser } = useAuth();
   const router = useRouter();
   const [error, setError] = useState('');
 
-  const handleBackClick = () => {
+  const handleBackClick = (event) => {
+    event.preventDefault();
     router.push('../Doctor/LoggedinPage');
   };
 
-  const handleAllDeleteForm = async () => {
+  const handleAllDeleteForm = async (event) => {
+    event.preventDefault();
     try {
-      const response = await axios.delete(`http://localhost:3000/Doctor/deleteAllAppointments/1/`);
+      const response = await axios.delete(`http://localhost:3000/Doctor/deleteAllAppointment`,{
+        withCredentials: true,
+      });
       
       console.log("Backend Response:", response);
       
-      if (response.data === "Don't find any appointment") {
-        setError('Error updating appointment');
-      } else if (response.data === "All appointments deleted") {
+      if (response.data === "All appointments deleted") {
         setError('');
-        router.push('../Doctor/LoggedinPage');
+        router.push('/Doctor/View_all_appointment');
+      }
+      else if(response.data === "No appointments to delete")
+      {
+        setError('No appointments available to delete');
+
+      }
+       else {
+        setError('Error deleting appointments');
       }
     } catch (error) {
       console.error('Failed:', error);
@@ -36,51 +54,39 @@ export default function Cancel_All_appointment() {
   };
 
   useEffect(() => {
-    console.log("CheckUser::::" + checkUser());
-    if (!checkUser()) {
-      router.push('/');
-    }
+
   }, []);
 
   return (
     <div>
-      {checkUser() ? (
+                <SessionCheck></SessionCheck>
+
         <>
+        <Title page ="Remove All Appointment"></Title>
+
           {/* <HeaderForLoggedin /> */}
           <NavigationBarLoggedin></NavigationBarLoggedin>
           <div className="navbar bg-teal-800 shadow-xl">
-  <div className="navbar-start">
-    <div className="dropdown">
-      
-      
-    </div>
-    <a className="btn btn-ghost normal-case text-xl">Delete Appointments</a>
-  </div>
- 
-</div>
-<div className="flex flex-col items-center justify-center min-h-screen bg-black-100">
-<form className="w-full max-w-md p-6 bg-black shadow-md rounded-md">
-
-
-          <h1 className="btn btn-ghost normal-case text-xl">Are you sure to delete all appointment?</h1>
-          <br />
-          {error && <p>{error}</p>}
-          <div className="button-container" style={{ display: 'flex', justifyContent: 'flex-end', marginRight: '3px' }}>
-
-          <input type="submit" value="Yes"  className='btn btn-outline btn-success ml-12' onClick={handleAllDeleteForm} />
-          
-          <input type="submit" value="No" className='btn btn-outline btn-error ml-12' onClick={handleBackClick} />
-         </div>
-          </form>
-          <FooterForLoggedin />
+            <div className="navbar-start">
+              <div className="dropdown">
+              </div>
+              <a className="btn btn-ghost normal-case text-xl">Delete Appointments</a>
+            </div>
+          </div>
+          <div className="flex flex-col items-center justify-center min-h-screen bg-black-100">
+            <form className="w-full max-w-md p-6 bg-black shadow-md rounded-md">
+              <h1 className="btn btn-ghost normal-case text-xl">Are you sure you want to delete all appointments?</h1>
+              <br />
+              {error && <p>{error}</p>}
+              <div className="button-container" style={{ display: 'flex', justifyContent: 'flex-end', marginRight: '3px' }}>
+                <input type="submit" value="Yes" className='btn btn-outline btn-success ml-12' onClick={handleAllDeleteForm} />
+                <input type="submit" value="No" className='btn btn-outline btn-error ml-12' onClick={handleBackClick} />
+              </div>
+            </form>
+            <FooterForLoggedin />
           </div>
         </>
-      ) : (
-        <div className="flex justify-center items-center h-screen">
-          <div className="w-16 h-16 border-t-4 border-blue-500 border-solid rounded-full animate-spin"></div>
-          <p>Login First</p>
-        </div>
-      )}
+     
     </div>
   );
 }

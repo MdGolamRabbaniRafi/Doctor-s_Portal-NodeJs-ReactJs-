@@ -3,6 +3,15 @@ import Link from 'next/link';
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
+import dynamic from "next/dynamic";
+
+
+const Title = dynamic(()=>import('./Layout/Doctor_Title'),{
+
+  ssr: false,
+
+});
+
 
 
 const HomePage = () => {
@@ -33,7 +42,10 @@ const HomePage = () => {
 
 
     return (
+      
       <div className='h-screen w-screen bg-white'>
+        <Title page ="Home"></Title>
+
       <div className="navbar bg-teal-800 py-0 shadow-xl">
       <div className="flex-1">
         <a><HomeLogo doctorLogoPath={doctorLogoPath}></HomeLogo></a>

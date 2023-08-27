@@ -5,7 +5,14 @@ import HeaderForLoggedin from '../Layout/LoggedinHeader';
 import FooterForLoggedin from '../Layout/LoggedinFooter';
 import Link from 'next/link';
 import NavigationBarLoggedin from "../Layout/LoggedinNavbar"
+import dynamic from "next/dynamic";
 
+
+const Title = dynamic(()=>import('../Layout/Doctor_Title'),{
+
+  ssr: false,
+
+});
 
 
 export default function Notification() {
@@ -51,6 +58,8 @@ export default function Notification() {
   return (
 
     <div>
+      <Title page ="Articles"></Title>
+
     {/* <HeaderForLoggedin></HeaderForLoggedin> */}
     <NavigationBarLoggedin></NavigationBarLoggedin>
 

@@ -81,7 +81,7 @@ export class DoctorController {
     return this.doctorService.viewNotification(session.email);
   }
 
-  @Delete('/deleteAllAppointments')
+  @Delete('/deleteAllAppointment')
 @UseGuards(SessionGuard)
   deleteAllAppointments(@Session() session): Promise<String> {
     return this.doctorService.deleteAllAppointments(session.email);

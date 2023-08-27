@@ -4,7 +4,16 @@ import HeaderForLoggedin from "../Layout/LoggedinHeader"; // Adjust the path acc
 import { useAuth } from '../utils/authentication';
 import { useEffect } from "react";
 import NavigationBarLoggedin from "../Layout/LoggedinNavbar"
+import SessionCheck from "../utils/session";
 
+import dynamic from "next/dynamic";
+
+
+const Title = dynamic(()=>import('../Layout/Doctor_Title'),{
+
+  ssr: false,
+
+});
 
 export default function Appointent() {
   const router = useRouter();
@@ -25,6 +34,10 @@ export default function Appointent() {
     <div>
       {checkUser() ? (
         <>
+                  <SessionCheck></SessionCheck>
+                  <Title page ="Appointment"></Title>
+
+
           {/* <HeaderForLoggedin /> */}
           <NavigationBarLoggedin></NavigationBarLoggedin>
 

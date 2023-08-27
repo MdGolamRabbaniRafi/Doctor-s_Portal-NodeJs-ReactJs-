@@ -7,7 +7,15 @@ import { useAuth } from '../utils/authentication';
 import NavigationBarLoggedin from "../Layout/LoggedinNavbar"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import SessionCheck from '../utils/session';
+import dynamic from "next/dynamic";
 
+
+const Title = dynamic(()=>import('../Layout/Doctor_Title'),{
+
+  ssr: false,
+
+});
 
 export default function Profile() {
   
@@ -78,19 +86,17 @@ export default function Profile() {
   };
 
   useEffect(() => {
-    if (user === null) {
-      console.log("User Nulllllllllllllll")
-    }
+   
 
-    if (!checkUser()) {
-      router.push('/');
-    } else {
       fetchData(user);
-    }
-  }, [user]); 
+    
+  }, []); 
 
   return (
     <div>
+      <SessionCheck></SessionCheck>
+      <Title page ="Profile"></Title>
+
       <NavigationBarLoggedin />
       <div className="navbar bg-teal-800 shadow-xl">
         <div className="navbar-start">
@@ -106,7 +112,6 @@ export default function Profile() {
             <div className="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
               <div className="card-body">
                 <div className="flex flex-col items-center justify-center min-h-screen">
-                  {checkUser() ? (
                     <>
                       <div className="flex items-center justify-center space-x-4">
                         <div className="w-24 h-24 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2 overflow-hidden">
@@ -145,12 +150,6 @@ export default function Profile() {
                         ))}
                       </ul>
                     </>
-                  ) : (
-                    <div className="flex justify-center items-center h-screen">
-                      <div className="w-16 h-16 border-t-4 border-blue-500 border-solid rounded-full animate-spin"></div>
-                      <p className="text-lg font-semibold">Login First</p>
-                    </div>
-                  )}
 
                 </div>
 

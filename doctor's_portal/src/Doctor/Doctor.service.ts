@@ -357,24 +357,45 @@ export class DoctorService {
   }
 
   async deleteAllAppointments(email: string): Promise<string> {
-    const doctor = await this.DoctorRepo.findOne({ where: { email } });
-    const appointments = await this.appointmentRepo.find({
-      where: { doctor },
-      relations: ['doctor'], 
-    });
-  
-    await this.appointmentRepo.remove(appointments);
+    try {
+      console.log('Email:', email); // Log the email parameter before the query
+      const doctor = await this.DoctorRepo.findOne({ where: { email } });
+      console.log('Doctor:', doctor);
+        if (!doctor) {
+            return "Doctor not found";
+        }
 
-    const notiFication: NotificationEntity = new NotificationEntity();
-    const currentDate: CurrentDate = new CurrentDate();
-    const currentTime: CurrentTime = new CurrentTime();
-    notiFication.Message = "Cancel all Appointment"; 
-    notiFication.date = currentDate.getCurrentDate();
-    notiFication.time = currentTime.getCurrentTime();
-    notiFication.doctor = doctor;
-    await this.notificationRepo.save(notiFication);
-    return "All appointments deleted";
-  }
+        const appointments = await this.appointmentRepo.find({
+            where: { doctor },
+            relations: ['doctor'],
+        });
+
+        console.log('Appointments:', appointments); // Log appointments for debugging
+
+        if (appointments.length === 0) {
+            return "No appointments to delete";
+        }
+        await this.appointmentRepo.remove(appointments);
+    console.log('Appointments deleted successfully');
+
+        const notiFication: NotificationEntity = new NotificationEntity();
+        const currentDate: CurrentDate = new CurrentDate();
+        const currentTime: CurrentTime = new CurrentTime();
+        notiFication.Message = "Cancel all Appointment";
+        notiFication.date = currentDate.getCurrentDate();
+        notiFication.time = currentTime.getCurrentTime();
+        notiFication.doctor = doctor;
+        await this.notificationRepo.save(notiFication);
+
+        return "All appointments deleted";        
+        return "All appointments deleted";
+    } catch (error) {
+        console.error(error); // Log the error for debugging
+        return "An error occurred";
+    }
+}
+
+
   
 
  
