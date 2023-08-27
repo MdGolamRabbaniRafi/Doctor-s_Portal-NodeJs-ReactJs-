@@ -7,6 +7,8 @@ export default function Profile() {
   const [error, setError] = useState('');
   const [profilePhoto, setProfilePhoto] = useState('http://localhost:3000/Admin/myphoto');
   const router = useRouter();
+  const [selectedFile, setSelectFile] = useState(null);
+
 
   const handleEditProfile = () => {
     router.push('/Admin/Admin_Edit_Profile');
@@ -15,6 +17,13 @@ export default function Profile() {
   useEffect(() => {
     fetchData();
   }, []);
+
+  // useEffect(() => {
+  //   // This effect reloads the page when the profilePhoto changes
+  //   if (profilePhoto) {
+  //     window.location.reload();
+  //   }
+  // }, [profilePhoto]);
 
   const fetchData = async () => {
     try {
@@ -34,6 +43,38 @@ export default function Profile() {
       setError('An error occurred. Please try again later.');
     }
   };
+  const handleProfilePicture = (e) => {
+    e.preventDefault();
+    setSelectFile(e.target.files[0]);
+  };
+  
+  async function postData() {
+    try {
+      const formData = new FormData();
+      formData.append('image', document.querySelector('#myfile').files[0]);
+
+      const response = await axios.put(
+        `http://localhost:3000/Admin/changePicture`,
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+          withCredentials: true,
+        }
+      );
+
+      const data = response.data;
+      console.log(data);
+      setSelectFile(null);
+      if (data.photoUrl) {
+        setProfilePhoto(data.photoUrl);
+      }
+      fetchData(user);
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   return (
     <div className="bg-gray-100 min-h-screen flex flex-col items-center justify-center py-10">
@@ -48,15 +89,19 @@ export default function Profile() {
             />
           )}
           
+          
         
         
       </div>
+     
       
       
       </div>
       </center>
+      
     
       <div className="w-full max-w-3xl bg-white p-8 rounded-lg shadow mt-4">
+        
       <button
           onClick={handleEditProfile}
           className="float-right text-blue-500 hover:underline"
@@ -93,7 +138,7 @@ export default function Profile() {
                 </a>
               </div>
             </div>
-            
+          
             <div className="grid grid-cols-2 gap-4">
               <div className="mb-4">
                 <p className="text-gray-600 font-semibold">Education:</p>
@@ -123,7 +168,30 @@ export default function Profile() {
                 <p className="text-gray-600 font-semibold">User:</p>
                 <p className="text-gray-600">{adminInfo.User}</p>
               </div>
+
+              <div className="mb-4">
+
+              <div className="space-y-2">
+              <p className="text-gray-600 font-semibold">New photo:</p>
+              <div className="flex items-center">
+                <input
+                  type="file"
+                  id="myfile"
+                  name="myfile"
+                  className="file-input file-input-bordered file-input-primary file-input-xs w-full max-w-xs"                  accept="image/*"
+                  onChange={handleProfilePicture}
+                />
+                
+                {selectedFile && (
+                  <button className="btn btn-xs ml-4" onClick={postData}>
+                    Save
+                  </button>
+                )}
+              </div>
             </div>
+            </div>
+            </div>
+           
           </>
         )}
       </div>

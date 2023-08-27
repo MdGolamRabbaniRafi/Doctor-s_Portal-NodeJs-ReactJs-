@@ -203,31 +203,31 @@ export class AdminService {
   
     throw new Error('Profile picture not found');
   }
-  
-  
-  
 
-  // async signup(data: AddAdminDTO): Promise<AdminEntity> {
-  //   const salt = await bcrypt.genSalt();
-  //   data.password = await bcrypt.hash(data.password,salt);
-  //   try {
-  //     const savedAdmin = await this.AdminRepo.save(data);
   
-  //     const notiFication: NotificationEntity = new NotificationEntity();
-  //     notiFication.admin = savedAdmin; 
-  //     notiFication.Message = "Account Created Successfully";
-  //     const currentDate: CurrentDate = new CurrentDate();
-  //     const currentTime: CurrentTime = new CurrentTime();
+  async changePicture(email: string, filename: string): Promise<string> {
+    const admin = await this.AdminRepo.findOne({ where: { email } });
+    console.log(filename);
   
-  //     notiFication.date = currentDate.getCurrentDate();
-  //     notiFication.time = currentTime.getCurrentTime();
-  //     await this.notificationRepo.save(notiFication);
+    await this.profileRepo.update({ admin: admin }, { filenames: filename });
   
-  //     return savedAdmin;
-  //   } catch (error) {
-  //     console.error(error);
-  //     throw error;
-  //   }}
+    const notiFication: NotificationEntity = new NotificationEntity();
+    notiFication.admin = admin;
+    notiFication.Message = "Profile Picture Uploaded";
+  
+    const currentDate: CurrentDate = new CurrentDate();
+    const currentTime: CurrentTime = new CurrentTime();
+  
+    notiFication.date = currentDate.getCurrentDate();
+    notiFication.time = currentTime.getCurrentTime();
+  
+    await this.notificationRepo.save(notiFication);
+  
+    return 'File uploaded successfully';
+  }
+
+  
+  
 
   async signup(data: AddAdminDTO): Promise<string> {
     const salt = await bcrypt.genSalt();
@@ -948,6 +948,9 @@ async addSalary(salary: SalaryEntity): Promise<SalaryEntity> {
 
   return updatedSalaries;
 }
+
+
+
 
 
 

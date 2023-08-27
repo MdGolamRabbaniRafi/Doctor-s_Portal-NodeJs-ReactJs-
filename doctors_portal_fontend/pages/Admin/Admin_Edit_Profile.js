@@ -10,7 +10,7 @@ export default function EditProfile() {
     website: '',
     education: '',
     experience: '',
-    filenames: '',
+    // filenames: '',
   });
 
   useEffect(() => {
@@ -30,7 +30,7 @@ export default function EditProfile() {
         website: profileData.profile.website,
         education: profileData.profile.education,
         experience: profileData.profile.experience,
-        filenames: profileData.profile.filenames,
+        // filenames: profileData.profile.filenames,
       });
     } catch (error) {
       console.error('Failed:', error);
@@ -106,21 +106,16 @@ export default function EditProfile() {
               value={formData.experience}
               onChange={handleChange}
             />
-            <label className="block text-sm font-medium text-gray-700">Filenames:</label>
-            <input
-              type="file"  accept="image/*"  
-              name="filenames"
-              className="file-input file-input-bordered file-input-primary w-full max-w-xs"
-              value={formData.filenames}
-              onChange={handleChange}
-            />
+           
           </div>
+          <div className='py-5'>
           <button
             type="submit"
-            className="w-full bg-blue-500 text-white py-2 mt-4 rounded-md hover:bg-blue-600"
+            className="btn btn-outline btn-accent "
           >
             Save Changes
           </button>
+          </div>
         </form>
       </div>
     </div>

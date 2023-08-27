@@ -19,7 +19,9 @@ export default function NoticeBoard() {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get(`http://localhost:3000/Admin/viewallnotice`);
+      const response = await axios.get(`http://localhost:3000/Admin/viewallnotice`,{
+        withCredentials: true,
+      });
 
       if (Array.isArray(response.data)) {
         const noticeData = response.data;

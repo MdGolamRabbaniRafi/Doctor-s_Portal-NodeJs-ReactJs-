@@ -10,6 +10,8 @@ export default function Notification() {
   const [notifications, setNotifications] = useState([]);
   const [error, setError] = useState('');
   const router = useRouter();
+  const doctorLogoPath = "/docav.jpg" ; 
+
 
   const handleBackClick = () => {
     router.push('/Admin/Admin_LoggedinPage');
@@ -70,7 +72,7 @@ export default function Notification() {
     <a className="btn btn-ghost normal-case text-xl">Notifications</a>
   </div>
   <div className="navbar-center">
-        <a><HomeLogo></HomeLogo></a>
+        <a><HomeLogo doctorLogoPath={doctorLogoPath}></HomeLogo></a>
 
       </div>
  
