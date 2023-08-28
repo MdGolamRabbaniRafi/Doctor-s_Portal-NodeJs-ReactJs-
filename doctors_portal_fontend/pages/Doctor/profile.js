@@ -3,12 +3,12 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import HeaderForLoggedin from '../Layout/LoggedinHeader';
 import FooterForLoggedin from '../Layout/LoggedinFooter';
-import { useAuth } from '../utils/authentication';
 import NavigationBarLoggedin from "../Layout/LoggedinNavbar"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import SessionCheck from '../utils/session';
 import dynamic from "next/dynamic";
+import Link from 'next/link';
 
 
 const Title = dynamic(()=>import('../Layout/Doctor_Title'),{
@@ -22,9 +22,7 @@ export default function Profile() {
   const [Profiles, setProfile] = useState([]);
   const [error, setError] = useState('');
   const router = useRouter();
-  const { user } = useAuth();
   const [selectedFile, setSelectFile] = useState(null);
-  const { checkUser } = useAuth();
 
   const handleBackClick = () => {
     router.push('../Doctor/LoggedinPage');
@@ -54,18 +52,18 @@ export default function Profile() {
       const data = response.data;
       console.log(data);
       setSelectFile(null);
-      fetchData(user);
+
+      fetchData();
     } catch (error) {
       console.error(error);
     }
   }
 
-  const fetchData = async (user) => {
+  const fetchData = async () => {
     try {
-      const userEmail = user.email;
-      console.log('User Email:', userEmail);
 
-      const response = await axios.get(`http://localhost:3000/Doctor/ViewProfile/${userEmail}`, {
+
+      const response = await axios.get(`http://localhost:3000/Doctor/ViewProfile`, {
         withCredentials: true,
       });
       console.log('Backend Response:', response.data);
@@ -84,11 +82,24 @@ export default function Profile() {
       setError('An error occurred. Please try again later.');
     }
   };
+  const handleEditClick = (profile) => {
+    const query = {
+      name: profile.name,
+      gender: profile.Gender,
+      degree: profile.Degree,
+      Blood: profile.Blood_group,
+    };
+    
+    return {
+      pathname: '../Doctor/Edit_profile',
+      query: query,
+    };
+  };
+  
 
-  useEffect(() => {
-   
+  useEffect(() => {   
 
-      fetchData(user);
+      fetchData();
     
   }, []); 
 
@@ -103,7 +114,7 @@ export default function Profile() {
           <div className="dropdown">
             {/* Dropdown content */}
           </div>
-          <a className="btn btn-ghost normal-case text-xl">Notifications</a>
+          <a className="btn btn-ghost normal-case text-xl">Profile</a>
         </div>
       </div>
       <div className="hero min-h-screen bg-base-100">
@@ -113,8 +124,11 @@ export default function Profile() {
               <div className="card-body">
                 <div className="flex flex-col items-center justify-center min-h-screen">
                     <>
+
                       <div className="flex items-center justify-center space-x-4">
+
                         <div className="w-24 h-24 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2 overflow-hidden">
+
                           <img
                             className="w-full h-full object-cover"
                             src={`http://localhost:3000/Doctor/viewProfilePicture?${Date.now()}`}
@@ -146,7 +160,11 @@ export default function Profile() {
                             <p>Gender: {profile.Gender}</p>
                             <p>Degree: {profile.Degree}</p>
                             <p>Blood Group: {profile.Blood_group}</p>
-                          </li>
+                            <Link href={handleEditClick(profile)} class="text-blue-500">
+                             <span>Edit</span>
+                            </Link>
+
+                          </li> 
                         ))}
                       </ul>
                     </>

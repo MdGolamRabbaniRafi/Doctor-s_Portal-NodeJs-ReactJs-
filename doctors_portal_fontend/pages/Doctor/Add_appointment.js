@@ -49,13 +49,6 @@ export default function AddAppointment() {
  // const { checkUser } = useAuth();
 
   useEffect(() => {
-    //fetchData(user);
-    console.log("CheckUser::::"+checkUser())
-    if(!checkUser())
-    {
-      //  alert('Log in first')
-      router.push('/')
-    }
   }, []);
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -101,7 +94,6 @@ export default function AddAppointment() {
   };
   return (
     <>
-      {checkUser() ? (
         <>
                   <SessionCheck></SessionCheck>
                   <Title page ="Add Appointment"></Title>
@@ -198,12 +190,7 @@ export default function AddAppointment() {
             <FooterForLoggedin />
           </div>
         </>
-      ) : (
-        <div className="flex justify-center items-center h-screen">
-          <div className="w-16 h-16 border-t-4 border-blue-500 border-solid rounded-full animate-spin"></div>
-          <p className="text-lg font-semibold">Login First</p>
-        </div>
-      )}
+     
     </>
   );
   }

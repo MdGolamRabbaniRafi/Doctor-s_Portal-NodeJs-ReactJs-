@@ -24,15 +24,11 @@ export default function Appointent() {
   };
 
   useEffect(() => {
-    console.log("CheckUser::::"+checkUser())
-    if (!checkUser()) {
-      router.push('/');
-    }
+
   }, []);
 
   return (
     <div>
-      {checkUser() ? (
         <>
                   <SessionCheck></SessionCheck>
                   <Title page ="Appointment"></Title>
@@ -49,12 +45,6 @@ export default function Appointent() {
 
           <FooterForLoggedin />
         </>
-      ) : (
-        <div className="flex justify-center items-center h-screen">
-          <div className="w-16 h-16 border-t-4 border-blue-500 border-solid rounded-full animate-spin"></div>
-          <p>Login First</p>
-        </div>
-      )}
     </div>
   );
 }

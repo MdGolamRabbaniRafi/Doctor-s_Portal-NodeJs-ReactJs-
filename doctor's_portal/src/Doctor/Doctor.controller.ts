@@ -19,10 +19,10 @@ export class DoctorController {
     return this.doctorService.addDoctor(doctor);
   }
 
-  @Get('/ViewProfile/:email')
+  @Get('/ViewProfile')
   @UseGuards(SessionGuard)
-  ViewProfile(@Param('email') email: string): Object {
-    return this.doctorService.ViewProfile(email);
+  ViewProfile(@Session() session): Object {
+    return this.doctorService.ViewProfile(session.email);
   }
   
 

@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import HeaderForLoggedin from '../Layout/LoggedinHeader';
 import FooterForLoggedin from '../Layout/LoggedinFooter';
-import { useAuth } from '../utils/authentication';
 import NavigationBarLoggedin from "../Layout/LoggedinNavbar"
 import SessionCheck from '../utils/session';
 
@@ -21,7 +20,6 @@ export default function EmailHistory() {
   const [EmailData, setEmailData] = useState([]);
   const [error, setError] = useState('');
   const router = useRouter();
-  const { checkUser } = useAuth();
   const index=0
 
 
@@ -60,7 +58,7 @@ export default function EmailHistory() {
 
   return (
     <div>
-      <Title page ="Dashboard"></Title>
+      <Title page ="Email History"></Title>
 
           <SessionCheck></SessionCheck>
         <>

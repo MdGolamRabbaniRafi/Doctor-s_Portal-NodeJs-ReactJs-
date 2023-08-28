@@ -99,7 +99,6 @@ export default function EditAppointment() {
 
         <div className="w-full max-w-md p-6 bg-black shadow-md rounded-md">
           
-          {checkUser() ? (
             <>
               <h1 className="text-2xl font-semibold mb-4">Edit Appointment</h1>
   
@@ -123,25 +122,31 @@ export default function EditAppointment() {
                 className="input"
               />
   
-              <label htmlFor="date" className="block mt-4 mb-1">Date:</label>
-              <input
-                type="date"
-                id="date"
-                value={updatedDate}
-                required
-                onChange={handleChangeDate}
-                className="input"
-              />
+  <div className="mb-4">
+  <label htmlFor="date" className="block font-medium mb-1">Date:</label>
+  <input
+    type="date"
+    id="date"
+    value={updatedDate}
+    required
+    onChange={handleChangeDate}
+    className="input input-bordered w-full"
+  />
+</div>
+
   
-              <label htmlFor="time" className="block mt-4 mb-1">Time:</label>
-              <input
-                type="time"
-                id="time"
-                value={updatedTime}
-                required
-                onChange={handleChangeTime}
-                className="input"
-              />
+              <div className="mb-4">
+  <label htmlFor="time" className="block font-medium mb-1">Time:</label>
+  <input
+    type="time"
+    id="time"
+    value={updatedTime}
+    required
+    onChange={handleChangeTime}
+    className="input input-bordered w-full"
+  />
+</div>
+
   
               {error && <p className="text-red-500 mt-2">{error}</p>}
   
@@ -154,12 +159,7 @@ export default function EditAppointment() {
                 </button>
               </div>
             </>
-          ) : (
-            <div className="flex justify-center items-center h-screen">
-              <div className="w-16 h-16 border-t-4 border-blue-500 border-solid rounded-full animate-spin mr-2"></div>
-              <p className="text-lg font-semibold">Login First</p>
-            </div>
-          )}
+          
         </div>
   
         <FooterForLoggedin />

@@ -21,7 +21,6 @@ export default function Notification() {
   const [notifications, setNotifications] = useState([]);
   const [error, setError] = useState('');
   const router = useRouter();
-  const { user, checkUser } = useAuth();
   const index=0
 
   const handleBackClick = () => {
@@ -29,13 +28,13 @@ export default function Notification() {
   };
 
   useEffect(() => {
-   fetchData();
+      fetchData();
+    
     
   }, []);
 
   const fetchData = async () => {
     try {
-      const userEmail = user.email;
       const response = await axios.get('http://localhost:3000/Doctor/notification', {
         withCredentials: true,
       });

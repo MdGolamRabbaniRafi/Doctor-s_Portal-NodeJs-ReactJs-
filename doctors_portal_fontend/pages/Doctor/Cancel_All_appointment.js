@@ -22,7 +22,7 @@ export default function Cancel_All_appointment() {
 
   const handleBackClick = (event) => {
     event.preventDefault();
-    router.push('../Doctor/LoggedinPage');
+    router.push('../Doctor/View_all_appointment');
   };
 
   const handleAllDeleteForm = async (event) => {
