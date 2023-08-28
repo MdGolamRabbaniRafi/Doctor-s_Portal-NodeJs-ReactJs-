@@ -564,6 +564,9 @@ async addDoctor(data: AddDocotorDTO, email: string): Promise<DoctorEntity> {
   const addDoctor: DoctorEntity = new DoctorEntity();
   addDoctor.name = data.name;
   addDoctor.email = data.email;
+
+  const salt = await bcrypt.genSalt();
+  data.password = await bcrypt.hash(data.password, salt);
   addDoctor.password = data.password; 
   addDoctor.Degree = data.Degree; 
   addDoctor.Blood_group = data.Blood_group; 
@@ -630,33 +633,36 @@ async viewDoctorsByAdmin(id: any): Promise<AdminEntity[]> {
     .getMany();
 }
 
-async getDoctorById(doctorId: number, email: string): Promise<DoctorEntity> {
-  const admin = await this.AdminRepo.findOne({ where: { email } });
+// async getDoctorById(doctorId: number, email: string): Promise<DoctorEntity> {
+//   const admin = await this.AdminRepo.findOne({ where: { email } });
 
-  if (!admin) {
-    throw new NotFoundException('Admin not found');
-  }
+//   if (!admin) {
+//     throw new NotFoundException('Admin not found');
+//   }
 
-  const doctor = await this.doctorRepo.findOne({
-    where: { id: doctorId, admin },
-    relations: ['admin'],
+//   const doctor = await this.doctorRepo.findOne({
+//     where: { id: doctorId, admin },
+//     relations: ['admin'],
+//   });
+
+//   if (!doctor) {
+//     throw new NotFoundException('Doctor not found');
+//   }
+
+//   doctor.password = undefined;
+//   if (doctor.admin) {
+//     doctor.admin.password = undefined;
+//     doctor.admin.email = undefined;
+//   }
+
+//   return doctor;
+// }
+async getDoctorById(id: number): Promise<DoctorEntity> {
+  return this.doctorRepo.findOne({ 
+    where: { id },
+    select: ['id', 'name', 'email', 'Gender', 'Degree' ],
   });
-
-  if (!doctor) {
-    throw new NotFoundException('Doctor not found');
-  }
-
-  doctor.password = undefined;
-  if (doctor.admin) {
-    doctor.admin.password = undefined;
-    // doctor.admin.filenames = undefined;
-    // doctor.admin.phone = undefined;
-    doctor.admin.email = undefined;
-  }
-
-  return doctor;
 }
-
 
 
   async deleteAllDoctors(): Promise<{ message: string }> {
@@ -730,6 +736,9 @@ async getDoctorById(doctorId: number, email: string): Promise<DoctorEntity> {
     const addPatients: PatientEntity = new PatientEntity();
     addPatients.name = data.name;
     addPatients.email = data.email;
+
+    const salt = await bcrypt.genSalt();
+    data.password = await bcrypt.hash(data.password, salt);
     addPatients.password = data.password; 
     addPatients.Degree = data.Degree; 
     addPatients.Blood_group = data.Blood_group; 
@@ -770,7 +779,7 @@ async getDoctorById(doctorId: number, email: string): Promise<DoctorEntity> {
 async getPatientById(id: number): Promise<PatientEntity> {
   return this.patientRepo.findOne({ 
     where: { id },
-    select: ['id', 'name', 'email'],
+    select: ['id', 'name', 'email', 'Gender', 'Blood_group'],
   });
 }
 
