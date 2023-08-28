@@ -1,8 +1,6 @@
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import dynamic from "next/dynamic";
-
 import HeaderForLoggedin from '../Layout/LoggedinHeader';
 import FooterForLoggedin from '../Layout/LoggedinFooter';
 
@@ -11,15 +9,9 @@ export default function NoticeBoard() {
   const [error, setError] = useState('');
   const router = useRouter();
 
-
-  const Title = dynamic(()=>import('../Layout/Admin_Title'),{
-
-    ssr: false,
-  
-  });
-  console.log("hehe", Title); 
-
-
+  const handleBackClick = () => {
+    router.push('/Admin/Admin_LoggedinPage');
+  };
 
   useEffect(() => {
     fetchData();
@@ -81,7 +73,7 @@ export default function NoticeBoard() {
           
         </div>
         <div className="w-full max-w-3xl bg-white p-8 rounded-lg shadow">
-          <h1 className="text-3xl font-semibold mb-4"><Title page ="Notices"></Title></h1>
+          <h1 className="text-3xl font-semibold mb-4">Notices</h1>
           {error && <p className="text-red-500 mb-4">{error}</p>}
           <div className="flex items-center justify-between bg-blue-500 text-white py-2 px-4 rounded-lg shadow-md mb-4">
             <span className="text-lg font-semibold">Total Notices</span>

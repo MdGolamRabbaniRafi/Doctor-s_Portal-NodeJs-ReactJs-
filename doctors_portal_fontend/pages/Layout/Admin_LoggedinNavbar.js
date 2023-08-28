@@ -33,13 +33,14 @@ const NavigationBarLoggedin = () => {
           </label>
           
           <ul tabIndex={0} className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
-            <li><button onClick={() => handleNavigation("/Admin/Admin_Profile")}>Profile</button></li>
-            <li><Link href="/Admin/Admin_NoticeBoard">Notice</Link></li>
+            <li><button onClick={() => handleNavigation("/profile")}>Profile</button></li>
+            <li><Link href="/Admin/Admin_notice">Notice</Link></li>
             <li><Link href="/Admin/Admin_Add_Profile">Add Profile</Link></li>
             <li><Link href="/Admin/Admin_Update_Pass">Set new password</Link></li>
             <li><Link href="/Admin/Admin_Notification">Notifications</Link></li>
-            <li><Link href="/Admin/Admin_Search_User">Search User</Link></li>
-            <li><Link href="/Admin/Admin_Email">Email</Link></li>
+            <li><Link href="/Admin/Admin_Profile">Profile</Link></li>
+
+            <li><Link href="/Send_email">Email</Link></li>
              <li><button onClick={() => router.push("/Logout")}>Log Out</button></li>
           </ul>
         </div>

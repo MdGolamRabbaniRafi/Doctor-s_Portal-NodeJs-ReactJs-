@@ -1,20 +1,13 @@
 import { useState } from 'react';
 import axios from 'axios';
-import dynamic from "next/dynamic";
-
+import HeaderForLoggedin from '../Layout/LoggedinHeader';
+import FooterForLoggedin from '../Layout/LoggedinFooter';
 
 export default function Email() {
   const [to, setTo] = useState('');
   const [subject, setSubject] = useState('');
   const [text, setText] = useState('');
   const [error, setError] = useState('');
-
-  const Title = dynamic(()=>import('../Layout/Admin_Title'),{
-
-    ssr: false,
-  
-  });
-
 
   const handleChangeTo = (e) => {
     setTo(e.target.value);
@@ -58,7 +51,7 @@ export default function Email() {
   return (
     <div className="bg-gray-100 min-h-screen flex items-center justify-center">
       <div className="max-w-md w-full bg-white p-8 shadow-lg rounded-lg">
-        <h2 className="text-3xl font-semibold mb-4"><Title page =" Email"></Title></h2>
+        <h2 className="text-3xl font-semibold mb-4">Send an Email</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
           <label htmlFor="Link" className="input-group input-group-sm">              

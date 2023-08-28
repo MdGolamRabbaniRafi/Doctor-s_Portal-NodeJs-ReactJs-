@@ -5,7 +5,6 @@ import HeaderForLoggedin from '../Layout/LoggedinHeader';
 import FooterForLoggedin from '../Layout/LoggedinFooter';
 import { useAuth } from '../utils/authentication';
 import NavigationBarLoggedin from "../Layout/LoggedinNavbar"
-import SessionCheck from '../utils/session';
 
 
 export default function AddAppointment() {
@@ -58,11 +57,15 @@ export default function AddAppointment() {
   };
 
   useEffect(() => {
- 
+    console.log('CheckUser::::' + checkUser());
+    if (!checkUser()) {
+      router.push('/');
+    }
   }, []);
   return (
     <>
-        <><SessionCheck></SessionCheck>
+      {checkUser() ? (
+        <>
             <NavigationBarLoggedin />
             <div className="navbar bg-teal-800 shadow-xl">
   <div className="navbar-start">
@@ -113,7 +116,12 @@ export default function AddAppointment() {
             <FooterForLoggedin />
           </div>
         </>
-     
+      ) : (
+        <div className="flex justify-center items-center h-screen">
+          <div className="w-16 h-16 border-t-4 border-blue-500 border-solid rounded-full animate-spin"></div>
+          <p className="text-lg font-semibold">Login First</p>
+        </div>
+      )}
     </>
   );
   

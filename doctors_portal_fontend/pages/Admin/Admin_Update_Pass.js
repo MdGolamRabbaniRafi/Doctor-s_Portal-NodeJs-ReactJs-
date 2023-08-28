@@ -3,7 +3,6 @@ import axios from 'axios';
 import React, { useState } from 'react';
 import HeaderForLoggedin from '../Layout/LoggedinHeader';
 import Link from 'next/link';
-import dynamic from "next/dynamic";
 
 export default function AddAppointment() {
   const [password, setPassword] = useState('');
@@ -11,13 +10,6 @@ export default function AddAppointment() {
   const router = useRouter();
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-
-  const Title = dynamic(()=>import('../Layout/Admin_Title'),{
-
-    ssr: false,
-  
-  });
-
 
   const handleChangePassword = (e) => {
     setPassword(e.target.value);
@@ -32,6 +24,7 @@ export default function AddAppointment() {
   };
 
   const isStrongPassword = (password) => {
+    // Define your strong password criteria here
     const minLength = 8;
     const hasUppercase = /[A-Z]/.test(password);
     const hasLowercase = /[a-z]/.test(password);
@@ -95,7 +88,7 @@ export default function AddAppointment() {
       <center>      <HeaderForLoggedin /> </center>
 
       <div className="mx-auto p-8 max-w-md">
-        <h1 className="text-2xl font-semibold mb-4"><Title page ="Give a new password"></Title></h1>
+        <h1 className="text-2xl font-semibold mb-4">Give a new password</h1>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label htmlFor="password" className="block text-sm font-medium mb-1">

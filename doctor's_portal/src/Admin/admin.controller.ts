@@ -283,11 +283,11 @@ addDoctor(@Body() doctor: AddDocotorDTO,@Session() session): object {
     return this.adminService.getAllDoctors();
   }
   
-  @Get('/Doctor/:id')
-  @UseGuards(SessionGuard)
-  async getDoctorById(@Param('id') id: number, @Session() session): Promise<object> {
-    return this.adminService.getDoctorById(id);
-  }
+@Get('/doctor/:id')
+@UseGuards(SessionGuard)
+async getDoctorById(@Param('id') id: number, @Session() session): Promise<DoctorEntity> {
+  return this.adminService.getDoctorById(id, session.email);
+}
 
 @Get('/adminaddeddoctors/:adminid')
 viewDoctorsByAdmin(@Param('adminid', ParseIntPipe) adminid: number): Promise<AdminEntity[]> {
@@ -342,8 +342,7 @@ viewDoctorsByAdmin(@Param('adminid', ParseIntPipe) adminid: number): Promise<Adm
     return this.adminService.getAllPatient();
   }
 
-@Get('/Patient/:id')
-@UseGuards(SessionGuard)
+@Get('/patient/:id')
 getPatientById(@Param('id', ParseIntPipe) id: number): object {
   return this.adminService.getPatientById(id);
 }
