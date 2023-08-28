@@ -16,6 +16,9 @@ export default function AddUser() {
   const [userType, setUserType] = useState('Doctor'); 
   const router = useRouter();
   const [error, setError] = useState('');
+  const doctorLogoPath = "/docav.jpg" ; 
+  const patientLogoPath = "/patiav.jpg" ; 
+
 
   const handleChangeEmail = (e) => {
     setEmail(e.target.value);
@@ -91,7 +94,7 @@ export default function AddUser() {
               >
         <div className="mb-2">
           <center>
-          <span className="label-text">{userType === 'Doctor' ? <HomeLogo></HomeLogo> : <PatiLogo></PatiLogo>}</span>
+          <span className="label-text">{userType === 'Doctor' ? <HomeLogo doctorLogoPath={doctorLogoPath}></HomeLogo> : <PatiLogo patientLogoPath={patientLogoPath}></PatiLogo>}</span>
             <h2 className="text-2xl font-bold mb-2">Add {userType}</h2>
           </center>
 

@@ -44,6 +44,8 @@ export class AdminController {
     
   }
 
+
+
   @Put('/EditPass')
   @UseGuards(SessionGuard)
   EditPass(@Body() updatePass: AddAdminDTO,@Session() session): Object {
@@ -96,10 +98,8 @@ export class AdminController {
       const email: string = session.email;
       const filename: string = await this.adminService.getProfilePictureFilename(email);
       
-      // Construct the path to the image file
       const filePath = join(__dirname, '..', '..', 'uploads', filename);
       
-      // Send the image file
       res.sendFile(filePath);
     } catch (error) {
       console.error(error);
@@ -107,33 +107,37 @@ export class AdminController {
     }
   }
   
-  // @Post('/signup')
-  //   @UseInterceptors(FileInterceptor('image',
-  //       {
-  //           fileFilter: (req, file, cb) => {
-  //               if (file.originalname.match(/^.*\.(jpg|webp|png|jpeg)$/))
-  //                   cb(null, true);
-  //               else {
-  //                   cb(new MulterError('LIMIT_UNEXPECTED_FILE', 'image'), false);
-  //               }
-  //           },
-  //           limits: { fileSize: 30000 },
-  //           storage: diskStorage({
-  //               destination: './uploads',
-  //               filename: function (req, file, cb) {
-  //                   cb(null, Date.now() + file.originalname)
-  //               },
-  //           })
-  //       }
-  //   ))
-  //   @UsePipes(new ValidationPipe)
-  //   signup(@Body() mydata: AddAdminDTO, @UploadedFile() imageobj: Express.Multer.File) {
-  //       console.log(mydata);
-  //       console.log(imageobj.filename);
-  //       mydata.filenames = imageobj.filename;
-  //       return this.adminService.signup(mydata);
+  @Put('/changePicture')
+  @UseGuards(SessionGuard)
+  @UseInterceptors(
+    FileInterceptor('image', {
+      fileFilter: (req, file, cb) => {
+        if (file.originalname.match(/^.*\.(jpg|webp|png|jpeg)$/)) {
+          cb(null, true);
+        } else {
+          cb(new Error('LIMIT_UNEXPECTED_FILE'), false);
+        }
+      },
+      limits: { fileSize: 300000 },
+      storage: diskStorage({
+        destination: './uploads',
+        filename: (req, file, cb) => {
+          const fileName = Date.now() + file.originalname;
+          cb(null, fileName);
+        },
+      }),
+    }),
+  )
+  async changePicture(
+    @UploadedFile() file: Express.Multer.File,
+    @Session() session,
+  ): Promise<string> {
+    const fileName = file.filename;
+    return await this.adminService.changePicture(session.email, fileName);
+  }
 
-  //   }
+  
+
 
   @Post('/signup')
   @UsePipes(new ValidationPipe())
@@ -437,8 +441,6 @@ updateEidSalary(): Promise<SalaryEntity[]> {
 
 
 
- 
-  
 
 
 

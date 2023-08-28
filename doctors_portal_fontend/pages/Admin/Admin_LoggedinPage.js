@@ -1,15 +1,19 @@
 import { useRouter } from 'next/router';
 import axios from 'axios';
-import React, { useState } from 'react';
+import { useState, useEffect } from 'react';
 import HomeLogo from '../Layout/HomeLogo';
 import Admin_NavigationBar from '../Layout/Admin_LoggedinNavbar';
 import Link from 'next/link';
+import { useAuth } from '../utils/authentication';
+
 
 export default function LoggedinPage() {
   const router = useRouter();
   const [subject, setSubject] = useState('');
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
+  const { checkUser } = useAuth();
+
 
   const handleNavigation = (path) => {
     router.push(path);
@@ -48,10 +52,13 @@ export default function LoggedinPage() {
     }
   };
 
+ 
+
   return (
     <>
       <title>Admin</title>
       <Admin_NavigationBar />
+      
       <div className="bg-gray-300 flex items-center justify-center h-screen">
   <div className="flex flex-col items-start">
   <div className="card w-96 bg-stone-800 shadow-xl">

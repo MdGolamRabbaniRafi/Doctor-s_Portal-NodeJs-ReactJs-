@@ -3,6 +3,8 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 
 import HomeLogo from './HomeLogo';
+import HeaderForLoggedin from './LoggedinHeader';
+
 
 const NavigationBarLoggedin = () => {
   const router = useRouter();
@@ -23,7 +25,7 @@ const NavigationBarLoggedin = () => {
   };
 
   return (
-    <div className="navbar bg-teal-800 py-2 shadow-xl">
+    <div className="navbar bg-teal-800  shadow-xl">
       <div className="navbar-start">
         <div className="dropdown">
           <label tabIndex={0} className="btn btn-ghost btn-circle">
@@ -39,14 +41,13 @@ const NavigationBarLoggedin = () => {
             <li><Link href="/Admin/Admin_Profile">Profile</Link></li>
 
             <li><Link href="/Send_email">Email</Link></li>
-            <li><button onClick={handleLogout}>Logout</button></li>
-
+             <li><button onClick={() => router.push("/Logout")}>Log Out</button></li>
           </ul>
         </div>
         <a className="btn btn-ghost normal-case text-xl ">Doctor's Portal</a>
       </div>
       <div className="navbar-center">
-        <a><HomeLogo></HomeLogo></a>
+        <a><HeaderForLoggedin></HeaderForLoggedin></a>
 
       </div>
 
@@ -54,8 +55,13 @@ const NavigationBarLoggedin = () => {
       <div className="navbar-end">
 
       <div className="form-control">
-      <input type="text" placeholder="Search" className="input input-bordered w-24 md:w-auto" />
-    </div>
+  <div className="input-group">
+    <input type="text" placeholder="Search…" className="input input-bordered bg-slate-800" />
+    <button className="btn btn-square bg-slate-700">
+      <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+    </button>
+  </div>
+</div>
 
       <button className="btn btn-ghost btn-circle">
         <Link href="/Admin/Admin_Email">

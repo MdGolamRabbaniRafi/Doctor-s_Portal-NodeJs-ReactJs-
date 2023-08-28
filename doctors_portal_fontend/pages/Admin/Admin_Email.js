@@ -54,9 +54,8 @@ export default function Email() {
         <h2 className="text-3xl font-semibold mb-4">Send an Email</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label htmlFor="email" className="block text-gray-700 font-medium mb-2">
-              To:
-            </label>
+          <label htmlFor="Link" className="input-group input-group-sm">              
+          <span>To:</span>
             <input
               type="email"
               id="email"
@@ -64,27 +63,26 @@ export default function Email() {
               value={to}
               required
               onChange={handleChangeTo}
-              className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
+              className="input input-bordered input-sm"            />
+              </label>
           </div>
           <div className="mb-4">
-            <label htmlFor="subject" className="block text-gray-700 font-medium mb-2">
-              Subject:
-            </label>
+          <label htmlFor="Link" className="input-group input-group-sm">              
+          <span>Subject:</span>
             <input
-              type="text"
-              id="subject"
-              name="subject"
-              value={subject}
+              type="email"
+              id="email"
+              name="email"
+              value={to}
               required
               onChange={handleChangeSubject}
-              className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
+              className="input input-bordered input-sm"            />
+              </label>
           </div>
           <div className="mb-4">
-            <label htmlFor="text" className="block text-gray-700 font-medium mb-2">
-              Text:
-            </label>
+          <label htmlFor="Link" className="input-group input-group-sm">
+             <span> Text:</span>
+            
             <textarea
               id="text"
               name="text"
@@ -94,10 +92,11 @@ export default function Email() {
               className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               rows="4"
             />
+            </label>
           </div>
           <button
             type="submit"
-            className="w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="btn btn-outline btn-accent "
           >
             Send Email
           </button>
