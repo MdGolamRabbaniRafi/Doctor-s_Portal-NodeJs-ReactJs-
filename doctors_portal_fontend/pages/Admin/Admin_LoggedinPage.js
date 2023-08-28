@@ -5,6 +5,7 @@ import HomeLogo from '../Layout/HomeLogo';
 import Admin_NavigationBar from '../Layout/Admin_LoggedinNavbar';
 import Link from 'next/link';
 import { useAuth } from '../utils/authentication';
+import dynamic from "next/dynamic";
 
 
 export default function LoggedinPage() {
@@ -13,6 +14,12 @@ export default function LoggedinPage() {
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
   const { checkUser } = useAuth();
+
+  const Title = dynamic(()=>import('../Layout/Admin_Title'),{
+
+    ssr: false,
+  
+  });
 
 
   const handleNavigation = (path) => {
@@ -91,7 +98,7 @@ export default function LoggedinPage() {
                 <img src="/noticeAv.jpg" alt="Notice Avatar" />
               </div>
             </div>
-            <h1 className="text-3xl font-semibold mt-4">Post a Notice</h1>
+            <h1 className="text-3xl font-semibold mt-4"><Title page ="Post a Notice"></Title></h1>
           </div>
           
           <form onSubmit={handleSubmit}>
