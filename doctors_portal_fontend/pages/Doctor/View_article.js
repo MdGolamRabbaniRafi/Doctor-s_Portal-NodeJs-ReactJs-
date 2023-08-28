@@ -60,8 +60,6 @@ export default function Notification() {
     <div>
       <Title page ="Articles"></Title>
 
-    {/* <HeaderForLoggedin></HeaderForLoggedin> */}
-    <NavigationBarLoggedin></NavigationBarLoggedin>
 
       <h1>Articles</h1>
       {error && <p>{error}</p>}

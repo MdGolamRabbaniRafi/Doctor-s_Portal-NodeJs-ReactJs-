@@ -66,7 +66,6 @@ export class DoctorController {
   }
 
   @Get('/viewAppointment')
-  @UseGuards(SessionGuard)
   viewAppointment(@Session() session): Promise<DoctorEntity[]> {
     return this.doctorService.viewAppointment(session.email);
   }
