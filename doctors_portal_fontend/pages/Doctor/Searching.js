@@ -7,7 +7,7 @@ import { useAuth } from '../utils/authentication';
 import NavigationBarLoggedin from "../Layout/LoggedinNavbar"
 import SessionCheck from '../utils/session';
 import dynamic from "next/dynamic";
-
+ 
 
 const Title = dynamic(()=>import('../Layout/Doctor_Title'),{
 

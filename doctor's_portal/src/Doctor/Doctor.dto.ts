@@ -12,7 +12,7 @@ import { MailerEntity } from './mailer.entity';
 
 export class AddDocotorDTO {
   @IsString({ message: "invalid name" })
-  @Matches(/^[a-zA-Z]+$/, { message: "enter a proper name" })
+  @Matches(/^[a-zA-Z ]+$/, { message: "Enter a proper name" })
   name: string;
 
   @IsEmail({}, { message: "invalid email" })
@@ -25,7 +25,7 @@ export class AddDocotorDTO {
   User: string;
 
 
-  id: number;
+  id: number; 
 }
 
 export class DoctorInfo {

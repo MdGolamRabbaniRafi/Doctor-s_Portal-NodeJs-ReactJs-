@@ -5,8 +5,16 @@ import { useRouter } from 'next/router';
 import PatiLogo from './Layout/PatientLogo';
 import HomeLogo from './Layout/HomeLogo';
 import AdminLogo from './Layout/AdminLogo';
-import Title from './Layout/Doctor_Title';
 
+
+import dynamic from "next/dynamic";
+
+
+const Title = dynamic(()=>import('./Layout/Doctor_Title'),{
+
+  ssr: false,
+
+});
 
 
 export default function Signup() {
@@ -72,7 +80,7 @@ export default function Signup() {
 
   const handleSignUp = async (e) => {
     e.preventDefault();
-    if (!email || !password || !confirmPassword || !name || !gender || !bloodGroup || !degree) {
+    if (!email || !password || !confirmPassword || !name || !gender || !bloodGroup || !degree||!signUpAs) {
       setError('All fields are required');
     } else if (!isValidEmail(email)) {
       setError('Invalid email address');
@@ -82,7 +90,12 @@ export default function Signup() {
       setError('');
 
       try {
-        const response = await axios.post(`http://localhost:3000/${signUpAs}/signup/`, {
+        const chckUser = await axios.get(
+          `http://localhost:3000/Doctor/searchUser/${email}`
+        );
+        if (chckUser.data === 'Not found') {
+        
+        const response = await axios.post(`http://localhost:3000/${signUpAs}/signup`, {
           name,
           email,
           password,
@@ -91,6 +104,7 @@ export default function Signup() {
           Degree: degree,
           User: signUpAs
         });
+        
 
         console.log('Backend Response:', response.data);
 
@@ -119,13 +133,31 @@ export default function Signup() {
 
           router.push('/login');
           console.log('Registration successful');
+        }
 
+   else {
+       setError('Registration failed');
+        }
         } else {
-          setError('Registration failed');
+          setError('Email Already Exist');
+
         }
       } catch (error) {
-        console.error('Registration failed:', error);
+        if (error.response && error.response.data && error.response.data.message) {
+          const errorMessage = error.response.data.message[0];
+          console.log("EEEEEEEEEEEEEEEEEEERRRRRRRRRRRRRRR      "+error.response.data.message[0])
+
+          console.log("EEEEEEEEEEEEEEEEEEERRRRRRRRRRRRRRR")
+          console.log('Error Message:', errorMessage);
+          setError(errorMessage);
+
+          
+        }
+      else
+      {
+      console.error('Registration failed:', error);
         setError('An error occurred during signup. Please try again later.');
+      }
       }
     }
   };
@@ -232,7 +264,7 @@ export default function Signup() {
 
       <div className="mb-6">
         <input type="submit" value="Sign Up" className="w-full px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 cursor-pointer" />
-        {error && <p>{error}</p>}
+        {error && <p className="text-red-500">{error}</p>}
       </div>
     </form>
 
