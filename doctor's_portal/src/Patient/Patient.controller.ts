@@ -32,6 +32,16 @@ export class PatientController {
     return this.patientService.ViewPersonalInfo(session.email);
 
   }
+
+
+  @Get('/ViewMyProfile/:email')
+  @UseGuards(SessionGuard)
+  ViewPersonalInfoByEmail(@Param('email') email: string): Object{
+    return this.patientService.ViewPersonalInfoByEmail(email);
+
+  }
+
+
   @Post('/addProfile')
   @UseGuards(SessionGuard)
   async addProfile(@Body() profileData: PatientProfileEntity, @Session() session): Promise<PatientProfileEntity> {

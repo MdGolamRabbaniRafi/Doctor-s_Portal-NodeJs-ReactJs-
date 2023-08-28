@@ -85,7 +85,34 @@ export class PatientService {
 
     return this.PatientProfileRepo.save(profile);
   }
+
+
+  async ViewPersonalInfoByEmail(email: string): Promise<PatientEntity> {
+    const visit = await this.PatientRepo.findOne({
+      select: {
+        name: true,
+        email: true,
+        id: true,
+        password: false,
+        Gender:true,
+        Blood_group:true,
+        Degree:true
+        // filenames: false
+        
+      },
+      where: {
+        email: email,
+        
+      },
+      relations: ['Profile']
+    });
   
+    return visit;
+  } 
+
+
+  
+   
  
   async ViewPersonalInfo(email: string): Promise<PatientEntity[]> {
     const visit = await this.PatientRepo.find({

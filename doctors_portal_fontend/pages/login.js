@@ -238,8 +238,10 @@ export default function Signin() {
                   onChange={handleChangePassword}
                 />
                 <label className="label">
-                  
-                  <NavigationBar></NavigationBar>
+{/*                   
+                <div className="form-control mt-6">
+                <input type="submit" className="btn btn-primary" value="Login" />
+              </div> */}
 
                 
                 </label>
@@ -247,6 +249,8 @@ export default function Signin() {
               <div className="form-control mt-6">
                 <input type="submit" className="btn btn-primary" value="Login" />
               </div>
+              <NavigationBar></NavigationBar>
+
             </form>
             <center>
              {error && <p>{error}</p>}
