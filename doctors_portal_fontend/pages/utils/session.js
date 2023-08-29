@@ -22,7 +22,17 @@ export default function SessionCheck() {
 
     }, []);
 
- 
+    // useEffect((user) => {
+
+    //     const session = sessionStorage.getItem('email');
+
+    //     if (!session) {
+
+    //         router.push('/');
+
+    //     }
+
+    // }, [user]);
 
     return null;
 

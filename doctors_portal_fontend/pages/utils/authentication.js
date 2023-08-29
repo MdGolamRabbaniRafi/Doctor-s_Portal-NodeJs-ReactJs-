@@ -14,10 +14,10 @@ export const AuthProvider = ({ children }) => {
   const updateUser = (newUser) => {
     setUser(newUser);
   };
+  
 
   const login = (email, cookie) => {
   sessionStorage.setItem('email', email); 
-  console.log("EEEEEEEEE:"+email)
   console.log("ccccccccccccc:"+cookie)
   console.log("session:::::"+sessionStorage.getItem('email'))
     setUser({ email, cookie });
@@ -41,6 +41,7 @@ export const AuthProvider = ({ children }) => {
       const response = await axios.post( 'http://localhost:3000/Doctor/logout',
         {
           // headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          // headers: { 'Content-Type': 'multiple/x-www-form-urlencoded' },
          // withCredentials: true
         }
       );
