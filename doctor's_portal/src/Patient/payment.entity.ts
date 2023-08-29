@@ -20,8 +20,8 @@ export class PaymentEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-@ManyToOne(() => DoctorEntity, doctor => doctor.payment)
-doctor: DoctorEntity[];
+// @ManyToOne(() => DoctorEntity, doctor => doctor.payment)
+// doctor: DoctorEntity[];
 
   
   

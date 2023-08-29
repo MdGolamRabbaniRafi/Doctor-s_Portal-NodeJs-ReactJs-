@@ -1,9 +1,10 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm";
 import { PatientEntity } from "./Patient.dto";
 import { IsInt } from "class-validator";
+import { DoctorEntity } from "src/Doctor/Doctor.dto";
 
-@Entity("appointment")
-export class AppointmentEntity {
+@Entity("appointment_Patient")
+export class AppointmentPatientEntity {
   @PrimaryGeneratedColumn()
   Serial: number;
 
@@ -15,12 +16,21 @@ export class AppointmentEntity {
   age: number;
 
   @Column()
+  email: string;
+
+  @Column()
   date: string;
+  
 
   @Column({ type: "varchar", length: 150 })
   time: string;
+  @ManyToOne(() => DoctorEntity, doctor => doctor.appointment)
+  doctor: DoctorEntity;
 
   @ManyToOne(() => PatientEntity, patient => patient.appointment)
   patient: PatientEntity;
+
+  
 }
+
 

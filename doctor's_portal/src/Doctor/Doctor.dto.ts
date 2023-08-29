@@ -66,8 +66,8 @@ export class DoctorEntity {
     @ManyToOne(() => AdminEntity, admin => admin.doctor)
   admin: AdminEntity;
 
-  @OneToMany(() => PaymentEntity, payment => payment.doctor)
-  payment: PaymentEntity[];
+  // @OneToMany(() => PaymentEntity, payment => payment.doctor)
+  // payment: PaymentEntity[];
   @OneToMany(() => SalaryEntity, salary => salary.doctor)
 salary: SalaryEntity[];
 @OneToMany(() => NotificationEntity, notification => notification.doctor)

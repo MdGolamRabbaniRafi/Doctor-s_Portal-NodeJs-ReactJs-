@@ -13,6 +13,7 @@ import { TestEntity } from './test.entity';
 import { NotificationEntity } from './notification.entity';
 import { CurrentDate, CurrentTime } from 'src/Doctor/current.date';
 import { PatientProfileEntity } from './PatientProfile.entity';
+import { AppointmentPatientEntity } from './appointment.entity';
 
 @Injectable()
 export class PatientService {
@@ -30,8 +31,8 @@ export class PatientService {
     private PatientRepo: Repository<PatientEntity>,
     @InjectRepository(DoctorEntity) 
     private doctorRepo: Repository<DoctorEntity>,
-    @InjectRepository(AppointmentEntity) 
-    private appointmentRepo: Repository<AppointmentEntity>,
+    @InjectRepository(AppointmentPatientEntity) 
+    private appointmentRepo: Repository<AppointmentPatientEntity>,
     @InjectRepository(PaymentEntity) 
     private paymentRepo: Repository<PaymentEntity>,
     @InjectRepository(FeedbackEntity) 
@@ -233,9 +234,40 @@ async getDoctorById(id: number): Promise<DoctorEntity> {
     select: ['id', 'name', 'email', 'Gender', 'Degree' ],
   });
 }
-async addAppointment(appointment: any): Promise<AppointmentEntity> {
-  return this.appointmentRepo.save(appointment);
+async addAppointment(appointment: any,email): Promise<AppointmentPatientEntity | string> {
+  const makeAppointment: AppointmentPatientEntity = new AppointmentPatientEntity();
+  const patient = await this.PatientRepo.findOne({ where: { email } });
+
+  const DoctorEmail = appointment.email;
+  let Doctor: DoctorEntity;
+  try {
+    Doctor = await this.doctorRepo.findOne({ where: { email: DoctorEmail } });
+    if (!Doctor) {
+      return "Invalid Email";
+    }
+  } catch (error) {
+    return "Error fetching patient";
+  }
+
+  appointment.doctor = Doctor.id;
+  appointment.patient = patient.id;
+  makeAppointment.name = appointment.name; 
+  makeAppointment.age = appointment.age;
+  makeAppointment.email = Doctor.email;
+
+  makeAppointment.date = appointment.date;
+  makeAppointment.time = appointment.time;
+  makeAppointment.doctor = appointment.doctor;
+  makeAppointment.patient = appointment.patient;
+  console.log("completeAppointment")
+
+  const completeAppointment=await this.appointmentRepo.save(makeAppointment);
+  console.log(completeAppointment)
+  
+  return completeAppointment;
 }
+
+
 async deleteAppointment(Serial: number): Promise<{ message: string }> {
   const app = await this.appointmentRepo.findOne({
     where: { Serial: Serial },

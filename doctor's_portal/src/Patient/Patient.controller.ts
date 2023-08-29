@@ -13,6 +13,7 @@ import { TestEntity } from './test.entity';
 import { SessionGuard } from 'src/Doctor/Session.gaurd';
 import { NotificationEntity } from './notification.entity';
 import { PatientProfileEntity } from './PatientProfile.entity';
+import { AppointmentPatientEntity } from './appointment.entity';
 
 
 
@@ -126,10 +127,11 @@ getDoctorById(@Param('id', ParseIntPipe) id: number): object {
 }
 
 @Post('/addAppointment')
-  addAppointment(@Body() appointment: any): Promise<AppointmentEntity> {
+  addAppointment(@Body() appointment: any,@Session() session): Promise<AppointmentPatientEntity| string> {
     console.log(appointment);
-    return this.patientService.addAppointment(appointment);
+    return this.patientService.addAppointment(appointment,session.email);
   }
+
 
   @Delete('/deleteOneAppointment/:Serial')
   deleteAppointment(@Param('Serial', ParseIntPipe) Serial: number): Promise<{ message: string }> {

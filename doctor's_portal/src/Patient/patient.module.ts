@@ -13,9 +13,10 @@ import { MedicineEntity } from './medicine.entity';
 import { TestEntity } from './test.entity';
 import { NotificationEntity } from './notification.entity';
 import { PatientProfileEntity } from './PatientProfile.entity';
+import { AppointmentPatientEntity } from './appointment.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([PatientEntity,DoctorEntity,AppointmentEntity,PaymentEntity,FeedbackEntity,PatientProfileEntity,MedicineEntity,TestEntity,NotificationEntity])],
+  imports: [TypeOrmModule.forFeature([PatientEntity,DoctorEntity,AppointmentEntity,AppointmentPatientEntity,PaymentEntity,FeedbackEntity,PatientProfileEntity,MedicineEntity,TestEntity,NotificationEntity])],
   controllers: [PatientController],
   providers: [PatientService, MailerService],
 })
