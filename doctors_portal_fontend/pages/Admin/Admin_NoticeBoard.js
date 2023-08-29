@@ -2,9 +2,9 @@ import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import dynamic from "next/dynamic";
+import SessionCheck from "../utils/session";
 
-import HeaderForLoggedin from '../Layout/LoggedinHeader';
-import FooterForLoggedin from '../Layout/LoggedinFooter';
+
 
 export default function NoticeBoard() {
   const [notice, setNotice] = useState([]);
@@ -53,7 +53,7 @@ export default function NoticeBoard() {
   const handleDeleteNotice = async (sl) => {
     const confirmed = window.confirm('Are you sure you want to delete this Notice?');
     if (!confirmed) {
-      return; // User canceled the deletion
+      return; 
     }
 
     try {
@@ -76,6 +76,7 @@ export default function NoticeBoard() {
 
   return (
     <div>
+       <SessionCheck></SessionCheck>
       <div className="bg-gray-100 min-h-screen flex flex-col items-center justify-center">
         <div className="mt-4">
           

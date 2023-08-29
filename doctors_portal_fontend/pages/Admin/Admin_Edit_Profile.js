@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
-
+import SessionCheck from '../utils/session';
 export default function EditProfile() {
   const router = useRouter();
   const [formData, setFormData] = useState({
@@ -61,6 +61,7 @@ export default function EditProfile() {
   };
 
   return (
+    <><SessionCheck></SessionCheck>
     <div className="bg-gray-100 min-h-screen flex items-center justify-center py-10">
       <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-md">
         <h1 className="text-3xl font-semibold mb-4 text-center">Edit Profile</h1>
@@ -118,6 +119,6 @@ export default function EditProfile() {
           </div>
         </form>
       </div>
-    </div>
+    </div></>
   );
 }

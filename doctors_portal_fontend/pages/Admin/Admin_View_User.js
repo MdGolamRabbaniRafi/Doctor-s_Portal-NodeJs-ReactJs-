@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-
+import SessionCheck from '../utils/session';
 export default function ViewUser() {
   const [users, setUsers] = useState([]);
   const [userType, setUserType] = useState('Doctor'); 
@@ -72,6 +72,7 @@ export default function ViewUser() {
   };
 
   return (
+    <><SessionCheck></SessionCheck>
     <div className="bg-gray-100 min-h-screen flex flex-col items-center justify-center">
       <div className="w-full max-w-3xl bg-white p-8 rounded-lg shadow">
         <h1 className="text-3xl font-semibold mb-4">{userType === 'Doctor' ? 'Doctors' : 'Patients'}</h1>
@@ -116,6 +117,6 @@ export default function ViewUser() {
           ))}
         </ul>
       </div>
-    </div>
+    </div></>
   );
 }

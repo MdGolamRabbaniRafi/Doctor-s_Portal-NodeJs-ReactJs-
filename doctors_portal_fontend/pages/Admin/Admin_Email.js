@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import axios from 'axios';
 import dynamic from "next/dynamic";
-
+import SessionCheck from '../utils/session';
 
 export default function Email() {
   const [to, setTo] = useState('');
@@ -56,7 +56,8 @@ export default function Email() {
   };
 
   return (
-    <div className="bg-gray-100 min-h-screen flex items-center justify-center">
+    <><SessionCheck></SessionCheck>  
+      <div className="bg-gray-100 min-h-screen flex items-center justify-center">
       <div className="max-w-md w-full bg-white p-8 shadow-lg rounded-lg">
         <h2 className="text-3xl font-semibold mb-4"><Title page =" Email"></Title></h2>
         <form onSubmit={handleSubmit}>
@@ -110,6 +111,7 @@ export default function Email() {
           {error && <p className="mt-2 text-red-500">{error}</p>}
         </form>
       </div>
-    </div>
+    </div></>
+
   );
 }

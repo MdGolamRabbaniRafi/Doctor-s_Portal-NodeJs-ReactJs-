@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import HeaderForLoggedin from '../Layout/LoggedinHeader';
 import Link from 'next/link';
 import dynamic from "next/dynamic";
-
+import SessionCheck from '../utils/session';
 export default function AddAppointment() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -92,6 +92,7 @@ export default function AddAppointment() {
 
   return (
     <div>
+      <SessionCheck></SessionCheck>
       <center>      <HeaderForLoggedin /> </center>
 
       <div className="mx-auto p-8 max-w-md">

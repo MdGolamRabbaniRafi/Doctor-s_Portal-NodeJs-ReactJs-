@@ -6,6 +6,7 @@ import Admin_NavigationBar from '../Layout/Admin_LoggedinNavbar';
 import Link from 'next/link';
 import { useAuth } from '../utils/authentication';
 import dynamic from "next/dynamic";
+import SessionCheck from "../utils/session";
 
 
 export default function LoggedinPage() {
@@ -63,6 +64,7 @@ export default function LoggedinPage() {
 
   return (
     <>
+    <SessionCheck></SessionCheck>
       <title>Admin</title>
       <Admin_NavigationBar />
       

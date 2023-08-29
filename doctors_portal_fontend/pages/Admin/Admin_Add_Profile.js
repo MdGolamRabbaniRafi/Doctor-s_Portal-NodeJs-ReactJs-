@@ -1,9 +1,7 @@
 import { useRouter } from 'next/router';
 import axios from 'axios';
 import React, { useState } from 'react';
-import HomeLogo from '../Layout/HomeLogo';
-import Admin_NavigationBar from '../Layout/Admin_LoggedinNavbar';
-import Link from 'next/link';
+import SessionCheck from '../utils/session';
 
 // import { useRouter } from 'next/router';
 
@@ -79,7 +77,7 @@ export default function AddProfile() {
   };
 
   return (
-    
+    <><SessionCheck></SessionCheck>    
 
     
     <div className="bg-gray-100 h-fit flex flex-col items-center justify-center">
@@ -144,6 +142,7 @@ export default function AddProfile() {
         </button>
       </form>
     </div>
-  </div>
+  </div></>
+
   );
 }

@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-
+import SessionCheck from '../utils/session';
 export default function DoctorInfo() {
   const [userId, setUserId] = useState('');
   const [userInfo, setUserInfo] = useState(null);
-  const [userType, setUserType] = useState('doctor'); // Default to doctor
+  const [userType, setUserType] = useState('doctor'); 
   const [error, setError] = useState('');
 
   const handleUserIdChange = (e) => {
@@ -38,6 +38,9 @@ export default function DoctorInfo() {
   };
 
   return (
+    <>
+    <SessionCheck></SessionCheck>
+    
     <div className="p-6 max-w-sm mx-auto bg-white rounded-xl shadow-md space-y-2 mt-24">
       <div className="flex justify-end">
        
@@ -75,7 +78,6 @@ export default function DoctorInfo() {
           />
         </div>
 
-        {/* Search button */}
         <button
           type="button"
           onClick={handleFetchUser}
@@ -84,7 +86,6 @@ export default function DoctorInfo() {
           Search
         </button>
 
-        {/* User information */}
 {userInfo && (
   <div className="mt-4 bg-gray-900 text-white p-4 rounded-md">
     <h3 className="font-semibold text-lg">
@@ -125,5 +126,6 @@ export default function DoctorInfo() {
 
       </div>
     </div>
+    </>
   );
 }

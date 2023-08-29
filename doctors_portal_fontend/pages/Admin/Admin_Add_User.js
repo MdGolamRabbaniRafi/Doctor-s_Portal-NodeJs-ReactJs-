@@ -5,6 +5,7 @@ import HomeLogo from '../Layout/HomeLogo';
 import HeaderForLoggedin from '../Layout/LoggedinHeader';
 import FooterForLoggedin from '../Layout/LoggedinFooter';
 import PatiLogo from '../Layout/PatientLogo';
+import SessionCheck from '../utils/session';
 
 export default function AddUser() {
   const [email, setEmail] = useState('');
@@ -86,6 +87,7 @@ export default function AddUser() {
 
   return (
     <>
+    <SessionCheck></SessionCheck>
       <title>Manage</title>
 
       <form

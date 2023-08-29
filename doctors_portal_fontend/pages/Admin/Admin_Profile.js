@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import { useAuth } from '../utils/authentication';
+import SessionCheck from "../utils/session";
 
 export default function Profile() {
   const [adminInfo, setAdminInfo] = useState({});
@@ -43,7 +44,6 @@ export default function Profile() {
         setProfilePhoto(data.photoUrl);
       }
 
-      // Reset the selected file
       setSelectFile(null);
     } catch (error) {
       console.error(error);
@@ -74,6 +74,8 @@ export default function Profile() {
   }, []);
 
   return (
+    <>
+    <SessionCheck></SessionCheck>
     <div className="bg-gray-100 min-h-screen flex flex-col items-center justify-center py-10">
       <center>
         <div className='px-6'>
@@ -189,5 +191,6 @@ export default function Profile() {
         )}
       </div>
     </div>
+    </>
   );
 }

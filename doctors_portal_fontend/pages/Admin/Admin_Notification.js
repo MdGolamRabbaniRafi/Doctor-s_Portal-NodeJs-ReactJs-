@@ -2,9 +2,8 @@ import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import HomeLogo from '../Layout/HomeLogo';
+import SessionCheck from '../utils/session';
 
-import HeaderForLoggedin from '../Layout/LoggedinHeader';
-import FooterForLoggedin from '../Layout/LoggedinFooter';
 
 export default function Notification() {
   const [notifications, setNotifications] = useState([]);
@@ -62,6 +61,7 @@ export default function Notification() {
   };
 
   return (
+    <><SessionCheck></SessionCheck>
     <div className="bg-gray-100 h-screen w-screen  justify-between">
       <div className="navbar bg-teal-800 shadow-xl">
   <div className="navbar-start">
@@ -112,5 +112,6 @@ export default function Notification() {
 
 
     </div>
+    </>
   );
 }
