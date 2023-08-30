@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 
 export default function UserInfo() {
@@ -8,6 +8,29 @@ export default function UserInfo() {
   const [userData, setUserData] = useState({});
   const [updatedData, setUpdatedData] = useState({});
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    fetchUserData();
+  }, [id]);
+
+  const fetchUserData = async () => {
+    try {
+      const response = await axios.get(`http://localhost:3000/Admin/${userType}/${id}`, {
+        withCredentials: true,
+      });
+
+      if (response.data) {
+        setUserData(response.data);
+        setUpdatedData(response.data);
+        setError('');
+      } else {
+        setError('User data not found');
+      }
+    } catch (error) {
+      console.error('Failed:', error);
+      setError('An error occurred. Please try again later.');
+    }
+  };
 
   const handleChangeDegree = (e) => {
     setUpdatedData({ ...updatedData, Degree: e.target.value });
