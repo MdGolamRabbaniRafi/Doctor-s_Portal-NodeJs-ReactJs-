@@ -22,8 +22,8 @@ import { AdminEntity } from 'src/Admin/admin.entity';
         port: 587,
         secure: false,
         auth: {
-          user: 'dreamlessboyrafi7@gmail.com',
-          pass: 'zcqebaxjhtjovunk',
+          user: '',//give gmail
+          pass: '',//secret key of gmail
         },
       },
     }),
